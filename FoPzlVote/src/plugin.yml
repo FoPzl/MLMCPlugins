@@ -1,0 +1,13 @@
+name: FoPzlVote
+main: me.fopzl.vote.Vote
+author: [FoPzl]
+depend: [Votifier, NeoCore]
+version: 1.0
+api-version: 1.19
+commands:
+   mlvote:
+   vp:
+permissions:
+   mlvote.*:
+   mlvote.admin:
+      default: op
