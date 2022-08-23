@@ -6,7 +6,10 @@ version: 1.0
 api-version: 1.19
 commands:
    mlvote:
-   vp:
+      usage: "§cUsage: §7/<command> leaderboard"
+   voteparty:
+      aliases: [vp]
+      usage: "§cUsage: §7/<command> status"
 permissions:
    mlvote.*:
    mlvote.admin:
