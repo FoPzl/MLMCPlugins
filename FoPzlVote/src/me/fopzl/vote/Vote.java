@@ -10,16 +10,20 @@ import me.fopzl.vote.commands.MLVoteCommand;
 import me.fopzl.vote.commands.VotePartyCommand;
 
 public class Vote extends JavaPlugin {
+	private VoteParty voteParty;
 	private HashSet<String> validVoteSites = new HashSet<String>();
 	
 	public void onEnable() {
 		super.onEnable();
-		Bukkit.getServer().getLogger().info("FoPzlVote Enabled");
+		
+		voteParty = new VoteParty(this);
 		
 		this.getCommand("mlvote").setExecutor(new MLVoteCommand(this));
-		this.getCommand("vp").setExecutor(new VotePartyCommand(this));
+		this.getCommand("vp").setExecutor(new VotePartyCommand(voteParty));
 		
 		getServer().getPluginManager().registerEvents(new VoteListener(this), this);
+		
+		Bukkit.getServer().getLogger().info("FoPzlVote Enabled");
 	}
 	
 	public void onDisable() {

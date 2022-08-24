@@ -1,17 +1,17 @@
 package me.fopzl.vote.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import me.fopzl.vote.Vote;
+import me.fopzl.vote.VoteParty;
 
 public class VotePartyCommand implements CommandExecutor {
-	private Vote main;
+	private VoteParty voteParty;
 
-	public VotePartyCommand(Vote main) {
-		this.main = main;
+	public VotePartyCommand(VoteParty vp) {
+		voteParty = vp;
 	}
 
 	@Override
@@ -22,17 +22,17 @@ public class VotePartyCommand implements CommandExecutor {
 			switch(args[0]) {
 				case "add":
 					if(args.length < 2) return false;
-					// TODO: add to vp #
+					voteParty.addPoints(Integer.parseInt(args[1]));
 					return true;
 				case "set":
 					if(args.length < 2) return false;
-					// TODO: set vp #
+					voteParty.setPoints(Integer.parseInt(args[1]));
 					return true;
 			}
 		}
 		
 		if (args[0].equalsIgnoreCase("status")) {
-			// TODO
+			voteParty.showStatus((Player)sender);
 		}
 		
 		return false;
