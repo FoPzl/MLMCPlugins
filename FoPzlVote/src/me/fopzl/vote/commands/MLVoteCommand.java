@@ -28,14 +28,14 @@ public class MLVoteCommand implements CommandExecutor {
 					// TODO: reqs specify this includes vote site, but how?
 					return true;
 				case "reload":
-					main.reloadConfig();
+					main.loadConfig();
 					sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded config");
 					return true;
 			}
 		}
 		
 		if (args[0].equalsIgnoreCase("leaderboard")) {
-			// TODO
+			main.showLeaderboard((Player)sender);
 			return true;
 		}
 		

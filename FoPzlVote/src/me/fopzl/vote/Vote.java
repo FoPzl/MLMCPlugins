@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.fopzl.vote.commands.MLVoteCommand;
 import me.fopzl.vote.commands.VotePartyCommand;
+import me.neoblade298.neocore.bungee.BungeeAPI;
 
 public class Vote extends JavaPlugin {
 	private VoteParty voteParty;
@@ -23,12 +24,26 @@ public class Vote extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(new VoteListener(this), this);
 		
+		loadConfig();
+		
 		Bukkit.getServer().getLogger().info("FoPzlVote Enabled");
 	}
 	
 	public void onDisable() {
 		Bukkit.getServer().getLogger().info("FoPzlVote Disabled");
 		super.onDisable();
+	}
+	
+	public void loadConfig() {
+		// TODO
+		
+		voteParty.loadConfig();
+	}
+	
+	public void showLeaderboard(Player p) {
+		// TODO: sql
+		String msg = "TODO";
+		BungeeAPI.sendPluginMessage(p, "global", msg); // TODO: verify channel
 	}
 	
 	public boolean isValidSite(String site) {
