@@ -36,7 +36,7 @@ public class MLVoteCommand implements CommandExecutor {
 		}
 		
 		if (args[0].equalsIgnoreCase("leaderboard")) {
-			main.showLeaderboard((Player)sender);
+			main.showLeaderboard(sender);
 			return true;
 		}
 		

@@ -1,8 +1,12 @@
 package me.fopzl.vote;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,10 +48,18 @@ public class Vote extends JavaPlugin {
 		voteParty.addPoints(1);
 	}
 	
-	public void showLeaderboard(Player p) {
-		// TODO: sql
-		String msg = "TODO";
-		BungeeAPI.sendPluginMessage(p, "global", msg); // TODO: verify channel
+	public void showLeaderboard(CommandSender sender) {
+		// TODO: sqlize this, it will change (no hashmap)
+		
+		HashMap<UUID, Integer> topVoters = new HashMap<UUID, Integer>();
+		int num = 1;
+		String msg = "&4[&c&lMLMC&4] &eTop Monthly Voters:\n"; // TODO: better to send as one msg with newlines vs send multiple?
+		for(Entry<UUID, Integer> entry : topVoters.entrySet()) {
+			String username = Bukkit.getServer().getOfflinePlayer(entry.getKey()).getName();
+			msg += "&6&l" + num++ + ". &e" + username + " &7 - &f" + entry.getValue() + "\n";
+		}
+		
+		Util.sendMessageFormatted(sender, msg);
 	}
 	
 	public boolean isValidSite(String site) {
