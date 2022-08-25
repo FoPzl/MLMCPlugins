@@ -23,8 +23,11 @@ public class VoteListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onVote(final VotifierEvent e) {
-		if(main.isValidSite(e.getVote().getServiceName())) {
-			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(e.getVote().getUsername()); // TODO: verify case sensitivity
+		com.vexsoftware.votifier.model.Vote vote = e.getVote();
+		if(main.isValidSite(vote.getServiceName())) {
+			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(vote.getUsername()); // TODO: verify case sensitivity
+			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + vote.getServiceName() + "&7!");
+			
 			if(p.isOnline()) {
 				main.rewardVote((Player)p);
 			} else {
@@ -32,8 +35,7 @@ public class VoteListener implements Listener {
 				queuedRewards.put(uuid, queuedRewards.getOrDefault(uuid, 0) + 1);
 			}
 			
-			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + e.getVote().getServiceName() + "&7!");
-			// TODO: voteparty stuff
+			main.incVoteParty();
 		}
 	}
 	

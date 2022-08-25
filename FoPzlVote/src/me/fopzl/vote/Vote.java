@@ -40,6 +40,10 @@ public class Vote extends JavaPlugin {
 		voteParty.loadConfig();
 	}
 	
+	public void incVoteParty() {
+		voteParty.addPoints(1);
+	}
+	
 	public void showLeaderboard(Player p) {
 		// TODO: sql
 		String msg = "TODO";
@@ -53,4 +57,8 @@ public class Vote extends JavaPlugin {
 	public void rewardVote(Player p) {
 		
 	}
+}
+
+class VoteConfig {
+	
 }
