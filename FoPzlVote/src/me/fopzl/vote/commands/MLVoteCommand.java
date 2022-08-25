@@ -25,8 +25,7 @@ public class MLVoteCommand implements CommandExecutor {
 				case "vote":
 					if(args.length < 3) return false;
 					
-					main.rewardVote(Bukkit.getServer().getPlayer(args[1]));
-					// TODO: reqs specify this includes vote site, but how?
+					main.rewardVote(Bukkit.getServer().getPlayer(args[1]), args[2]);
 					return true;
 				case "reload":
 					main.loadConfig();

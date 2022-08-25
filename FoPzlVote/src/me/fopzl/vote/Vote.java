@@ -66,7 +66,7 @@ public class Vote extends JavaPlugin {
 		return validVoteSites.contains(site);
 	}
 	
-	public void rewardVote(Player p) {
+	public void rewardVote(Player p, String voteSite) {
 		
 	}
 }

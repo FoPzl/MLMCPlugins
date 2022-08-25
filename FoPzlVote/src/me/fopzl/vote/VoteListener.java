@@ -2,7 +2,9 @@ package me.fopzl.vote;
 
 import com.vexsoftware.votifier.model.VotifierEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -14,7 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class VoteListener implements Listener {
 	private Vote main;
-	private HashMap<UUID, Integer> queuedRewards = new HashMap<UUID, Integer>();
+	private HashMap<UUID, List<String>> queuedRewards = new HashMap<UUID, List<String>>();
 	
 	public VoteListener(Vote main) {
 		this.main = main;
@@ -29,10 +31,13 @@ public class VoteListener implements Listener {
 			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + vote.getServiceName() + "&7!");
 			
 			if(p.isOnline()) {
-				main.rewardVote((Player)p);
+				main.rewardVote((Player)p, vote.getServiceName());
 			} else {
 				UUID uuid = p.getUniqueId();
-				queuedRewards.put(uuid, queuedRewards.getOrDefault(uuid, 0) + 1);
+				if(!queuedRewards.containsKey(uuid)) {
+					queuedRewards.put(uuid, new ArrayList<String>());
+				}
+				queuedRewards.get(uuid).add(vote.getServiceName());
 			}
 			
 			main.incVoteParty();
@@ -43,9 +48,9 @@ public class VoteListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		UUID uuid = e.getPlayer().getUniqueId();
 		if(queuedRewards.containsKey(uuid)) {
-			int numRewards = queuedRewards.remove(uuid);
-			for(int i = 0; i < numRewards; i++) {
-				main.rewardVote(e.getPlayer());
+			List<String> sites = queuedRewards.remove(uuid);
+			for(String s : sites) {
+				main.rewardVote(e.getPlayer(), s);
 			}
 		}
 	}
