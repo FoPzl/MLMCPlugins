@@ -32,7 +32,7 @@ public class VoteListener implements Listener {
 				queuedRewards.put(uuid, queuedRewards.getOrDefault(uuid, 0) + 1);
 			}
 			
-			// TODO: broadcast("&4[&c&lMLMC&4] &e" + playername + " &7just voted on &c" + servicename + "&7!")
+			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + e.getVote().getServiceName() + "&7!");
 			// TODO: voteparty stuff
 		}
 	}

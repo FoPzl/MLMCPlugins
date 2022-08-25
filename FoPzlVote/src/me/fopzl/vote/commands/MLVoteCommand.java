@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.fopzl.vote.Util;
 import me.fopzl.vote.Vote;
 
 public class MLVoteCommand implements CommandExecutor {
@@ -29,7 +30,7 @@ public class MLVoteCommand implements CommandExecutor {
 					return true;
 				case "reload":
 					main.loadConfig();
-					sender.sendMessage("§4[§c§lMLMC§4] §7Reloaded config");
+					Util.sendMessageFormatted(sender, "&4[&c&lMLMC&4] &7Reloaded config");
 					return true;
 			}
 		}

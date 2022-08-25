@@ -25,8 +25,7 @@ public class VoteParty {
 	}
 	
 	public void showStatus(Player p) {
-		String msg = "&4[&c&lMLMC&4] &e" + points + " / " + cfg.pointsToStart + " &7votes for a vote party to commence!";
-		BungeeAPI.sendPluginMessage(p, "global", msg); // TODO: verify channel
+		Util.sendMessageFormatted(p, "&4[&c&lMLMC&4] &e" + points + " / " + cfg.pointsToStart + " &7votes for a vote party to commence!");
 	}
 	
 	public void addPoints(int pts) {
@@ -41,7 +40,7 @@ public class VoteParty {
 	private void tick() {
 		if(points % cfg.notifyInterval == 0) {
 			// TODO: placeholders
-			BungeeAPI.broadcast(cfg.notifyMessage);
+			Util.broadcastFormatted(cfg.notifyMessage);
 		}
 		
 		if(points <= 0) {
