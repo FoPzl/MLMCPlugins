@@ -67,7 +67,7 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void rewardVote(Player p, String voteSite) {
-		
+		// TODO: best to give rewards manually, or is command better?
 	}
 }
 
