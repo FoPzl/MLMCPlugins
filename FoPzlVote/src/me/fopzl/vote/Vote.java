@@ -12,15 +12,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.fopzl.vote.commands.MLVoteCommand;
 import me.fopzl.vote.commands.VotePartyCommand;
-import me.neoblade298.neocore.bungee.BungeeAPI;
 
 public class Vote extends JavaPlugin {
+	private VoteRewards rewards;
 	private VoteParty voteParty;
 	private HashSet<String> validVoteSites = new HashSet<String>();
 	
 	public void onEnable() {
 		super.onEnable();
 		
+		rewards = new VoteRewards();
 		voteParty = new VoteParty(this);
 		
 		this.getCommand("mlvote").setExecutor(new MLVoteCommand(this));
@@ -39,8 +40,7 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void loadConfig() {
-		// TODO
-		
+		rewards.loadConfig();	
 		voteParty.loadConfig();
 	}
 	
@@ -67,10 +67,8 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void rewardVote(Player p, String voteSite) {
-		// TODO: best to give rewards manually, or is command better?
+		int streak = 0; // TODO: sql stuff		
+		
+		rewards.rewardVote(p, streak);
 	}
-}
-
-class VoteConfig {
-	
 }
