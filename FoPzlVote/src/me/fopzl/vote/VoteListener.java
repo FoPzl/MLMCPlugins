@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class VoteListener implements Listener {
 	private Vote main;
@@ -46,12 +47,17 @@ public class VoteListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		UUID uuid = e.getPlayer().getUniqueId();
-		if(queuedRewards.containsKey(uuid)) {
-			List<String> sites = queuedRewards.remove(uuid);
-			for(String s : sites) {
-				main.rewardVote(e.getPlayer(), s);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				UUID uuid = e.getPlayer().getUniqueId();
+				if(queuedRewards.containsKey(uuid)) {
+					List<String> sites = queuedRewards.remove(uuid);
+					for(String s : sites) {
+						main.rewardVote(e.getPlayer(), s);
+					}
+				}
 			}
-		}
+		}.runTaskLater(main, 100); // delay to let vote stats load in first
 	}
 }

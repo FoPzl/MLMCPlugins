@@ -1,9 +1,8 @@
 package me.fopzl.vote;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -53,12 +52,12 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void showLeaderboard(CommandSender sender) {
-		HashMap<UUID, Integer> topVoters = io.getTopVoters(LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+		List<Object[]> topVoters = io.getTopVoters(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), 10);
 		int num = 1;
-		String msg = "&4[&c&lMLMC&4] &eTop Monthly Voters:\n"; // TODO: better to send as one msg with newlines vs send multiple?
-		for(Entry<UUID, Integer> entry : topVoters.entrySet()) {
-			String username = Bukkit.getServer().getOfflinePlayer(entry.getKey()).getName();
-			msg += "&6&l" + num++ + ". &e" + username + " &7 - &f" + entry.getValue() + "\n";
+		String msg = "&4[&c&lMLMC&4] &eTop Monthly Voters:";
+		for(Object[] entry : topVoters) {
+			String username = Bukkit.getServer().getOfflinePlayer((UUID)entry[0]).getName();
+			msg += "\n&6&l" + num++ + ". &e" + username + " &7 - &f" + (String)entry[1];
 		}
 		
 		Util.sendMessageFormatted(sender, msg);
