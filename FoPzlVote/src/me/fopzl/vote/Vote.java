@@ -1,5 +1,6 @@
 package me.fopzl.vote;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -18,11 +19,14 @@ public class Vote extends JavaPlugin {
 	private VoteParty voteParty;
 	private HashSet<String> validVoteSites = new HashSet<String>();
 	
+	private VoteIO io;
+	
 	public void onEnable() {
 		super.onEnable();
 		
 		rewards = new VoteRewards();
 		voteParty = new VoteParty(this);
+		io = new VoteIO();
 		
 		this.getCommand("mlvote").setExecutor(new MLVoteCommand(this));
 		this.getCommand("vp").setExecutor(new VotePartyCommand(voteParty));
@@ -49,9 +53,7 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void showLeaderboard(CommandSender sender) {
-		// TODO: sqlize this, it will change (no hashmap)
-		
-		HashMap<UUID, Integer> topVoters = new HashMap<UUID, Integer>();
+		HashMap<UUID, Integer> topVoters = io.getTopVoters(LocalDate.now().getYear(), LocalDate.now().getMonthValue());
 		int num = 1;
 		String msg = "&4[&c&lMLMC&4] &eTop Monthly Voters:\n"; // TODO: better to send as one msg with newlines vs send multiple?
 		for(Entry<UUID, Integer> entry : topVoters.entrySet()) {
@@ -67,8 +69,8 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void rewardVote(Player p, String voteSite) {
-		int streak = 0; // TODO: sql stuff		
-		
-		rewards.rewardVote(p, streak);
+		VoteStats stats = io.getStats(p);
+		stats.addVote(voteSite);
+		rewards.rewardVote(p, stats.voteStreak);
 	}
 }
