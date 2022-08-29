@@ -120,8 +120,8 @@ public class VoteIO implements IOComponent {
 }
 
 class VoteStats {
-	final static long streakLimit = 125; // votes // TODO: get from config
-	final static long streakResetTime = 2; // days // TODO: configurable?
+	private static long streakLimit; // votes
+	private static long streakResetTime; // days
 	
 	boolean needToSave;
 	
@@ -130,6 +130,14 @@ class VoteStats {
 	LocalDateTime lastVoted;
 	HashMap<String, Integer> monthlySiteCounts; // key is voteSite, value is votes this month
 	// TODO: handle player being logging in as month crosses over to next
+	
+	public static void setStreakLimit(long numVotes) {
+		streakLimit = numVotes;
+	}
+	
+	public static void setStreakResetTime(long numDays) {
+		streakResetTime = numDays;
+	}
 	
 	public VoteStats() {
 		needToSave = true;

@@ -1,5 +1,6 @@
 package me.fopzl.vote;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,7 +18,7 @@ import me.fopzl.vote.commands.VotePartyCommand;
 public class Vote extends JavaPlugin {
 	private VoteRewards rewards;
 	private VoteParty voteParty;
-	private HashSet<String> validVoteSites = new HashSet<String>();
+	private HashSet<String> validVoteSites;
 	
 	private VoteIO io;
 	
@@ -32,7 +34,7 @@ public class Vote extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(new VoteListener(this), this);
 		
-		loadConfig();
+		loadAllConfigs();
 		
 		Bukkit.getServer().getLogger().info("FoPzlVote Enabled");
 	}
@@ -42,9 +44,34 @@ public class Vote extends JavaPlugin {
 		super.onDisable();
 	}
 	
-	public void loadConfig() {
-		rewards.loadConfig();	
-		voteParty.loadConfig();
+	public void loadAllConfigs() {
+		File mainCfg = new File(getDataFolder(), "config.yml");
+		if(!mainCfg.exists()) {
+			saveResource("config.yml", false);
+		}
+		this.loadConfig(YamlConfiguration.loadConfiguration(mainCfg));
+
+		File rewardsCfg = new File(getDataFolder(), "rewards.yml");
+		if(!rewardsCfg.exists()) {
+			saveResource("rewards.yml", false);
+		}
+		rewards.loadConfig(YamlConfiguration.loadConfiguration(rewardsCfg));	
+		
+		File votepartyCfg = new File(getDataFolder(), "voteparty.yml");
+		if(!votepartyCfg.exists()) {
+			saveResource("voteparty.yml", false);
+		}
+		voteParty.loadConfig(YamlConfiguration.loadConfiguration(votepartyCfg));
+	}
+	
+	public void loadConfig(YamlConfiguration cfg) {
+		validVoteSites = new HashSet<String>();
+		for(String site : cfg.getStringList("websites")) {
+			validVoteSites.add(site);
+		}
+		
+		VoteStats.setStreakLimit(cfg.getInt("streak-vote-limit"));
+		VoteStats.setStreakResetTime(cfg.getInt("streak-reset-leniency"));
 	}
 	
 	public void incVoteParty() {

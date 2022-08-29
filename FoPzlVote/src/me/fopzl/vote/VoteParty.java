@@ -1,9 +1,11 @@
 package me.fopzl.vote;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,7 +24,30 @@ public class VoteParty {
 	}
 	
 	public void loadConfig(YamlConfiguration cfg) {
-		// TODO
+		this.cfg = new VotePartyConfig();
+		this.cfg.pointsToStart = cfg.getInt("general.voteparty");
+		
+		this.cfg.countdownLength = cfg.getInt("general.countdown");
+		this.cfg.countdownCommands = new HashMap<Integer, String>();
+		ConfigurationSection countdownSec = cfg.getConfigurationSection("countdown"); 
+		for(String key : countdownSec.getKeys(false)) {
+			int countNum = Integer.parseInt(key);
+			String cmd = countdownSec.getString(key);
+			this.cfg.countdownCommands.put(countNum, cmd);
+		}
+		
+		this.cfg.partyCommands = cfg.getStringList("general.voteparty-commands");
+		
+		this.cfg.notifyCommand = cfg.getString("notifications.interval.command");
+		this.cfg.notifyInterval = cfg.getInt("notifications.interval.num");
+		
+		this.cfg.specificNotifies = new HashMap<Integer, String>();
+		ConfigurationSection specificSec = cfg.getConfigurationSection("notifications.specific"); 
+		for(String key : specificSec.getKeys(false)) {
+			int pointNum = Integer.parseInt(key);
+			String cmd = specificSec.getString(key);
+			this.cfg.specificNotifies.put(pointNum, cmd);
+		}
 	}
 	
 	public void showStatus(Player p) {
@@ -84,7 +109,7 @@ public class VoteParty {
 
 class VotePartyConfig {
 	public int pointsToStart;
-	public String[] partyCommands; // ordered
+	public List<String> partyCommands; // ordered
 	
 	public int notifyInterval; // in points
 	public String notifyCommand;
