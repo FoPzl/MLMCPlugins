@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -20,7 +21,7 @@ public class VoteParty {
 		points = 0;
 	}
 	
-	public void loadConfig() {
+	public void loadConfig(YamlConfiguration cfg) {
 		// TODO
 	}
 	
@@ -40,7 +41,13 @@ public class VoteParty {
 	private void tick() {
 		if(points % cfg.notifyInterval == 0) {
 			// TODO: placeholders
-			Util.broadcastFormatted(cfg.notifyMessage);
+			Util.broadcastFormatted(cfg.notifyCommand);
+		}
+		
+		for(int i : cfg.specificNotifies.keySet()) {
+			if(points % i == 0) {
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cfg.specificNotifies.get(i));
+			}
 		}
 		
 		if(points <= 0) {
@@ -52,7 +59,7 @@ public class VoteParty {
 		if(points > cfg.pointsToStart) {
 			points = 0;
 			
-			for(Entry<Integer, String> entry : cfg.countdownMessages.entrySet()) {
+			for(Entry<Integer, String> entry : cfg.countdownCommands.entrySet()) {
 				new BukkitRunnable() {
 					@Override
 					public void run() {
@@ -70,7 +77,7 @@ public class VoteParty {
 	
 	private void startParty() {
 		for(String cmd : cfg.partyCommands) {
-			Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
 		}
 	}
 }
@@ -80,8 +87,10 @@ class VotePartyConfig {
 	public String[] partyCommands; // ordered
 	
 	public int notifyInterval; // in points
-	public String notifyMessage;
+	public String notifyCommand;
+	
+	public HashMap<Integer, String> specificNotifies;
 
 	public int countdownLength; // in seconds
-	public HashMap<Integer, String> countdownMessages; // key in seconds
+	public HashMap<Integer, String> countdownCommands; // key in seconds
 }
