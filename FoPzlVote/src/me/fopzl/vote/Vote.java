@@ -12,10 +12,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.vexsoftware.votifier.google.gson.JsonObject;
+import com.vexsoftware.votifier.model.VotifierEvent;
+
 import me.fopzl.vote.commands.MLVoteCommand;
 import me.fopzl.vote.commands.VotePartyCommand;
 
 public class Vote extends JavaPlugin {
+	private VoteListener voteListener;
+	
 	private VoteRewards rewards;
 	private VoteParty voteParty;
 	private HashSet<String> validVoteSites;
@@ -28,11 +33,12 @@ public class Vote extends JavaPlugin {
 		rewards = new VoteRewards();
 		voteParty = new VoteParty(this);
 		io = new VoteIO();
-		
+
+		voteListener = new VoteListener(this);
+		getServer().getPluginManager().registerEvents(voteListener, this);
+
 		this.getCommand("mlvote").setExecutor(new MLVoteCommand(this));
 		this.getCommand("vp").setExecutor(new VotePartyCommand(voteParty));
-		
-		getServer().getPluginManager().registerEvents(new VoteListener(this), this);
 		
 		loadAllConfigs();
 		
@@ -72,6 +78,16 @@ public class Vote extends JavaPlugin {
 		
 		VoteStats.setStreakLimit(cfg.getInt("streak-vote-limit"));
 		VoteStats.setStreakResetTime(cfg.getInt("streak-reset-leniency"));
+	}
+	
+	public void cmdVote(String username, String serviceName) {
+        JsonObject o = new JsonObject();
+        o.addProperty("serviceName", serviceName);
+        o.addProperty("username", username);
+        o.addProperty("address", "xxx");
+        o.addProperty("timestamp", "xxx");
+        
+		voteListener.onVote(new VotifierEvent(new com.vexsoftware.votifier.model.Vote(o)));
 	}
 	
 	public void incVoteParty() {

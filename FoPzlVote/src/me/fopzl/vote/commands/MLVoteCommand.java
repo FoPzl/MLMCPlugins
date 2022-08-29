@@ -1,6 +1,5 @@
 package me.fopzl.vote.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,10 +20,11 @@ public class MLVoteCommand implements CommandExecutor {
 		
 		if(sender.hasPermission("mlvote.admin")) {
 			switch(args[0]) {
+				// mlvote vote [player] [website]
 				case "vote":
 					if(args.length < 3) return false;
 					
-					main.rewardVote(Bukkit.getServer().getPlayer(args[1]), args[2]);
+					main.cmdVote(args[1], args[2]);
 					return true;
 				case "reload":
 					main.loadAllConfigs();
