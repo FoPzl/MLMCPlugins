@@ -66,7 +66,7 @@ public class VoteParty {
 	private void tick() {
 		if(points % cfg.notifyInterval == 0) {
 			// TODO: placeholders
-			Util.broadcastFormatted(cfg.notifyCommand);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cfg.notifyCommand);
 		}
 		
 		for(int i : cfg.specificNotifies.keySet()) {
@@ -88,7 +88,7 @@ public class VoteParty {
 				new BukkitRunnable() {
 					@Override
 					public void run() {
-						BungeeAPI.broadcast(entry.getValue());
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), entry.getValue());
 				}}.runTaskLater(main, 20 * entry.getKey());
 			}
 			
