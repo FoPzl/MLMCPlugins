@@ -25,6 +25,7 @@ public class Vote extends JavaPlugin {
 	private VoteParty voteParty;
 	private HashSet<String> validVoteSites;
 	
+	private VoteInfo info;
 	private VoteIO io;
 	
 	public void onEnable() {
@@ -32,7 +33,9 @@ public class Vote extends JavaPlugin {
 		
 		rewards = new VoteRewards();
 		voteParty = new VoteParty(this);
-		io = new VoteIO();
+		
+		info = new VoteInfo();
+		io = new VoteIO(this);
 
 		voteListener = new VoteListener(this);
 		getServer().getPluginManager().registerEvents(voteListener, this);
@@ -80,6 +83,10 @@ public class Vote extends JavaPlugin {
 		VoteStats.setStreakResetTime(cfg.getInt("streak-reset-leniency"));
 	}
 	
+	public VoteInfo getVoteInfo() {
+		return info;
+	}
+	
 	public void cmdVote(String username, String serviceName) {
         JsonObject o = new JsonObject();
         o.addProperty("serviceName", serviceName);
@@ -111,7 +118,7 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void rewardVote(Player p, String voteSite) {
-		VoteStats stats = io.getStats(p);
+		VoteStats stats = info.getStats(p);
 		stats.addVote(voteSite);
 		rewards.rewardVote(p, stats.voteStreak);
 	}

@@ -13,20 +13,41 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.IOComponent;
+import me.neoblade298.neocore.scheduler.ScheduleInterval;
+import me.neoblade298.neocore.scheduler.SchedulerAPI;
 
 public class VoteIO implements IOComponent {
-	private HashMap<UUID, VoteStats> playerStats;
+	Vote main;
 	
-	@Override
-	public String getKey() {
-		return "VoteManager";
+	public VoteIO(Vote main) {
+		this.main = main;
+		
+		loadQueue();
+		
+		SchedulerAPI.scheduleRepeating("FoPzlVote-Autosave-Queue", ScheduleInterval.FIFTEEN_MINUTES, new Runnable() {
+			public void run() {
+				new BukkitRunnable() {
+					public void run() {
+						saveQueue();
+					}
+				}.runTaskAsynchronously(main);
+			}
+		});
 	}
 	
 	@Override
-	public void cleanup(Statement insert, Statement delete) {}
+	public String getKey() {
+		return "FoPzlVoteIO";
+	}
+	
+	@Override
+	public void cleanup(Statement insert, Statement delete) {
+		saveQueue();
+	}
 
 	@Override
 	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {}
@@ -34,25 +55,25 @@ public class VoteIO implements IOComponent {
 	@Override
 	public void savePlayer(Player p, Statement insert, Statement delete) {
 		autosavePlayer(p, insert, delete);
-		playerStats.remove(p.getUniqueId());
+		main.getVoteInfo().playerStats.remove(p.getUniqueId());
 	}
 	
 	@Override
 	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
-		if(!playerStats.containsKey(uuid)) return;
+		if(!main.getVoteInfo().playerStats.containsKey(uuid)) return;
 		
-		VoteStats vs = playerStats.get(uuid);
+		VoteStats vs = main.getVoteInfo().playerStats.get(uuid);
 		if(!vs.needToSave) return;
 		vs.needToSave = false;
 		
 		try {
-			insert.addBatch("replace into fopzlvote_playerStats values ('" + uuid + "', " + vs.totalVotes + ", " + vs.voteStreak + ", '" + vs.lastVoted.toString() + "')");
+			insert.addBatch("replace into fopzlvote_playerStats values ('" + uuid + "', " + vs.totalVotes + ", " + vs.voteStreak + ", '" + vs.lastVoted.toString() + "');");
 			
 			int year = LocalDateTime.now().getYear();
 			int month = LocalDateTime.now().getMonthValue();
 			for(Entry<String, Integer> entry : vs.monthlySiteCounts.entrySet()) {
-				insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ")");
+				insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
 			}
 		} catch (SQLException e) {
 			Bukkit.getLogger().warning("Failed to save vote data for player " + p.getName());
@@ -74,28 +95,71 @@ public class VoteIO implements IOComponent {
 				vs.monthlySiteCounts.put(rs.getString("voteSite"), rs.getInt("numVotes"));
 			}
 			
-			playerStats.put(uuid, vs);
+			main.getVoteInfo().playerStats.put(uuid, vs);
 		} catch (SQLException e) {
 			Bukkit.getLogger().warning("Failed to load vote data for player " + p.getName());
 			e.printStackTrace();
 		}
 	}
 	
-	public VoteStats getStats(Player p) {
-		UUID uuid = p.getUniqueId();
-		if(playerStats.containsKey(uuid)) {
-			return playerStats.get(uuid);
-		} else {
-			VoteStats vs = new VoteStats();
-			playerStats.put(uuid, vs);
-			return vs;
+	public void saveQueue() {
+		Statement stmt = NeoCore.getStatement();
+		
+		try {
+			stmt.execute("delete from fopzlvote_voteQueue");
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to clear queue data");
+			e.printStackTrace();
 		}
+		
+		for(Entry<UUID, HashMap<String, Integer>> entry : main.getVoteInfo().queuedRewards.entrySet()) {
+			UUID uuid = entry.getKey();
+			try {
+				for(Entry<String, Integer> subEntry : entry.getValue().entrySet()) {
+					stmt.addBatch("replace into fopzlvote_voteQueue values ('" + uuid + "', '" + subEntry.getKey() + "', " + subEntry.getValue() + ");");
+				}
+			} catch (SQLException e) {
+				Bukkit.getLogger().warning("Failed to save queue data for uuid " + uuid);
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			stmt.executeBatch();
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to save queue data batch");
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadQueue() {
+		HashMap<UUID, HashMap<String, Integer>> newQueue = new HashMap<UUID, HashMap<String, Integer>>();
+		Statement stmt = NeoCore.getStatement();
+		
+		try {
+			ResultSet rs = stmt.executeQuery("select * from fopzlvote_voteQueue");
+			while(rs.next()) {
+				UUID uuid = UUID.fromString(rs.getString("uuid"));
+				String voteSite = rs.getString("voteSite");
+				int numVotes = rs.getInt("numVotes");
+				
+				HashMap<String, Integer> pq = newQueue.getOrDefault(uuid, new HashMap<String, Integer>());
+				pq.put(voteSite, numVotes);
+				newQueue.putIfAbsent(uuid, pq);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to load queue data");
+			e.printStackTrace();
+		}
+		
+		main.getVoteInfo().queuedRewards = newQueue;
 	}
 	
 	// month is 1-indexed
 	// returned list items are indexed as: [0] - uuid (as UUID), [1] = # of votes (as int)
 	public List<Object[]> getTopVoters(int year, int month, int numVoters) {
-		// TODO: async this
 		List<Object[]> topVoters = new ArrayList<Object[]>();
 		
 		try {
@@ -116,59 +180,5 @@ public class VoteIO implements IOComponent {
 		}
 		
 		return topVoters;
-	}
-}
-
-class VoteStats {
-	private static long streakLimit; // votes
-	private static long streakResetTime; // days
-	
-	boolean needToSave;
-	
-	int totalVotes; // ever
-	int voteStreak; // current
-	LocalDateTime lastVoted;
-	HashMap<String, Integer> monthlySiteCounts; // key is voteSite, value is votes this month
-	// TODO: handle player being logging in as month crosses over to next
-	
-	public static void setStreakLimit(long numVotes) {
-		streakLimit = numVotes;
-	}
-	
-	public static void setStreakResetTime(long numDays) {
-		streakResetTime = numDays;
-	}
-	
-	public VoteStats() {
-		needToSave = true;
-		
-		totalVotes = 0;
-		voteStreak = 0;
-		lastVoted = LocalDateTime.MIN;
-		monthlySiteCounts = new HashMap<String, Integer>();
-	}
-	
-	public VoteStats(int totalVotes, int voteStreak, LocalDateTime lastVoted) {
-		needToSave = false;
-		
-		this.totalVotes = totalVotes;
-		this.voteStreak = voteStreak;
-		this.lastVoted = lastVoted;
-		monthlySiteCounts = new HashMap<String, Integer>();
-	}
-	
-	public void addVote(String site) {
-		totalVotes++;
-		
-		if(voteStreak >= streakLimit || LocalDateTime.now().isAfter(lastVoted.plusDays(streakResetTime))) {
-			voteStreak = 0;
-		}		
-		voteStreak++;
-		
-		lastVoted = LocalDateTime.now();
-		
-		monthlySiteCounts.put(site, monthlySiteCounts.getOrDefault(site, 0) + 1);
-		
-		needToSave = true;
 	}
 }

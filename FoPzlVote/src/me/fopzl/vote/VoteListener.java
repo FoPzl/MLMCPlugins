@@ -2,9 +2,8 @@ package me.fopzl.vote;
 
 import com.vexsoftware.votifier.model.VotifierEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,7 +16,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class VoteListener implements Listener {
 	private Vote main;
-	private HashMap<UUID, List<String>> queuedRewards = new HashMap<UUID, List<String>>();
 	
 	public VoteListener(Vote main) {
 		this.main = main;
@@ -27,18 +25,25 @@ public class VoteListener implements Listener {
 	@EventHandler
 	public void onVote(final VotifierEvent e) {
 		com.vexsoftware.votifier.model.Vote vote = e.getVote();
-		if(main.isValidSite(vote.getServiceName())) {
+		String site = vote.getServiceName();
+		if(main.isValidSite(site)) {
 			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(vote.getUsername()); // TODO: verify case sensitivity
-			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + vote.getServiceName() + "&7!");
+			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + site + "&7!");
 			
 			if(p.isOnline()) {
-				main.rewardVote((Player)p, vote.getServiceName());
+				main.rewardVote((Player)p, site);
 			} else {
 				UUID uuid = p.getUniqueId();
-				if(!queuedRewards.containsKey(uuid)) {
-					queuedRewards.put(uuid, new ArrayList<String>());
+				HashMap<String, Integer> pq = null;
+				HashMap<UUID, HashMap<String, Integer>> qr = main.getVoteInfo().queuedRewards;
+				
+				if(!qr.containsKey(uuid)) {
+					pq = new HashMap<String, Integer>();
+					qr.put(uuid, pq);
+				} else {
+					pq = qr.get(uuid);
 				}
-				queuedRewards.get(uuid).add(vote.getServiceName());
+				pq.put(site, pq.getOrDefault(site, 0) + 1);
 			}
 			
 			main.incVoteParty();
@@ -51,10 +56,13 @@ public class VoteListener implements Listener {
 			@Override
 			public void run() {
 				UUID uuid = e.getPlayer().getUniqueId();
-				if(queuedRewards.containsKey(uuid)) {
-					List<String> sites = queuedRewards.remove(uuid);
-					for(String s : sites) {
-						main.rewardVote(e.getPlayer(), s);
+				HashMap<UUID, HashMap<String, Integer>> qr = main.getVoteInfo().queuedRewards;
+				if(qr.containsKey(uuid)) {
+					HashMap<String, Integer> sites = qr.remove(uuid);
+					for(Entry<String, Integer> entry : sites.entrySet()) {
+						for(int i = 0; i < entry.getValue(); i++) {
+							main.rewardVote(e.getPlayer(), entry.getKey());
+						}
 					}
 				}
 			}
