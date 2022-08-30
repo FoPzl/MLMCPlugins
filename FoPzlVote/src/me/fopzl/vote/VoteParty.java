@@ -2,6 +2,7 @@ package me.fopzl.vote;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -9,8 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import me.neoblade298.neocore.bungee.BungeeAPI;
 
 public class VoteParty {
 	private Vote main;
@@ -114,8 +113,8 @@ class VotePartyConfig {
 	public int notifyInterval; // in points
 	public String notifyCommand;
 	
-	public HashMap<Integer, String> specificNotifies;
+	public Map<Integer, String> specificNotifies;
 
 	public int countdownLength; // in seconds
-	public HashMap<Integer, String> countdownCommands; // key in seconds
+	public Map<Integer, String> countdownCommands; // key in seconds
 }

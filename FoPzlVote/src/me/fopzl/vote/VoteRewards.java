@@ -3,7 +3,10 @@ package me.fopzl.vote;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,12 +15,12 @@ import org.bukkit.entity.Player;
 
 public class VoteRewards {
 	private Reward dailyReward;
-	private HashMap<Integer, Reward> streakRewards;
+	private Map<Integer, Reward> streakRewards;
 	
 	public void loadConfig(YamlConfiguration cfg) {
-		HashMap<String, Reward> rewards = new HashMap<String, Reward>();
+		Map<String, Reward> rewards = new HashMap<String, Reward>();
 		
-		HashMap<String, RawReward> rawRewards = new HashMap<String, RawReward>();
+		Map<String, RawReward> rawRewards = new HashMap<String, RawReward>();
 		ConfigurationSection sec = cfg.getConfigurationSection("rewards");
 		for(String rName : sec.getKeys(false)) {
 			rawRewards.put(rName, new RawReward(sec.getString(rName)));
@@ -109,7 +112,7 @@ class RawReward implements Reward {
 
 // all rewards in group given
 class RewardGroup implements Reward {
-	private HashSet<Reward> rewards = new HashSet<Reward>();
+	private Set<Reward> rewards = new HashSet<Reward>();
 	
 	public void addReward(Reward r) {
 		rewards.add(r);
@@ -126,7 +129,7 @@ class RewardGroup implements Reward {
 class RewardPool implements Reward {
 	private static Random rng = new Random();
 	
-	private ArrayList<Object[]> lootTable = new ArrayList<Object[]>();
+	private List<Object[]> lootTable = new ArrayList<Object[]>();
 	private int sumWeights = 0;
 	
 	public void addReward(Reward reward, int weight) {
@@ -148,7 +151,7 @@ class RewardPool implements Reward {
 
 //first authorized reward is given
 class RestrictedReward implements Reward {
-	private ArrayList<Object[]> rewards = new ArrayList<Object[]>(); // ordered by decreasing authority
+	private List<Object[]> rewards = new ArrayList<Object[]>(); // ordered by decreasing authority
 	
 	public void addReward(Reward reward, String permission) {
 		rewards.add(new Object[]{ reward, permission }); // thank you java

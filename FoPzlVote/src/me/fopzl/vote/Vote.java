@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ public class Vote extends JavaPlugin {
 	
 	private VoteRewards rewards;
 	private VoteParty voteParty;
-	private HashSet<String> validVoteSites;
+	private Set<String> validVoteSites;
 	
 	private VoteInfo info;
 	private VoteIO io;
@@ -49,6 +50,8 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void onDisable() {
+		io.saveQueue();
+		
 		Bukkit.getServer().getLogger().info("FoPzlVote Disabled");
 		super.onDisable();
 	}

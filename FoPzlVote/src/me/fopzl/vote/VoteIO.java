@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -45,9 +46,7 @@ public class VoteIO implements IOComponent {
 	}
 	
 	@Override
-	public void cleanup(Statement insert, Statement delete) {
-		saveQueue();
-	}
+	public void cleanup(Statement insert, Statement delete) {}
 
 	@Override
 	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {}
@@ -80,14 +79,14 @@ public class VoteIO implements IOComponent {
 			VoteMonth prev = new VoteMonth(year, month);
 			
 			// only save this month and the last
-			HashMap<String, Integer> currCounts = vs.monthlySiteCounts.get(now);
+			Map<String, Integer> currCounts = vs.monthlySiteCounts.get(now);
 			if(currCounts != null) {
 				for(Entry<String, Integer> entry : currCounts.entrySet()) {
 					insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
 				}
 			}
 			
-			HashMap<String, Integer> prevCounts = vs.monthlySiteCounts.get(prev);
+			Map<String, Integer> prevCounts = vs.monthlySiteCounts.get(prev);
 			if(prevCounts != null) {
 				for(Entry<String, Integer> entry : prevCounts.entrySet()) {
 					insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
@@ -114,7 +113,7 @@ public class VoteIO implements IOComponent {
 				String voteSite = rs.getString("voteSite");
 				int numVotes = rs.getInt("numVotes");
 				
-				HashMap<String, Integer> monthCounts = vs.monthlySiteCounts.getOrDefault(voteMonth, new HashMap<String, Integer>());
+				Map<String, Integer> monthCounts = vs.monthlySiteCounts.getOrDefault(voteMonth, new HashMap<String, Integer>());
 				monthCounts.put(voteSite, numVotes);
 				vs.monthlySiteCounts.putIfAbsent(voteMonth, monthCounts);
 			}
@@ -136,7 +135,7 @@ public class VoteIO implements IOComponent {
 			e.printStackTrace();
 		}
 		
-		for(Entry<UUID, HashMap<String, Integer>> entry : main.getVoteInfo().queuedRewards.entrySet()) {
+		for(Entry<UUID, Map<String, Integer>> entry : main.getVoteInfo().queuedRewards.entrySet()) {
 			UUID uuid = entry.getKey();
 			try {
 				for(Entry<String, Integer> subEntry : entry.getValue().entrySet()) {
@@ -158,7 +157,7 @@ public class VoteIO implements IOComponent {
 	}
 	
 	public void loadQueue() {
-		HashMap<UUID, HashMap<String, Integer>> newQueue = new HashMap<UUID, HashMap<String, Integer>>();
+		Map<UUID, Map<String, Integer>> newQueue = new HashMap<UUID, Map<String, Integer>>();
 		Statement stmt = NeoCore.getStatement();
 		
 		try {
@@ -168,7 +167,7 @@ public class VoteIO implements IOComponent {
 				String voteSite = rs.getString("voteSite");
 				int numVotes = rs.getInt("numVotes");
 				
-				HashMap<String, Integer> pq = newQueue.getOrDefault(uuid, new HashMap<String, Integer>());
+				Map<String, Integer> pq = newQueue.getOrDefault(uuid, new HashMap<String, Integer>());
 				pq.put(voteSite, numVotes);
 				newQueue.putIfAbsent(uuid, pq);
 			}

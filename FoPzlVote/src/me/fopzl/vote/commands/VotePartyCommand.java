@@ -33,6 +33,7 @@ public class VotePartyCommand implements CommandExecutor {
 		
 		if (args[0].equalsIgnoreCase("status")) {
 			voteParty.showStatus((Player)sender);
+			return true;
 		}
 		
 		return false;

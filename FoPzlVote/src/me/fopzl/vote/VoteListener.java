@@ -3,6 +3,7 @@ package me.fopzl.vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -34,8 +35,8 @@ public class VoteListener implements Listener {
 				main.rewardVote((Player)p, site);
 			} else {
 				UUID uuid = p.getUniqueId();
-				HashMap<String, Integer> pq = null;
-				HashMap<UUID, HashMap<String, Integer>> qr = main.getVoteInfo().queuedRewards;
+				Map<String, Integer> pq = null;
+				Map<UUID, Map<String, Integer>> qr = main.getVoteInfo().queuedRewards;
 				
 				if(!qr.containsKey(uuid)) {
 					pq = new HashMap<String, Integer>();
@@ -56,9 +57,9 @@ public class VoteListener implements Listener {
 			@Override
 			public void run() {
 				UUID uuid = e.getPlayer().getUniqueId();
-				HashMap<UUID, HashMap<String, Integer>> qr = main.getVoteInfo().queuedRewards;
+				Map<UUID, Map<String, Integer>> qr = main.getVoteInfo().queuedRewards;
 				if(qr.containsKey(uuid)) {
-					HashMap<String, Integer> sites = qr.remove(uuid);
+					Map<String, Integer> sites = qr.remove(uuid);
 					for(Entry<String, Integer> entry : sites.entrySet()) {
 						for(int i = 0; i < entry.getValue(); i++) {
 							main.rewardVote(e.getPlayer(), entry.getKey());
