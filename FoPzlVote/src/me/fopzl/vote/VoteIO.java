@@ -72,8 +72,26 @@ public class VoteIO implements IOComponent {
 			
 			int year = LocalDateTime.now().getYear();
 			int month = LocalDateTime.now().getMonthValue();
-			for(Entry<String, Integer> entry : vs.monthlySiteCounts.entrySet()) {
-				insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
+			VoteMonth now = new VoteMonth(year, month);
+			if(month == 1) {
+				year--;
+				month = 12;
+			}
+			VoteMonth prev = new VoteMonth(year, month);
+			
+			// only save this month and the last
+			HashMap<String, Integer> currCounts = vs.monthlySiteCounts.get(now);
+			if(currCounts != null) {
+				for(Entry<String, Integer> entry : currCounts.entrySet()) {
+					insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
+				}
+			}
+			
+			HashMap<String, Integer> prevCounts = vs.monthlySiteCounts.get(prev);
+			if(prevCounts != null) {
+				for(Entry<String, Integer> entry : prevCounts.entrySet()) {
+					insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
+				}
 			}
 		} catch (SQLException e) {
 			Bukkit.getLogger().warning("Failed to save vote data for player " + p.getName());
@@ -90,9 +108,15 @@ public class VoteIO implements IOComponent {
 			VoteStats vs = new VoteStats(rs.getInt("totalVotes"), rs.getInt("voteStreak"), rs.getObject("whenLastVoted", LocalDateTime.class));
 			//rs.close(); // TODO: verify if this is needed
 			
-			rs = stmt.executeQuery("select * from fopzlvote_playerHist where uuid = '" + uuid + "' and year = " + LocalDateTime.now().getYear() + " and month = " + LocalDateTime.now().getMonthValue() + ";");
+			rs = stmt.executeQuery("select * from fopzlvote_playerHist where uuid = '" + uuid + "';");
 			while(rs.next()) {
-				vs.monthlySiteCounts.put(rs.getString("voteSite"), rs.getInt("numVotes"));
+				VoteMonth voteMonth = new VoteMonth(rs.getInt("year"), rs.getInt("month"));
+				String voteSite = rs.getString("voteSite");
+				int numVotes = rs.getInt("numVotes");
+				
+				HashMap<String, Integer> monthCounts = vs.monthlySiteCounts.getOrDefault(voteMonth, new HashMap<String, Integer>());
+				monthCounts.put(voteSite, numVotes);
+				vs.monthlySiteCounts.putIfAbsent(voteMonth, monthCounts);
 			}
 			
 			main.getVoteInfo().playerStats.put(uuid, vs);

@@ -31,8 +31,7 @@ class VoteStats {
 	int totalVotes; // ever
 	int voteStreak; // current
 	LocalDateTime lastVoted;
-	HashMap<String, Integer> monthlySiteCounts; // key is voteSite, value is votes this month
-	// TODO: handle player being logging in as month crosses over to next
+	HashMap<VoteMonth, HashMap<String, Integer>> monthlySiteCounts; // value is <voteSite, votes this month>
 	
 	public static void setStreakLimit(long numVotes) {
 		streakLimit = numVotes;
@@ -48,7 +47,7 @@ class VoteStats {
 		totalVotes = 0;
 		voteStreak = 0;
 		lastVoted = LocalDateTime.MIN;
-		monthlySiteCounts = new HashMap<String, Integer>();
+		monthlySiteCounts = new HashMap<VoteMonth, HashMap<String, Integer>>();
 	}
 	
 	public VoteStats(int totalVotes, int voteStreak, LocalDateTime lastVoted) {
@@ -57,7 +56,7 @@ class VoteStats {
 		this.totalVotes = totalVotes;
 		this.voteStreak = voteStreak;
 		this.lastVoted = lastVoted;
-		monthlySiteCounts = new HashMap<String, Integer>();
+		monthlySiteCounts = new HashMap<VoteMonth, HashMap<String, Integer>>();
 	}
 	
 	public void addVote(String site) {
@@ -70,8 +69,35 @@ class VoteStats {
 		
 		lastVoted = LocalDateTime.now();
 		
-		monthlySiteCounts.put(site, monthlySiteCounts.getOrDefault(site, 0) + 1);
+		VoteMonth now = new VoteMonth(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
+		HashMap<String, Integer> currCounts = monthlySiteCounts.getOrDefault(now, new HashMap<String, Integer>());
+		currCounts.put(site, currCounts.getOrDefault(site, 0) + 1);
+		monthlySiteCounts.putIfAbsent(now, currCounts);
 		
 		needToSave = true;
+	}
+}
+
+class VoteMonth {
+	int yearNum;
+	int monthNum;
+	
+	public VoteMonth(int y, int m) {
+		yearNum = y;
+		monthNum = m;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) return true;
+		if(obj == null || obj.getClass() != this.getClass()) return false;
+		
+		VoteMonth other = (VoteMonth)obj;
+		return other.yearNum == this.yearNum && other.monthNum == this.monthNum;
+	}
+	
+	@Override
+	public int hashCode() {
+		return 31 * monthNum + yearNum;
 	}
 }
