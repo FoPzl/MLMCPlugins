@@ -7,10 +7,13 @@ api-version: 1.19
 commands:
    mlvote:
       usage: "§cUsage: §7/<command> leaderboard"
+      permission: mlvote.general
    voteparty:
       aliases: [vp]
       usage: "§cUsage: §7/<command> status"
+      permission: mlvote.general
 permissions:
-   mlvote.*:
+   mlvote.general:
+      default: false
    mlvote.admin:
       default: op
