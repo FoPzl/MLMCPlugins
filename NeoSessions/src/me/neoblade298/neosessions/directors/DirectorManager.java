@@ -21,7 +21,9 @@ public class DirectorManager implements Listener {
 	private static HashMap<String, HashMap<UUID, Long>> cooldowns = new HashMap<String, HashMap<UUID, Long>>();
 	private static List<String> sessionHosts;
 	private static HashMap<String, SessionInfo> info;
-	private static boolean disableSessions = false;
+	private static boolean sessionsDisabled = false;
+	public static final String NO_INSTANCE_AVAILABLE = "No Instances Available";
+	public static final String SQL_FAILED = "SQL Failed";
 	
 	public DirectorManager(ConfigurationSection cfg) {
 		sessionHosts = cfg.getStringList("session-hosts");
@@ -52,7 +54,7 @@ public class DirectorManager implements Listener {
 				return rs.getString(1);
 			}
 			else {
-				return null;
+				return "All Instances Full";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -63,5 +65,13 @@ public class DirectorManager implements Listener {
 	
 	public static void sendToSessionHost(Player p, String sessionHost, String sessionKey, boolean bypassRestrictions) {
 		
+	}
+	
+	public static boolean sessionsDisabled() {
+		return sessionsDisabled;
+	}
+	
+	public static HashMap<String, HashMap<UUID, Long>> getCooldowns() {
+		return cooldowns;
 	}
 }
