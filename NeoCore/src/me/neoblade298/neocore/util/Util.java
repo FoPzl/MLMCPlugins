@@ -17,6 +17,18 @@ import net.md_5.bungee.api.ChatColor;
 public class Util {
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
 	private final static int CENTER_PX = 154;
+	
+	public static void msgGroup(Collection<CommandSender> s, String msg, boolean hasPrefix) {
+		for (CommandSender sender : s) {
+			msg(sender, msg, hasPrefix);
+		}
+	}
+	
+	public static void msgGroup(Collection<CommandSender> s, String msg) {
+		for (CommandSender sender : s) {
+			msg(sender, msg);
+		}
+	}
 
 	public static void msg(CommandSender s, String msg) {
 		msg(s, msg, true);
