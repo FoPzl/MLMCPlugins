@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders.placeholders;
+package me.neoblade298.neoplaceholders.placeholders.other;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders.placeholders;
+package me.neoblade298.neoplaceholders.placeholders.core;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,17 +9,17 @@ import com.sucy.skill.SkillAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.neoblade298.neocore.NeoCore;
 
-public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
+public class QuestTagPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoCore") != null;
+        return Bukkit.getPluginManager().getPlugin("NeoQuests") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoCore");
+    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoQuests");
     	if (plugin == null) return false;
     	return super.register();
     }
@@ -36,12 +36,12 @@ public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "playertags";
+		return "questtags";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoCore";
+        return "NeoQuests";
     }
     
 	@Override
@@ -52,12 +52,12 @@ public class NeoCoreTagPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
-		if (!SkillAPI.isLoaded(p)) return "Loading...";
+		if (SkillAPI.getPlayerAccountData(p) == null) return "Loading...";
 		
+		int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 		String args[] = identifier.split("_");
-		String key = args[0];
-		String subkey = args[1];
+		String subkey = args[0];
 		
-		return "" + NeoCore.getPlayerTags(key).exists(subkey, p.getUniqueId());
+		return "" + NeoCore.getPlayerTags("questaccount_" + acct).exists(subkey, p.getUniqueId());
 	}
 }

@@ -1,26 +1,21 @@
-package me.neoblade298.neoplaceholders.placeholders;
+package me.neoblade298.neoplaceholders.placeholders.mythicmobs;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import com.sucy.skill.SkillAPI;
-
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neocore.NeoCore;
 
-public class QuestTagPlaceholders extends PlaceholderExpansion {
+public class MythicmobsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoQuests") != null;
+        return Bukkit.getPluginManager().getPlugin("MythicMobs") != null;
     }
     
     @Override
     public boolean register(){
     	if (!canRegister()) return false;
-    	Plugin plugin = Bukkit.getPluginManager().getPlugin("NeoQuests");
-    	if (plugin == null) return false;
     	return super.register();
     }
 
@@ -36,28 +31,32 @@ public class QuestTagPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "questtags";
+		return "neomythicmobs";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoQuests";
+        return "MythicMobs";
     }
     
 	@Override
 	public String getVersion() {
-		return "1.0.0";
+		return "1.0.1";
 	}
 	
 	@Override
 	public String onPlaceholderRequest(Player p, String identifier) {
 		if (p == null) return "Loading...";
-		if (SkillAPI.getPlayerAccountData(p) == null) return "Loading...";
 		
-		int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 		String args[] = identifier.split("_");
-		String subkey = args[0];
-		
-		return "" + NeoCore.getPlayerTags("questaccount_" + acct).exists(subkey, p.getUniqueId());
+		if (args[0].equalsIgnoreCase("name")) {
+			try {
+				return MythicBukkit.inst().getMobManager().getMythicMob(args[1]).get().getDisplayName().get();
+			}
+			catch (Exception e) {
+				return "§cInvalid name!";
+			}
+		}
+    	return "§cInvalid placeholder!";
 	}
 }

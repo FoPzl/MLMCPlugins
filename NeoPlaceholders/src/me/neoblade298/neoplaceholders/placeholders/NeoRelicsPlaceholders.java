@@ -1,20 +1,17 @@
 package me.neoblade298.neoplaceholders.placeholders;
 
-import java.util.HashMap;
-
+import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.neoblade298.neoresearch.Research;
+import me.neoblade298.neorelics.NeoRelics;
 
-public class ResearchNamePlaceholder extends PlaceholderExpansion {
+public class NeoRelicsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("NeoResearch") != null;
+        return Bukkit.getPluginManager().getPlugin("MythicMobs") != null;
     }
     
     @Override
@@ -35,12 +32,12 @@ public class ResearchNamePlaceholder extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchname";
+		return "neorelics";
 	}
 
     @Override
     public String getRequiredPlugin(){
-        return "NeoResearch";
+        return "NeoRelics";
     }
     
 	@Override
@@ -53,18 +50,14 @@ public class ResearchNamePlaceholder extends PlaceholderExpansion {
 		if (p == null) return "Loading...";
 		
 		String args[] = identifier.split("_");
-		
-		if (args.length != 1) return "Invalid placeholder";
-		String mob = args[0];
-		MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-		if (mm == null) {
-			return "Invalid placeholder";
+		if (args[0].equalsIgnoreCase("lore")) {
+			ArrayList<String> lore = NeoRelics.getRelics().get(args[1]).getLore();
+			String line = lore.get(0);
+			for (int i = 1; i < lore.size(); i++) {
+				line += "\n" + lore.get(i);
+			}
+			return line;
 		}
-		String name = mm.getDisplayName().get();
-		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
-		if (mobKills.containsKey(mob)) {
-			return name;
-		}
-    	return "§c???";
+    	return "§cInvalid placeholder!";
 	}
 }

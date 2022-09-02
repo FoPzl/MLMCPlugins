@@ -4,18 +4,36 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neoplaceholders.placeholders.*;
+import me.neoblade298.neoplaceholders.placeholders.core.NeoCoreFieldPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.core.NeoCoreTagPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.core.QuestTagPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.mythicmobs.MinibossPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.mythicmobs.MinibossShortPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.mythicmobs.MythicmobsPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.other.ChatColorPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.other.EtcPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.other.LordboardPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.other.SkillAPIPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.other.VaultPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.research.ResearchKillsBossPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.research.ResearchKillsPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.research.ResearchNameBossPlaceholder;
+import me.neoblade298.neoplaceholders.placeholders.research.ResearchNamePlaceholder;
+import me.neoblade298.neoplaceholders.placeholders.research.ResearchPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.research.ResearchPointsBossPlaceholders;
+import me.neoblade298.neoplaceholders.placeholders.research.ResearchPointsPlaceholders;
 
-public class NeoPlaceholders extends JavaPlugin implements org.bukkit.event.Listener {
+public class NeoPlaceholders extends JavaPlugin {
 
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoPlaceholders Enabled");
-		getServer().getPluginManager().registerEvents(this, this);
 		
 		new MythicmobsPlaceholders().register();
 		new SkillAPIPlaceholders().register();
 		new BossMultipliersPlaceholders().register();
 		new NeoCoreFieldPlaceholders().register();
 		new NeoCoreTagPlaceholders().register();
+		new NeoRelicsPlaceholders().register();
 		new VaultPlaceholders(this).register();
 		new EtcPlaceholders(this).registerPlaceholders();
 		new NeoProfessionsPlaceholders().register();

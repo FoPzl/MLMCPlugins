@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders.placeholders;
+package me.neoblade298.neoplaceholders.placeholders.research;
 
 import java.util.HashMap;
 
@@ -10,7 +10,7 @@ import me.neoblade298.neocore.info.BossInfo;
 import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchNameBossPlaceholder extends PlaceholderExpansion {
+public class ResearchPointsBossPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
@@ -35,7 +35,7 @@ public class ResearchNameBossPlaceholder extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchnameboss";
+		return "researchpointsboss";
 	}
 
     @Override
@@ -59,9 +59,10 @@ public class ResearchNameBossPlaceholder extends PlaceholderExpansion {
 		BossInfo bi = InfoAPI.getBossInfo(boss);
 		if (bi == null) return "Invalid boss";
 		String display = bi.getDisplayWithLevel(false);
-		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
-		if (mobKills.containsKey(boss)) {
-			return display;
+		HashMap<String, Integer> researchPoints = Research.getPlayerStats(p.getUniqueId()).getResearchPoints();
+		if (researchPoints.containsKey(boss)) {
+			int points = researchPoints.get(boss);
+			return display + "§7: §e" + points;
 		}
     	return "§c???";
 	}

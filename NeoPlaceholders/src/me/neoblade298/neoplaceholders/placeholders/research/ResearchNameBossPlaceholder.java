@@ -1,16 +1,16 @@
-package me.neoblade298.neoplaceholders.placeholders;
+package me.neoblade298.neoplaceholders.placeholders.research;
 
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.bukkit.MythicBukkit;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.neoblade298.neocore.info.BossInfo;
+import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neoresearch.Research;
 
-public class ResearchKillsPlaceholders extends PlaceholderExpansion {
+public class ResearchNameBossPlaceholder extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
@@ -35,7 +35,7 @@ public class ResearchKillsPlaceholders extends PlaceholderExpansion {
 
 	@Override
 	public String getIdentifier() {
-		return "researchkills";
+		return "researchnameboss";
 	}
 
     @Override
@@ -54,17 +54,14 @@ public class ResearchKillsPlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		
-		if (args.length != 1) return "Invalid placeholder";
-		String mob = args[0];
-		MythicMob mm = MythicBukkit.inst().getMobManager().getMythicMob(mob).get();
-		if (mm == null) {
-			return "Invalid placeholder";
-		}
-		String name = mm.getDisplayName().get();
+		if (args.length > 1) return "Invalid placeholder";
+		String boss = args[0];
+		BossInfo bi = InfoAPI.getBossInfo(boss);
+		if (bi == null) return "Invalid boss";
+		String display = bi.getDisplayWithLevel(false);
 		HashMap<String, Integer> mobKills = Research.getPlayerStats(p.getUniqueId()).getMobKills();
-		if (mobKills.containsKey(mob)) {
-			int kills = mobKills.get(mob);
-			return name + "§7: §e" + kills;
+		if (mobKills.containsKey(boss)) {
+			return display;
 		}
     	return "§c???";
 	}

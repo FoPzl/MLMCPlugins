@@ -1,4 +1,4 @@
-package me.neoblade298.neoplaceholders.placeholders;
+package me.neoblade298.neoplaceholders.placeholders.research;
 
 import java.util.HashMap;
 import java.util.Optional;
