@@ -2,6 +2,7 @@ name: NeoBase
 main: me.neoblade298.neosessions.NeoSessions
 author: [Neoblade298]
 depend: [NeoCore, MythicMobs]
+softdepend: [Multiverse-Core]]
 version: 1.0
 api-version: 1.16
 commands:

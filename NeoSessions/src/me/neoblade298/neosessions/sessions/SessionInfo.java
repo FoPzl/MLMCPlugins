@@ -1,7 +1,12 @@
 package me.neoblade298.neosessions.sessions;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,16 +14,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sucy.skill.SkillAPI;
 
+import me.neoblade298.neobossinstances.BossInstances;
+import me.neoblade298.neobossinstances.BossType;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.instancing.InstanceType;
+import me.neoblade298.neocore.player.PlayerDataManager;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neosessions.NeoSessions;
 import me.neoblade298.neosessions.directors.DirectorManager;
@@ -103,10 +113,26 @@ public abstract class SessionInfo {
 			return;
 		}
 		
-		// Actually send them
-		int level = (int) main.settings.getValue(p.getUniqueId(), boss);
+		// Boss multipliers
+		int level = (int) DirectorManager.getPlayerMultipliers().getValue(trigger.getUniqueId(), key);
 		if (level >= 1) {
-			level = Math.max((int) main.settings.getValue(p.getUniqueId(), boss), targets.size());
+			level = Math.max(level, players.size());
+		}
+
+		for (Player p : players) {
+			Bukkit.getServer().getLogger().info("[NeoBossInstances] " + p.getName() + " sent to session " + key + " at instance " + instance + " of multiplier " + level + ".");
+			
+			// Give cooldownn
+			int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
+			if (this instanceof BossSessionInfo) {
+				if (PlayerDataManager.getPlayerTags("questaccount_" + acct).exists("Killed" + key, uuid) &&
+						level >= 0) {
+					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+				}
+			}
+			else {
+				main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+			}
 		}
 	}
 }
