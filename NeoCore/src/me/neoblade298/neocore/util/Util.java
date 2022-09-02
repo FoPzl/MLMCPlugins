@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.SortedMultiset;
 import com.google.common.collect.TreeMultiset;
@@ -18,13 +19,13 @@ public class Util {
 	public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
 	private final static int CENTER_PX = 154;
 	
-	public static void msgGroup(Collection<CommandSender> s, String msg, boolean hasPrefix) {
+	public static void msgGroup(Collection<Player> s, String msg, boolean hasPrefix) {
 		for (CommandSender sender : s) {
 			msg(sender, msg, hasPrefix);
 		}
 	}
 	
-	public static void msgGroup(Collection<CommandSender> s, String msg) {
+	public static void msgGroup(Collection<Player> s, String msg) {
 		for (CommandSender sender : s) {
 			msg(sender, msg);
 		}
