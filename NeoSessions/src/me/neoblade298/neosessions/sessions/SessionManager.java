@@ -1,5 +1,6 @@
 package me.neoblade298.neosessions.sessions;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -34,13 +35,15 @@ import me.neoblade298.neosessions.NeoSessions;
 public class SessionManager implements Listener {
 	private static HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
 	private static HashMap<String, Session> sessions = new HashMap<String, Session>();
-	private static HashMap<String, SessionInfo> info = new HashMap<String, SessionInfo>();
+	private static HashMap<String, SessionInfo> info;
 	private static Location spawn;
 	
 	private static final String DEFAULT_DIRECTOR = "Towny";
 	
 	public SessionManager(ConfigurationSection cfg) {
 		spawn = Util.stringToLoc(cfg.getString("spawn"));
+		info = NeoSessions.getSessionInfo();
+		
 	}
 	
 	@EventHandler
