@@ -66,7 +66,7 @@ public class QueensGraceAugment extends Augment implements ModPotionAugment {
 		List<String> lore = meta.getLore();
 		lore.add("§7Receiving any potion effect grants");
 		lore.add("§f50 §7health and §f5 §7mana. 5s");
-		lore.add("§7cooldown.Only works with &9Mana&7.");
+		lore.add("§7cooldown. Only works with §9Mana&7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
