@@ -1,30 +1,15 @@
 package me.neoblade298.neosessions.sessions;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sucy.skill.SkillAPI;
 
-import me.neoblade298.neobossinstances.BossInstances;
-import me.neoblade298.neobossinstances.BossType;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.instancing.InstanceType;
@@ -60,6 +45,10 @@ public abstract class SessionInfo {
 		return key;
 	}
 	
+	public String getDisplay() {
+		return display;
+	}
+	
 	public boolean isInTeleportRegion(Location loc) {
 		return teleportRegion.contains(BukkitAdapter.asBlockVector(loc));
 	}
@@ -90,11 +79,9 @@ public abstract class SessionInfo {
 		boolean onCooldown = false;
 		String msg = "&4[&c&lMLMC&4] §cThe following players are still on cooldown:";
 		for (Player p : players) {
-    		long lastUse = DirectorManager.getCooldowns().get(key).getOrDefault(p.getUniqueId(), 0L);
-    		long currTime = System.currentTimeMillis();
-    		long cooldown = cooldownMinutes * 60 * 1000;
-    		if (currTime < lastUse + cooldown) {
-				int time = (int) (((lastUse + cooldown) - currTime) / 1000);
+    		long cooldownExpiration = DirectorManager.getCooldowns().get(key).getOrDefault(p.getUniqueId(), 0L);
+    		if (System.currentTimeMillis() < cooldownExpiration) {
+				int time = (int) ((cooldownExpiration - System.currentTimeMillis())/ 1000);
 				int minutes = time / 60;
 				int seconds = time % 60;
 				msg += "\n&7- &e" + p.getName() + "&7: " + String.format("§c%d:%02d", minutes, seconds);
@@ -125,14 +112,16 @@ public abstract class SessionInfo {
 			// Give cooldownn
 			int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
 			if (this instanceof BossSessionInfo) {
-				if (PlayerDataManager.getPlayerTags("questaccount_" + acct).exists("Killed" + key, uuid) &&
+				if (PlayerDataManager.getPlayerTags("questaccount_" + acct).exists("Killed" + key, p.getUniqueId()) &&
 						level >= 0) {
-					main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+					DirectorManager.getCooldowns().get(key).put(p.getUniqueId(), System.currentTimeMillis() + (cooldownMinutes * 60 * 1000));
 				}
 			}
 			else {
-				main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+				DirectorManager.getCooldowns().get(key).put(p.getUniqueId(), System.currentTimeMillis() + (cooldownMinutes * 60 * 1000));
 			}
 		}
+		
+		DirectorManager.sendToSessionHost(players, instance, this, level);
 	}
 }

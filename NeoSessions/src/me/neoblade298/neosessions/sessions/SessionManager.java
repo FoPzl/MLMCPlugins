@@ -1,6 +1,5 @@
 package me.neoblade298.neosessions.sessions;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;

@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -75,25 +74,28 @@ public class DirectorManager implements Listener {
 		return null;
 	}
 	
-	public static void sendToSessionHost(Collection<Player> players, String sessionHost, SessionInfo info) {
+	public static void sendToSessionHost(Collection<Player> players, String sessionHost, SessionInfo info, int multiplier) {
 		for (Player p : players) {
 			try {
 				Statement stmt = NeoCore.getStatement();
+				stmt.addBatch("REPLACE INTO sessions_sessions VALUES ('" + info.getKey() + "','" + sessionHost + 
+						"','" + NeoCore.getInstanceKey() + "'," + players.size() + "," + multiplier + ");");
 				sendToSessionHost(p, sessionHost, info, stmt, true);
 				stmt.executeBatch();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public static void sendToSessionHost(Player p, String sessionHost, SessionInfo info, Statement stmt, boolean batch) throws SQLException {
+	public static void sendToSessionHost(Player p, String sessionHost, SessionInfo info, Statement stmt, boolean saveMultiple) throws SQLException {
 		UUID uuid = p.getUniqueId();
 		SkillAPI.saveSingle(p);
 		Util.msg(p, "Starting session in " + sessionHost + " instance in 3 seconds...");
-		stmt.addBatch("REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','" + key
-					+ "','" + instance + "'," + level + ",'" + NeoCore.getInstanceKey() + "');");
+		stmt.addBatch("REPLACE INTO sessions_players VALUES ('" + uuid + "','" + info.getKey() + "');");
+		if (!saveMultiple) {
+			stmt.executeBatch();
+		}
 		
 		new BukkitRunnable() {
 			public void run() {
