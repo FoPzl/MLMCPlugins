@@ -1,7 +1,6 @@
 package me.neoblade298.neoplaceholders.placeholders;
 
 import java.util.ArrayList;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -11,7 +10,7 @@ public class NeoRelicsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister(){
-        return Bukkit.getPluginManager().getPlugin("MythicMobs") != null;
+        return true;
     }
     
     @Override
