@@ -38,6 +38,8 @@ public class PointsManager implements IOComponent {
 	private static HashMap<UUID, Long> lastSaved = new HashMap<UUID, Long>();
 	private static final double MAX_PLAYER_CONTRIBUTION = 1000;
 	private static final DecimalFormat df = new DecimalFormat("##.00");
+	private static List<String> dbs = Arrays.asList("neoleaderboard_nations", "neoleaderboard_contributed", "neoleaderboard_nationpoints",
+			"neoleaderboard_players", "neoleaderboard_towns");
 	
 	public static void initialize() {
 		// Ground rules:
@@ -481,6 +483,21 @@ public class PointsManager implements IOComponent {
 	}
 	
 	public static void reset() {
+		try {
+			playerEntries.clear();
+			nationEntries.clear();
+
+			Statement delete = NeoCore.getStatement();
+			for (String db : dbs) {
+				delete.addBatch("DELETE FROM " + db + ";");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void finalizeScores() {
 		Comparator<NationEntry> comp = new Comparator<NationEntry>() {
 			@Override
 			public int compare(NationEntry n1, NationEntry n2) {
@@ -507,8 +524,6 @@ public class PointsManager implements IOComponent {
 				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + n.getName() + "&7!");
 				saveAll();
 				
-				List<String> dbs = Arrays.asList("neoleaderboard_nations", "neoleaderboard_contributed", "neoleaderboard_nationpoints",
-						"neoleaderboard_players", "neoleaderboard_towns");
 				
 				
 				Statement stmt = NeoCore.getStatement();
