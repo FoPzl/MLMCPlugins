@@ -491,6 +491,10 @@ public class PointsManager implements IOComponent {
 			for (String db : dbs) {
 				delete.addBatch("DELETE FROM " + db + ";");
 			}
+
+			for (Nation n : TownyUniverse.getInstance().getNations()) {
+				nationEntries.putIfAbsent(n.getUUID(), new NationEntry(n.getUUID()));
+			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -523,8 +527,6 @@ public class PointsManager implements IOComponent {
 				Nation n = winner.getNation();
 				BungeeAPI.broadcast("&4[&c&lMLMC&4] &7This month's winner for top nation is: &6&l" + n.getName() + "&7!");
 				saveAll();
-				
-				
 				
 				Statement stmt = NeoCore.getStatement();
 				
