@@ -1,6 +1,7 @@
 package me.neoblade298.neosessions.sessions;
 
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
@@ -8,8 +9,11 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import me.neoblade298.neocore.NeoCore;
+import me.neoblade298.neocore.scheduler.SchedulerAPI;
+import me.neoblade298.neocore.scheduler.SchedulerAPI.CoreRunnable;
 import me.neoblade298.neosessions.NeoSessions;
 import me.neoblade298.neosessions.sessions.stats.Stats;
 
@@ -18,8 +22,10 @@ public abstract class Session {
 	private int numPlayers, multiplier;
 	private SessionInfo info;
 	private String from;
+	private long startTime = System.currentTimeMillis();
 	private HashMap<UUID, SessionPlayer> players = new HashMap<UUID, SessionPlayer>();
 	private HashMap<String, Stats> stats = new HashMap<String, Stats>();
+	private ArrayList<CoreRunnable> tasks = new ArrayList<CoreRunnable>();
 
 	public Session(SessionInfo info, String from, int numPlayers, int multiplier) {
 		this.from = from;
@@ -30,6 +36,14 @@ public abstract class Session {
 	}
 
 	public void start() {
+		if (info.getTimeLimitInMinutes() != -1) {
+			long timeLimit = System.currentTimeMillis() + (info.getTimeLimitInMinutes() * 60 * 1000);
+			tasks.add(SchedulerAPI.schedule("session-" + info.getKey(), timeLimit, new Runnable() {
+				public void run() {
+					end();
+				}
+			}));
+		}
 		for (SessionPlayer sp : players.values()) {
 			sp.setStatus(PlayerStatus.PARTICIPATING);
 		}
@@ -55,6 +69,10 @@ public abstract class Session {
 				}
 			}
 		}.runTaskLater(NeoSessions.inst(), 20L);
+	}
+	
+	public void setCheckpoint(String key) {
+		lastCheckpoint = info.getCheckpoint(key);
 	}
 
 	public void addPlayer(SessionPlayer sp) {
@@ -123,5 +141,9 @@ public abstract class Session {
 	
 	public Collection<Stats> getStats() {
 		return stats.values();
+	}
+	
+	public long getStartTime() {
+		return startTime;
 	}
 }

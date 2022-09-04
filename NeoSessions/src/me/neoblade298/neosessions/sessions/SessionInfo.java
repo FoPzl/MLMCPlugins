@@ -1,6 +1,8 @@
 package me.neoblade298.neosessions.sessions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,17 +23,31 @@ import me.neoblade298.neosessions.directors.DirectorManager;
 public abstract class SessionInfo {
 	private String key, display;
 	private Location spawn;
+	private HashMap<String, Location> checkpoints;
 	private int cooldownMinutes, maxPlayers;
 	private ProtectedRegion teleportRegion;
+	private int timeLimitMinutes;
+	
 	public SessionInfo(ConfigurationSection cfg) {
 		this.key = cfg.getName();
-		this.display = cfg.getString("display", InfoAPI.getBossInfo(key).getDisplay());
-		this.spawn = Util.stringToLoc(cfg.getString("player-spawn"));
+		this.display = Util.translateColors(cfg.getString("display", InfoAPI.getBossInfo(key).getDisplayWithLevel(false)));
 		this.cooldownMinutes = cfg.getInt("cooldown-in-minutes");
 		this.maxPlayers = cfg.getInt("max-players", 6);
+		this.timeLimitMinutes = cfg.getInt("time-limit-in-minutes", -1);
 		if (NeoCore.getInstanceType() != InstanceType.SESSIONS) {
 			String region = cfg.getString("teleport-region");
 			teleportRegion = NeoSessions.container.get(BukkitAdapter.adapt(Bukkit.getWorld("Argyll"))).getRegion(region);
+		}
+		else {
+			this.spawn = Util.stringToLoc(cfg.getString("player-spawn"));
+		}
+		
+		if (cfg.contains("checkpoints")) {
+			checkpoints = new HashMap<String, Location>();
+			ConfigurationSection sec = cfg.getConfigurationSection("checkpoints");
+			for (String checkpoint : sec.getKeys(false)) {
+				checkpoints.put(checkpoint, Util.stringToLoc(sec.getString(checkpoint)));
+			}
 		}
 	}
 	
@@ -51,6 +67,14 @@ public abstract class SessionInfo {
 	
 	public boolean isInTeleportRegion(Location loc) {
 		return teleportRegion.contains(BukkitAdapter.asBlockVector(loc));
+	}
+	
+	public Location getCheckpoint(String key) {
+		return checkpoints.get(key);
+	}
+	
+	public int getTimeLimitInMinutes() {
+		return timeLimitMinutes;
 	}
 	
 	public void directToSession(Player trigger) {

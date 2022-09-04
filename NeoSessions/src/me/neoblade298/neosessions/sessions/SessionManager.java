@@ -23,8 +23,11 @@ import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerLoadCompleteEvent;
 import com.sucy.skill.api.player.PlayerData;
 
+import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neoblade298.neobossinstances.Boss;
+import me.neoblade298.neobossinstances.BossType;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.util.Util;
@@ -204,6 +207,29 @@ public class SessionManager implements Listener {
 			}
 		}
 	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onMythicmobKill(MythicMobDeathEvent e) {
+		try {
+			if (e.getKiller() == null || !(e.getKiller() instanceof Player)) return;
+			
+			Player p = (Player) e.getKiller();
+			SessionPlayer sp = players.get(p);
+			if (sp.getSession() instanceof DungeonSession) {
+				DungeonSession s = (DungeonSession) sp.getSession();
+				if (e.getMob().getSpawner() != null) {
+					s.getAliveSpawners().remove(e.getMob().getSpawner().getInternalName());
+					if (s.getAliveSpawners().size() == 0) {
+						s.end();
+					}
+				}
+				
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 	
 	private void handleLeave(Player p) {
 		SkillAPI.saveSingle(p);
@@ -237,6 +263,10 @@ public class SessionManager implements Listener {
 			s.end();
 			sessions.remove(s.getSessionInfo().getKey());
 		}
+	}
+	
+	public static void endSession(String key) {
+		sessions.remove(key).end();
 	}
 	
 	public static void returnPlayer(Player p) {

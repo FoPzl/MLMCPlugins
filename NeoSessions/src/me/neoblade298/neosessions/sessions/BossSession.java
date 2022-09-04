@@ -15,13 +15,12 @@ public class BossSession extends Session {
 	@Override
 	public void start() {
 		super.start(); // Always run first
-		super.startStats(info.getKey(), info.getBossInfo().getDisplayWithLevel(false));
+		super.startStats(info.getKey(), info.getDisplay());
 		bossSpawn = info.getBossMob().spawn(BukkitAdapter.adapt(info.getBossSpawn()), super.getMultiplier());
 	}
 
 	@Override
 	public void end() {
-		super.stopStats(info.getKey()).display();
 		super.end(); // Always run last
 	}
 
