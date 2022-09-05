@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class Commands implements CommandExecutor {
 	private Main main = null;
@@ -33,13 +35,12 @@ public class Commands implements CommandExecutor {
 				for (int day = 2; day >= 0; day--) {
 					printDay(sender, day, days);
 				}
-				ComponentBuilder builder = new ComponentBuilder("<< Previous")
-						.color(net.md_5.bungee.api.ChatColor.YELLOW).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder("There are no previous pages!").create()));
-				builder.append(" ----- ").color(net.md_5.bungee.api.ChatColor.WHITE);
-				builder.append("Next >>").color(net.md_5.bungee.api.ChatColor.YELLOW).event(new HoverEvent(
-						HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to view next page!").create()));
-				builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/changelog 1"));
+				ComponentBuilder builder = new ComponentBuilder("§e<< Previous")
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to view previous page!")))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/changelog 1"))
+						.append("§f ----- ", FormatRetention.NONE)
+						.append("§eNext >>")
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("There are no next pages!")));
 				sender.spigot().sendMessage(builder.create());
 				return true;
 			}
@@ -63,16 +64,15 @@ public class Commands implements CommandExecutor {
 					printDay(sender, day, days);
 					day--;
 				}
-				int prev = page - 1 < 0 ? 0 : page - 1;
-				int next = chosenDay + 3 < days.size() ? page + 1 : page;
-				ComponentBuilder builder = new ComponentBuilder("<< Previous")
-						.color(net.md_5.bungee.api.ChatColor.YELLOW).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder("Click to view previous page!").create()));
-				builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/changelog " + prev));
-				builder.append(" ----- ").color(net.md_5.bungee.api.ChatColor.WHITE);
-				builder.append("Next >>").color(net.md_5.bungee.api.ChatColor.YELLOW).event(new HoverEvent(
-						HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to view next page!").create()));
-				builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/changelog " + next));
+				int next = page - 1 < 0 ? 0 : page - 1;
+				int prev = chosenDay + 3 < days.size() ? page + 1 : page;
+				ComponentBuilder builder = new ComponentBuilder("§e<< Previous")
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to view previous page!")))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/changelog " + prev))
+						.append("§f ----- ")
+						.append("§eNext >>")
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to view next page!")))
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/changelog " + next));
 				sender.spigot().sendMessage(builder.create());
 				return true;
 			}
