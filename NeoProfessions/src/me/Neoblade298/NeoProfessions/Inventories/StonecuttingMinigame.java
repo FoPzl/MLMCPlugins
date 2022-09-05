@@ -72,7 +72,7 @@ public class StonecuttingMinigame extends ProfessionInventory {
 		meta.setDisplayName("§aClick to start!");
 		ArrayList<String> lore = new ArrayList<String>();
 		lore.add("§7§l§nInstructions");
-		lore.add("§7The screen will flash 5 times.");
+		lore.add("§7The screen will flash " + NUM_FLASHES + " times.");
 		lore.add("§7During this, up to §e" + drops.size() + " §7drops");
 		lore.add("§7will show up. Click them! If you miss");
 		lore.add("§7and click a glass pane, it's game over.");
