@@ -64,7 +64,7 @@ public class VoteParty {
 	
 	private void tick() {
 		if(points % cfg.notifyInterval == 0) {
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cfg.notifyCommand);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cfg.notifyCommand.replace("%points%", points + ""));
 		}
 		
 		for(int i : cfg.specificNotifies.keySet()) {
