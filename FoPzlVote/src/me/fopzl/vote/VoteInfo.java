@@ -11,6 +11,11 @@ public class VoteInfo {
 	public Map<UUID, VoteStats> playerStats;
 	public Map<UUID, Map<String, Integer>> queuedRewards;
 
+	public VoteInfo() {
+		playerStats = new HashMap<UUID, VoteStats>();
+		queuedRewards = new HashMap<UUID, Map<String, Integer>>();
+	}
+	
 	public VoteStats getStats(Player p) {
 		UUID uuid = p.getUniqueId();
 		if(playerStats.containsKey(uuid)) {

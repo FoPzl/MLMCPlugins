@@ -26,6 +26,7 @@ public class VoteIO implements IOComponent {
 	
 	public VoteIO(Vote main) {
 		this.main = main;
+		NeoCore.registerIOComponent(main, this);
 		
 		loadQueue();
 		

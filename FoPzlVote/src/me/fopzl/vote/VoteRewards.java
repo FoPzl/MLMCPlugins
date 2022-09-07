@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -15,15 +16,14 @@ import org.bukkit.entity.Player;
 
 public class VoteRewards {
 	private Reward dailyReward;
-	private Map<Integer, Reward> streakRewards;
+	private Map<Integer, Set<Reward>> streakRewards;
 	
 	public void loadConfig(YamlConfiguration cfg) {
 		Map<String, Reward> rewards = new HashMap<String, Reward>();
 		
-		Map<String, RawReward> rawRewards = new HashMap<String, RawReward>();
 		ConfigurationSection sec = cfg.getConfigurationSection("rewards");
 		for(String rName : sec.getKeys(false)) {
-			rawRewards.put(rName, new RawReward(sec.getString(rName)));
+			rewards.put(rName, new RawReward(sec.getString(rName)));
 		}
 		
 		ConfigurationSection groupSec = cfg.getConfigurationSection("groups");
@@ -62,24 +62,27 @@ public class VoteRewards {
 			RestrictedReward r = (RestrictedReward)rewards.get(permGroupName);
 			
 			for(Object o : restrictSec.getList(permGroupName)) {
-				ConfigurationSection permGroupItem = (ConfigurationSection)o;
-				String permName = permGroupItem.getName();
-				String rewardName = permGroupItem.getString(permName);
+				@SuppressWarnings("unchecked")
+				Entry<String, String> permGroupItem = ((Map<String, String>)o).entrySet().iterator().next();
+				String permName = permGroupItem.getKey();
+				String rewardName = permGroupItem.getValue();
 				r.addReward(rewards.get(rewardName), permName);
 			}
 		}
 		
-		streakRewards = new HashMap<Integer, Reward>();
+		streakRewards = new HashMap<Integer, Set<Reward>>();
 		ConfigurationSection streakSec = cfg.getConfigurationSection("streaks");
 		for(String s : streakSec.getKeys(false)) {
 			int streakNum = Integer.parseInt(s);
+			Set<Reward> itemSet = streakRewards.getOrDefault(streakNum, new HashSet<Reward>());
+			streakRewards.putIfAbsent(streakNum, itemSet);
 			
 			for(String streakItem : streakSec.getStringList(s)) {
-				streakRewards.put(streakNum, rewards.get(streakItem));
+				itemSet.add(rewards.get(streakItem));
 			}
 		}
 		
-		dailyReward = rewards.get(cfg.getConfigurationSection("daily").getString("daily"));
+		dailyReward = rewards.get(cfg.getString("daily"));
 	}
 	
 	// streak is in votes, not days
@@ -87,7 +90,9 @@ public class VoteRewards {
 		dailyReward.giveReward(p);
 		
 		if(streakRewards.containsKey(streak)) {
-			streakRewards.get(streak).giveReward(p);
+			for(Reward r : streakRewards.get(streak)) {
+				r.giveReward(p);
+			}
 		}
 	}
 }
@@ -140,7 +145,7 @@ class RewardPool implements Reward {
 	public void giveReward(Player p) {
 		int choice = rng.nextInt(sumWeights);
 		
-		int index = 0;		
+		int index = -1;		
 		while (choice >= 0) {
 			choice -= (int)lootTable.get(++index)[1];
 		}

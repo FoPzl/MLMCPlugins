@@ -20,7 +20,6 @@ groups:
   ExampleGroup3:
     - Diamond1
     - ExampleGroup2
-    - ExamplePool1
     - ExamplePermGroup1
 
 # a random reward in a pool is given, determined by weights
@@ -28,7 +27,6 @@ pools:
   ExamplePool1:
     ExampleGroup1: 1
     ExampleGroup2: 5
-    ExampleGroup3: 20
   ExamplePool2:
     ExampleGroup1: 10
     ExamplePool1: 1
@@ -36,8 +34,8 @@ pools:
 # the first authorized reward in a permissioned group is given (or none if no default)
 permissioned-groups:
   ExamplePermGroup1:
-    - rank.neo: ExamplePool2
-    - rank.diamond: ExamplePool1
+    - rank.neo: Nice
+    - rank.diamond: Whoa
     - rank.dirt: ExampleGroup2
   ExamplePermGroup2:
     - perm.idk: ExamplePool1
