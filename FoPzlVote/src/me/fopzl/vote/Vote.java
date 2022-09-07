@@ -42,7 +42,7 @@ public class Vote extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(voteListener, this);
 
 		this.getCommand("mlvote").setExecutor(new MLVoteCommand(this));
-		this.getCommand("vp").setExecutor(new VotePartyCommand(voteParty));
+		this.getCommand("voteparty").setExecutor(new VotePartyCommand(voteParty));
 		
 		loadAllConfigs();
 		
