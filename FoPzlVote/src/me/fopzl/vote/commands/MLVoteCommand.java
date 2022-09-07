@@ -1,5 +1,6 @@
 package me.fopzl.vote.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,9 @@ public class MLVoteCommand implements CommandExecutor {
 				case "reload":
 					main.loadAllConfigs();
 					Util.sendMessageFormatted(sender, "&4[&c&lMLMC&4] &7Reloaded config");
+					return true;
+				case "debug":
+					Bukkit.getLogger().info(me.neoblade298.neocore.util.Util.connectArgs(args, 1));
 					return true;
 			}
 		}
