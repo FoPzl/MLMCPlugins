@@ -117,7 +117,8 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public boolean isValidSite(String site) {
-		return validVoteSites.contains(site);
+		return true;
+		//return validVoteSites.contains(site);
 	}
 	
 	public void rewardVote(Player p, String voteSite) {

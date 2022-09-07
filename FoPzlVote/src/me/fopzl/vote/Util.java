@@ -7,7 +7,8 @@ import me.neoblade298.neocore.bungee.BungeeAPI;
 
 public class Util {
 	public static void broadcastFormatted(String msg) {
-		// temp removed for live testing
+		Bukkit.getLogger().info(msg);
+		// temp for live testing
 		//BungeeAPI.broadcast(msg.replace('&', '§'));
 		//Bukkit.broadcastMessage(msg.replace('&', '§'));
 	}
