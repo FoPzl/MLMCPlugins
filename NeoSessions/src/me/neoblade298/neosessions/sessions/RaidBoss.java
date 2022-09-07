@@ -21,4 +21,12 @@ public class RaidBoss {
 	public void spawn(int multiplier) {
 		mob.spawn(BukkitAdapter.adapt(mobSpawn), multiplier);
 	}
+	
+	public Location getPlayerSpawn() {
+		return playerSpawn;
+	}
+	
+	public Location getMobSpawn() {
+		return mobSpawn;
+	}
 }

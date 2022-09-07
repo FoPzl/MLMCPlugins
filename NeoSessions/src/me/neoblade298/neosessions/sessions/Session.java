@@ -9,7 +9,6 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.scheduler.SchedulerAPI;

@@ -26,8 +26,6 @@ import com.sucy.skill.api.player.PlayerData;
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import me.neoblade298.neobossinstances.Boss;
-import me.neoblade298.neobossinstances.BossType;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.bungee.BungeeAPI;
 import me.neoblade298.neocore.util.Util;
@@ -214,7 +212,7 @@ public class SessionManager implements Listener {
 			if (e.getKiller() == null || !(e.getKiller() instanceof Player)) return;
 			
 			Player p = (Player) e.getKiller();
-			SessionPlayer sp = players.get(p);
+			SessionPlayer sp = players.get(p.getUniqueId());
 			if (sp.getSession() instanceof DungeonSession) {
 				DungeonSession s = (DungeonSession) sp.getSession();
 				if (e.getMob().getSpawner() != null) {

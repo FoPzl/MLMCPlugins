@@ -27,7 +27,6 @@ import me.neoblade298.neosessions.sessions.SessionInfo;
 public class DirectorManager implements Listener {
 	private static HashMap<String, HashMap<UUID, Long>> cooldowns = new HashMap<String, HashMap<UUID, Long>>();
 	private static List<String> sessionHosts;
-	private static HashMap<String, SessionInfo> info;
 	private static boolean sessionsDisabled = false;
 	public static final String NO_INSTANCE_AVAILABLE = "No Instances Available";
 	public static final String SQL_FAILED = "SQL Failed";

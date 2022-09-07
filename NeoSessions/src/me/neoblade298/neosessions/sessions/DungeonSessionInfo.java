@@ -2,14 +2,7 @@ package me.neoblade298.neosessions.sessions;
 
 import java.util.HashMap;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.bukkit.MythicBukkit;
-import me.neoblade298.neocore.info.BossInfo;
-import me.neoblade298.neocore.info.InfoAPI;
-import me.neoblade298.neocore.util.Util;
 
 public class DungeonSessionInfo extends SessionInfo {
 	private HashMap<String, Integer> spawners = new HashMap<String, Integer>();

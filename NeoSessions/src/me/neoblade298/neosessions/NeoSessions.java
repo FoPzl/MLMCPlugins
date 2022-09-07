@@ -14,6 +14,8 @@ import me.neoblade298.neocore.exceptions.NeoIOException;
 import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neosessions.directors.DirectorManager;
 import me.neoblade298.neosessions.sessions.BossSessionInfo;
+import me.neoblade298.neosessions.sessions.DungeonSessionInfo;
+import me.neoblade298.neosessions.sessions.RaidSessionInfo;
 import me.neoblade298.neosessions.sessions.SessionInfo;
 import me.neoblade298.neosessions.sessions.SessionManager;
 
@@ -25,7 +27,6 @@ public class NeoSessions extends JavaPlugin {
 	public void onEnable() {
 		inst = this;
 		Bukkit.getServer().getLogger().info("NeoSessions Enabled");
-		// Bukkit.getPluginManager().registerEvents(this, this);
 		
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
 		try {
@@ -36,12 +37,12 @@ public class NeoSessions extends JavaPlugin {
 			});
 			NeoCore.loadFiles(new File(NeoSessions.inst().getDataFolder(), "dungeons.yml"), (cfg, file) -> {
 				for (String key : cfg.getKeys(false)) {
-					info.put(key, new BossSessionInfo(cfg.getConfigurationSection(key)));
+					info.put(key, new DungeonSessionInfo(cfg.getConfigurationSection(key)));
 				}
 			});
 			NeoCore.loadFiles(new File(NeoSessions.inst().getDataFolder(), "raids.yml"), (cfg, file) -> {
 				for (String key : cfg.getKeys(false)) {
-					info.put(key, new BossSessionInfo(cfg.getConfigurationSection(key)));
+					info.put(key, new RaidSessionInfo(cfg.getConfigurationSection(key)));
 				}
 			});
 		} catch (NeoIOException e) {

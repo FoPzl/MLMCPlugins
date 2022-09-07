@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.utils.numbers.RandomInt;
