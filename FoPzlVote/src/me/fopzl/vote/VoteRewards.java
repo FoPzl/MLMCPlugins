@@ -110,8 +110,7 @@ class RawReward implements Reward {
 	}
 
 	public void giveReward(Player p) {
-		// TODO: placeholder with p.getName()
-		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), command);
+		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), command.replace("%player%", p.getName()));
 	}
 }
 

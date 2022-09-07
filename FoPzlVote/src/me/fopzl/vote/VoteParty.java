@@ -64,7 +64,6 @@ public class VoteParty {
 	
 	private void tick() {
 		if(points % cfg.notifyInterval == 0) {
-			// TODO: placeholders
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cfg.notifyCommand);
 		}
 		
