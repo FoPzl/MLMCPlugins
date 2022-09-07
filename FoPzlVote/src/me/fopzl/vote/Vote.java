@@ -96,7 +96,7 @@ public class Vote extends JavaPlugin {
         o.addProperty("username", username);
         o.addProperty("address", "xxx");
         o.addProperty("timestamp", "xxx");
-        
+
 		voteListener.onVote(new VotifierEvent(new com.vexsoftware.votifier.model.Vote(o)));
 	}
 	

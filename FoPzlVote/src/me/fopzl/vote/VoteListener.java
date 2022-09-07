@@ -28,7 +28,7 @@ public class VoteListener implements Listener {
 		com.vexsoftware.votifier.model.Vote vote = e.getVote();
 		String site = vote.getServiceName();
 		if(main.isValidSite(site)) {
-			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(vote.getUsername()); // TODO: verify case sensitivity
+			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(vote.getUsername());
 			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + site + "&7!");
 			
 			if(p.isOnline()) {
@@ -67,6 +67,6 @@ public class VoteListener implements Listener {
 					}
 				}
 			}
-		}.runTaskLater(main, 100); // delay to let vote stats load in first
+		}.runTaskLater(main, 200); // delay to let vote stats load in first
 	}
 }

@@ -74,13 +74,11 @@ public class VoteParty {
 			}
 		}
 		
-		if(points <= 0) {
-			tryStartCountdown();
-		}
+		tryStartCountdown();
 	}
 	
 	private void tryStartCountdown() {
-		if(points > cfg.pointsToStart) {
+		if(points >= cfg.pointsToStart) {
 			points = 0;
 			
 			for(Entry<Integer, String> entry : cfg.countdownCommands.entrySet()) {
