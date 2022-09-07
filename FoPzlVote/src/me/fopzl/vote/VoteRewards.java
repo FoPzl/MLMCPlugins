@@ -163,7 +163,8 @@ class RestrictedReward implements Reward {
 	
 	public void giveReward(Player p) {
 		for(Object[] tuple : rewards) {
-			if(p.hasPermission((String)tuple[1])) {
+			String permission = (String)tuple[1];
+			if(permission.equalsIgnoreCase("default") || p.hasPermission(permission)) {
 				((Reward)tuple[0]).giveReward(p);
 				return;
 			}
