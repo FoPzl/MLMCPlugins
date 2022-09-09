@@ -108,7 +108,9 @@ public class Quester {
 		qi.setupInstances(true);
 		new BukkitRunnable() {
 			public void run() {
-				qi.displayObjectives(p);
+				if (qi.getStage() == 0) {
+					qi.displayObjectives(p);
+				}
 			}
 		}.runTaskLater(NeoQuests.inst(), 40L);
 	}
