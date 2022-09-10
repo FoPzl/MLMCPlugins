@@ -35,7 +35,6 @@ public class DirectorManager implements Listener {
 	
 	public DirectorManager(ConfigurationSection cfg) {
 		sessionHosts = cfg.getStringList("session-hosts");
-		info = NeoSessions.getSessionInfo();
 		mults = NeoCore.createPlayerFields("BossMultipliers", NeoSessions.inst(), false);
 		spawn = Util.stringToLoc(cfg.getString("spawn"));
 		
@@ -91,7 +90,7 @@ public class DirectorManager implements Listener {
 		UUID uuid = p.getUniqueId();
 		SkillAPI.saveSingle(p);
 		Util.msg(p, "Starting session in " + sessionHost + " instance in 3 seconds...");
-		stmt.addBatch("REPLACE INTO sessions_players VALUES ('" + uuid + "','" + info.getKey() + "');");
+		stmt.addBatch("REPLACE INTO sessions_players VALUES ('" + uuid + "','" + info.getKey() + "','" + sessionHost + "');");
 		if (!saveMultiple) {
 			stmt.executeBatch();
 		}
@@ -114,5 +113,9 @@ public class DirectorManager implements Listener {
 	
 	public static PlayerFields getPlayerMultipliers() {
 		return mults;
+	}
+	
+	public static List<String> getSessionHosts() {
+		return sessionHosts;
 	}
 }

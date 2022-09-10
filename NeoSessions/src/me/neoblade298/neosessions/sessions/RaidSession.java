@@ -1,7 +1,5 @@
 package me.neoblade298.neosessions.sessions;
 
-import java.util.HashSet;
-
 import org.bukkit.Bukkit;
 
 public class RaidSession extends Session {
@@ -27,5 +25,16 @@ public class RaidSession extends Session {
 	@Override
 	public RaidSessionInfo getSessionInfo() {
 		return info;
+	}
+	
+	public void spawnBoss(String key) {
+		RaidBoss rb = info.getBosses().get(key);
+		rb.spawn(super.getMultiplier());
+		super.setCheckpoint(key);
+		super.startStats(key, rb.getBossInfo().getDisplay());
+		
+		for (SessionPlayer sp : super.getSessionPlayers().values()) {
+			sp.getPlayer().teleport(rb.getPlayerSpawn());
+		}
 	}
 }
