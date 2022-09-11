@@ -1,24 +1,27 @@
-package me.neoblade298.neosessions.commands.director;
+package me.neoblade298.neosessions.commands.session;
 
+import java.util.Arrays;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import me.neoblade298.neocore.commands.CommandArgument;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neosessions.NeoSessions;
 import me.neoblade298.neosessions.sessions.SessionManager;
 
-public class CmdSessionsShow implements Subcommand {
-	private static final CommandArguments args = new CommandArguments();
+public class CmdSessionsEnd implements Subcommand {
+	private static final CommandArguments args = new CommandArguments(new CommandArgument("session"));
 
 	@Override
 	public String getDescription() {
-		return "Leave current session";
+		return "Ends a session";
 	}
 
 	@Override
 	public String getKey() {
-		return "leave";
+		return "end";
 	}
 
 	@Override
@@ -28,12 +31,12 @@ public class CmdSessionsShow implements Subcommand {
 
 	@Override
 	public SubcommandRunner getRunner() {
-		return SubcommandRunner.PLAYER_ONLY;
+		return SubcommandRunner.BOTH;
 	}
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		SessionManager.returnPlayer((Player) s);
+		SessionManager.getSessions().get(args[0]).end();
 	}
 
 	@Override

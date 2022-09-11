@@ -267,6 +267,27 @@ public class SessionManager implements Listener {
 		sessions.remove(key).end();
 	}
 	
+	public static void addToSession(Player p, String sessionKey) {
+		UUID uuid = p.getUniqueId();
+		SessionPlayer sp;
+		if (players.containsKey(uuid)) {
+			sp = players.get(uuid);
+			sp.getSession().removePlayer(sp);
+		}
+		else {
+			sp = new SessionPlayer(p, sessionKey);
+		}
+		
+		// Get session
+		if (sessions.containsKey(sessionKey)) {
+			Bukkit.getLogger().warning("[NeoSessions] Failed to add player to session, " + sessionKey + " doesn't exist.");
+			return;
+		}
+		
+		Session s = sessions.get(sessionKey);
+		s.addPlayer(sp);
+	}
+	
 	public static void returnPlayer(Player p) {
 		SkillAPI.saveSingle(p);
 		
@@ -284,5 +305,9 @@ public class SessionManager implements Listener {
 	
 	public static SessionPlayer getPlayer(Player p) {
 		return players.get(p.getUniqueId());
+	}
+	
+	public static HashMap<String, Session> getSessions() {
+		return sessions;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandArgument;
@@ -16,7 +17,7 @@ import me.neoblade298.neosessions.directors.DirectorManager;
 import me.neoblade298.neosessions.sessions.SessionInfo;
 
 public class CmdSessionsAdd implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player"),
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false),
 			new CommandArgument("session"), new CommandArgument("session host")));
 
 	@Override
@@ -41,9 +42,18 @@ public class CmdSessionsAdd implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
+		int offset = 0;
+		Player p;
+		if (args.length == 3) {
+			p = Bukkit.getPlayer(args[0]);
+			offset = 1;
+		}
+		else {
+			p = (Player) s;
+		}
 		try {
-			SessionInfo si = NeoSessions.getSessionInfo().get(args[1]);
-			DirectorManager.sendToSessionHost(Bukkit.getPlayer(args[0]), args[2], si, NeoCore.getStatement(), false);
+			SessionInfo si = NeoSessions.getSessionInfo().get(args[offset]);
+			DirectorManager.sendToSessionHost(p), args[offset + 1], si, NeoCore.getStatement(), false);
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

@@ -81,6 +81,7 @@ public abstract class Session {
 
 	public void removePlayer(SessionPlayer sp) {
 		players.remove(sp.getUUID());
+		sp.setSession(null);
 	}
 
 	public HashMap<UUID, SessionPlayer> getSessionPlayers() {
