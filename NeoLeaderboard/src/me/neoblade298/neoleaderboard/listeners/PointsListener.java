@@ -56,6 +56,7 @@ public class PointsListener implements Listener {
 		Nation kn = kr.getNationOrNull();
 
 		if (vn == null || kn == null) return;
+		if (vn == kn) return;
 		if (deathCooldownActive(victim.getUniqueId())) return;
 		deathCooldowns.put(victim.getUniqueId(), System.currentTimeMillis() + DEATH_COOLDOWN);
 		PointsManager.addPlayerPoints(killer.getUniqueId(), KILL_PLAYER_POINTS, PlayerPointType.KILL_PLAYER);
