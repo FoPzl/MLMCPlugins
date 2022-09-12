@@ -16,7 +16,7 @@ import me.neoblade298.neosessions.NeoSessions;
 import me.neoblade298.neosessions.directors.DirectorManager;
 import me.neoblade298.neosessions.sessions.SessionInfo;
 
-public class CmdSessionsAdd implements Subcommand {
+public class CmdDSessionsAdd implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player", false),
 			new CommandArgument("session"), new CommandArgument("session host")));
 
@@ -53,7 +53,7 @@ public class CmdSessionsAdd implements Subcommand {
 		}
 		try {
 			SessionInfo si = NeoSessions.getSessionInfo().get(args[offset]);
-			DirectorManager.sendToSessionHost(p), args[offset + 1], si, NeoCore.getStatement(), false);
+			DirectorManager.sendToSessionHost(p, args[offset + 1], si, NeoCore.getStatement(), false);
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

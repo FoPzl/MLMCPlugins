@@ -18,6 +18,8 @@ import me.neoblade298.neosessions.sessions.DungeonSessionInfo;
 import me.neoblade298.neosessions.sessions.RaidSessionInfo;
 import me.neoblade298.neosessions.sessions.SessionInfo;
 import me.neoblade298.neosessions.sessions.SessionManager;
+import me.neoblade298.neosessions.commands.director.*;
+import me.neoblade298.neosessions.commands.session.*;
 
 public class NeoSessions extends JavaPlugin {
 	private static NeoSessions inst;
@@ -66,11 +68,18 @@ public class NeoSessions extends JavaPlugin {
 	}
 	
 	private void initSessionCommands() {
-		CommandManager mngr = new CommandManager("session", this);
+		CommandManager mngr = new CommandManager("sessions", this);
+		mngr.register(new CmdSSessionsAdd());
+		mngr.register(new CmdSSessionsEnd());
+		mngr.register(new CmdSSessionsLeave());
+		mngr.register(new CmdSSessionsStart());
+		mngr.register(new CmdSSessionsStats());
 	}
 	
 	private void initDirectorCommands() {
-		
+		CommandManager mngr = new CommandManager("sessions", this);
+		mngr.register(new CmdDSessionsAdd(), new CmdDSessionsResetCD(),
+				new CmdDSessionsShow(), new CmdDSessionsStart());
 	}
 	
 	public static NeoSessions inst() {

@@ -11,7 +11,7 @@ import me.neoblade298.neocore.commands.SubcommandRunner;
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neosessions.directors.DirectorManager;
 
-public class CmdSessionsResetCD implements Subcommand {
+public class CmdDSessionsResetCD implements Subcommand {
 	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("player"),
 			new CommandArgument("session", false)));
 
