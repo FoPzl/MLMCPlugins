@@ -94,7 +94,7 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 					p.sendMessage(localMsg);
 					String name = fitem.getItemMeta().getDisplayName().replaceAll("§", "&");
 					Bukkit.getLogger().info("Player " + p.getName() + " found boss chest, sending broadcast");
-					BungeeAPI.broadcast("&4[&c&lMLMC&4&l] &e" + p.getName() + " &7has found " + name + "&7!");
+					BungeeAPI.broadcast("&4[&c&lMLMC&4] &e" + p.getName() + " &7has found " + name + "&7!");
 				}
 				return SkillResult.SUCCESS;
 			}
