@@ -105,7 +105,7 @@ public class VoteIO implements IOComponent {
 		
 		try {
 			ResultSet rs = stmt.executeQuery("select * from fopzlvote_playerStats where uuid = '" + uuid + "';");
-			if(!rs.isBeforeFirst()) return;
+			if(!rs.next()) return;
 			
 			VoteStats vs = new VoteStats(rs.getInt("totalVotes"), rs.getInt("voteStreak"), rs.getObject("whenLastVoted", LocalDateTime.class));
 			//rs.close(); // TODO: verify if this is needed
