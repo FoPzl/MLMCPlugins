@@ -68,7 +68,7 @@ public class VoteParty {
 		}
 		
 		for(int i : cfg.specificNotifies.keySet()) {
-			if(points % i == 0) {
+			if(points == i) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cfg.specificNotifies.get(i));
 			}
 		}
