@@ -49,4 +49,11 @@ public class Garden {
 			MinigameManager.startMinigame(p, gs.getId(), gs.getFertilizer() != null ? gs.getFertilizer().getParams() : new MinigameParameters());
 		}
 	}
+	
+	public void uprootSeed(Player p, int slot) {
+		GardenSlot gs = slots.get(slot);
+		if (gs != null && gs.canHarvest()) {
+			slots.remove(slot);
+		}
+	}
 }
