@@ -72,7 +72,7 @@ public class CmdNLTown implements Subcommand {
 				
 				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Town Points: §e" + te.getTown().getName() + " §c§l«§8§m--------§6§l<");
 				int i = 0;
-				while (iter.hasNext() && i++ <= 10) {
+				while (iter.hasNext() && i++ < 10) {
 					PlayerEntry e = iter.next();
 					String name = e.getDisplay();
 					// double effective = PointsManager.calculateEffectivePoints(ne, e.getContributed());

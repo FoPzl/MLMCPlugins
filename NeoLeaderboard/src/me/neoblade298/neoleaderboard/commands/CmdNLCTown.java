@@ -103,7 +103,7 @@ public class CmdNLCTown implements Subcommand {
 
 					ComponentBuilder builder = new ComponentBuilder("§c§lTop Players in " + t.getName() + ": §e" + ftype.getDisplay());
 					int i = 1;
-					while (iter.hasNext() && i++ <= 10) {
+					while (iter.hasNext() && i++ < 10) {
 						PlayerEntry e = iter.next();
 						String name = e.getDisplay();
 						// double effective = PointsManager.calculateEffectivePoints(ne, e.getContributedPoints(ftype));

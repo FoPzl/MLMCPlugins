@@ -67,7 +67,7 @@ public class CmdNLNation implements Subcommand {
 				
 				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Point Contribution: §e" + n.getName() + " §c§l«§8§m--------§6§l<");
 				int i = 0;
-				while (iter.hasNext() && i++ <= 10) {
+				while (iter.hasNext() && i++ < 10) {
 					TownEntry e = iter.next();
 					String name = e.getTown().getName();
 					// double effective = PointsManager.calculateEffectivePoints(ne, e.getTotalPoints());

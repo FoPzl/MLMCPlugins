@@ -90,7 +90,7 @@ public class CmdNLCNation implements Subcommand {
 
 					ComponentBuilder builder = new ComponentBuilder("§c§lTop Towns in " + n.getName() + ": §e" + ftype.getDisplay());
 					int i = 1;
-					while (iter.hasNext() && i++ <= 10) {
+					while (iter.hasNext() && i++ < 10) {
 						TownEntry e = iter.next();
 						String name = e.getTown().getName();
 						// double effective = PointsManager.calculateEffectivePoints(ne, e.getPlayerPoints(ftype));

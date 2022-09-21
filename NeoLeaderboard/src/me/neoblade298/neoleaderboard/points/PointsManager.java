@@ -90,6 +90,9 @@ public class PointsManager implements IOComponent {
 						if (pentry != null) {
 							playerEntries.put(uuid, pentry);
 						}
+						else {
+							Bukkit.getLogger().warning("[NeoLeaderboard] Failed to initialize player " + uuid);
+						}
 					}
 					
 					// Calculate player points
@@ -568,9 +571,12 @@ public class PointsManager implements IOComponent {
 	// make sure to first clear the points for town and nation
 	private static void calculatePoints() {
 		for (PlayerEntry pe : playerEntries.values()) {
+			int count = 0;
 			for (Entry<PlayerPointType, Double> e : pe.getContributedPoints().entrySet()) {
 				pe.getNationEntry().addPlayerPoints(e.getValue(), e.getKey(), pe.getTown(), pe.getUuid());
+				count++;
 			}
+			Bukkit.getLogger().info("[NeoLeaderboard] Calculated " + count + " contributions for player " + pe.getUuid() + " to town " + pe.getTown());
 		}
 	}
 }

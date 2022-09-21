@@ -88,7 +88,7 @@ public class CmdNLCTop implements Subcommand {
 				
 				ComponentBuilder builder = new ComponentBuilder("§c§lTop Nations: §e" + type.getDisplay());
 				int i = 0;
-				while (iter.hasNext() && i++ <= 10) {
+				while (iter.hasNext() && i++ < 10) {
 					NationEntry e = iter.next();
 					String name = e.getNation().getName();
 					// double effective = PointsManager.calculateEffectivePoints(e, e.getPoints(type));
