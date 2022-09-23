@@ -47,7 +47,9 @@ public class VoteIO implements IOComponent {
 	}
 	
 	@Override
-	public void cleanup(Statement insert, Statement delete) {}
+	public void cleanup(Statement insert, Statement delete) {
+		saveQueue();
+	}
 
 	@Override
 	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {}
