@@ -32,7 +32,7 @@ public class MLVoteCommand implements CommandExecutor {
 					Util.sendMessageFormatted(sender, "&4[&c&lMLMC&4] &7Reloaded config");
 					return true;
 				case "debug":
-					Bukkit.getLogger().info(me.neoblade298.neocore.util.Util.connectArgs(args, 1));
+					Bukkit.getLogger().info(me.neoblade298.neocore.util.Util.connectArgs(args, 1).replace("%player%", sender.getName()));
 					return true;
 			}
 		}
