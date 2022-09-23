@@ -2,12 +2,12 @@
 
 # single rewards
 rewards:
-  Diamond1: "give %playername% diamond 1"
-  Diamond5: "give %playername% diamond 5"
-  FastThing1: "effect give %playername% haste 40 1"
-  FastThing2: "effect give %playername% speed 40 1"
-  Nice: "msg %playername% nice"
-  Whoa: "msg %playername% whoa!"
+  Diamond1: "give %player% diamond 1"
+  Diamond5: "give %player% diamond 5"
+  FastThing1: "effect give %player% haste 40 1"
+  FastThing2: "effect give %player% speed 40 1"
+  Nice: "msg %player% nice"
+  Whoa: "msg %player% whoa!"
 
 # all rewards in a group are given
 groups:
