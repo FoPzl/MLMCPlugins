@@ -14,6 +14,4 @@ commands:
       permission: mlvote.general
 permissions:
    mlvote.general:
-      default: false
    mlvote.admin:
-      default: op
