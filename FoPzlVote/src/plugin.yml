@@ -14,4 +14,6 @@ commands:
       permission: mlvote.general
 permissions:
    mlvote.general:
+      description: "General permission"
    mlvote.admin:
+      description: "For admin functions like freevote"
