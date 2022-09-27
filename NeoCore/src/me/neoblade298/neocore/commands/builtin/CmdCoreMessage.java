@@ -1,20 +1,13 @@
 package me.neoblade298.neocore.commands.builtin;
 
-import java.util.Arrays;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import me.neoblade298.neocore.commands.CommandArgument;
-import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
-import me.neoblade298.neocore.messaging.MessagingManager;
 import me.neoblade298.neocore.util.Util;
 
 public class CmdCoreMessage implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(
-			new CommandArgument("player", false), new CommandArgument("message"), new CommandArgument("page", false)));
 
 	@Override
 	public String getPermission() {
@@ -28,12 +21,12 @@ public class CmdCoreMessage implements Subcommand {
 
 	@Override
 	public String getKey() {
-		return "sendmsg";
+		return "msg";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Plays a message";
+		return "Sends a message to a player";
 	}
 
 	@Override
@@ -50,28 +43,17 @@ public class CmdCoreMessage implements Subcommand {
 		}
 		
 		// message only
-		if (args.length - offset == 1) {
-			parseAndRun(s, recipient, args[offset]);
+		if (offset == 0) {
+			Util.msg(recipient, Util.connectArgs(args));
 		}
 		// message and page
-		else if (args.length - offset == 2) {
-			parseAndRun(s, recipient, args[offset], Integer.parseInt(args[offset + 1]));
-		}
-	}
-	
-	public static void parseAndRun(CommandSender s, CommandSender recipient, String key) {
-		MessagingManager.sendMessage(s, key);
-	}
-	
-	public static void parseAndRun(CommandSender s, CommandSender recipient, String key, int page) {
-		MessagingManager.sendMessage(s, key, page);
-		if (s != recipient) {
-			Util.msg(s, "&7Successfully sent message");
+		else if (offset == 1) {
+			Util.msg(recipient, Util.connectArgs(args, 1));
 		}
 	}
 
 	@Override
-	public CommandArguments getArgs() {
-		return args;
+	public String getArgOverride() {
+		return "{player} [msg]";
 	}
 }

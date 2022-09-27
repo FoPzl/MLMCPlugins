@@ -34,7 +34,7 @@ public class CmdCorePlayerMessage implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		CmdCoreMessage.parseAndRun(s, args);
+		CmdCoreSendMessage.parseAndRun(s, args);
 	}
 
 	@Override
