@@ -57,15 +57,17 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String lbl, String[] args) {
-		List<String> options = new ArrayList<String>();
-		options.add("stats");
-		options.add("leaderboard");
-		if(sender.hasPermission("mlvote.admin")) {
-			options.add("vote");
-			options.add("reload");
-			options.add("debug");
-		}
-		return options;
+		if(args.length == 0) {
+			List<String> options = new ArrayList<String>();
+			options.add("stats");
+			options.add("leaderboard");
+			if(sender.hasPermission("mlvote.admin")) {
+				options.add("vote");
+				options.add("reload");
+				options.add("debug");
+			}
+			return options;
+		} else return null;
 	}
 	
 	
