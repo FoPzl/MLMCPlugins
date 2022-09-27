@@ -41,8 +41,12 @@ public class Vote extends JavaPlugin {
 		voteListener = new VoteListener(this);
 		getServer().getPluginManager().registerEvents(voteListener, this);
 
-		this.getCommand("mlvote").setExecutor(new MLVoteCommand(this));
-		this.getCommand("voteparty").setExecutor(new VotePartyCommand(voteParty));
+		MLVoteCommand mlvoteCmd = new MLVoteCommand(this);
+		this.getCommand("mlvote").setExecutor(mlvoteCmd);
+		this.getCommand("mlvote").setTabCompleter(mlvoteCmd);
+		VotePartyCommand vpCmd = new VotePartyCommand(voteParty);
+		this.getCommand("voteparty").setExecutor(vpCmd);
+		this.getCommand("voteparty").setTabCompleter(vpCmd);
 		
 		loadAllConfigs();
 		

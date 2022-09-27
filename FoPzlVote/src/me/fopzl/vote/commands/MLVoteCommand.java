@@ -1,15 +1,19 @@
 package me.fopzl.vote.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import me.fopzl.vote.Util;
 import me.fopzl.vote.Vote;
 
-public class MLVoteCommand implements CommandExecutor {
+public class MLVoteCommand implements CommandExecutor, TabCompleter {
 	private Vote main;
 	
 	public MLVoteCommand(Vote main) {
@@ -50,5 +54,20 @@ public class MLVoteCommand implements CommandExecutor {
 		
 		return false;
 	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String lbl, String[] args) {
+		List<String> options = new ArrayList<String>();
+		options.add("stats");
+		options.add("leaderboard");
+		if(sender.hasPermission("mlvote.admin")) {
+			options.add("vote");
+			options.add("reload");
+			options.add("debug");
+		}
+		return options;
+	}
+	
+	
 
 }
