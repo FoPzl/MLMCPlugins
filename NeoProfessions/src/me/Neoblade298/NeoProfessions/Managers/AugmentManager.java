@@ -58,6 +58,7 @@ public class AugmentManager implements Listener, Manager {
 	// Caches 1 augment of each level whenever it's created, works via Augment.get
 	private static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>(); // Don't use, caches by level
 	private static HashMap<String, ArrayList<String>> droptables = new HashMap<String, ArrayList<String>>();
+	private static HashMap<String, Double> configValues = new HashMap<String, Double>();
 	private static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	private static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	
@@ -156,6 +157,14 @@ public class AugmentManager implements Listener, Manager {
 		AugmentManager.droptables.clear();
 		try {
 			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "augments/config.yml"), (cfg, file) -> {
+				for (String augment : cfg.getKeys(false)) {
+					for (String subkey : cfg.getConfigurationSection(augment).getKeys(false)) {
+						String key = augment + "." + subkey;
+						configValues.put(key, cfg.getDouble(key, 0));
+					}
+				}
+			});
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -913,5 +922,9 @@ public class AugmentManager implements Listener, Manager {
 	
 	public static Professions getMain() {
 		return main;
+	}
+	
+	public static double getValue(String key) {
+		return configValues.getOrDefault(key, 0D);
 	}
 }

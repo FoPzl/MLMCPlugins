@@ -17,8 +17,10 @@ import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModCritSuccessAugment;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BrawlerAugment extends Augment implements ModCritSuccessAugment, ModDamageTakenAugment {
+	private double decreaseDamage = AugmentManager.getValue("brawler.damage-reduction");
 	
 	public BrawlerAugment() {
 		super();
@@ -56,7 +58,7 @@ public class BrawlerAugment extends Augment implements ModCritSuccessAugment, Mo
 	
 	@Override
 	public double getDamageTakenMult(LivingEntity user) {
-		return 0.006 * (level / 5);
+		return decreaseDamage * (level / 5);
 	}
 
 	public ItemStack getItem(Player user) {

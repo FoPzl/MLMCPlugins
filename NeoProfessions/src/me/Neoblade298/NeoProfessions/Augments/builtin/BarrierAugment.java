@@ -17,8 +17,11 @@ import com.sucy.skill.api.util.BuffType;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModSkillCastAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BarrierAugment extends Augment implements ModSkillCastAugment {
+	private double damageReduction = AugmentManager.getValue("barrier.damage-reduction");
+	private int ticks = (int) AugmentManager.getValue("barrier.ticks");
 	
 	public BarrierAugment() {
 		super();
@@ -71,8 +74,8 @@ public class BarrierAugment extends Augment implements ModSkillCastAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Reduces damage by §f50 §7for");
-		lore.add("§73s after casting a skill.");
+		lore.add("§7Reduces damage by §f" + damageReduction + " §7for");
+		lore.add("§7" + (ticks / 20) + "s after casting a skill.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
