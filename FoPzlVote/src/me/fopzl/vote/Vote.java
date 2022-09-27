@@ -104,6 +104,17 @@ public class Vote extends JavaPlugin {
 		voteParty.addPoints(1);
 	}
 	
+	public void showStats(Player player) {
+		VoteStats stats = info.getStats(player);
+		
+		String msg = "&4[&c&lMLMC&4] &eVote Stats for &6" + player.getName() + "&e:"
+				+ "\n &eAll time votes: &7" + stats.getTotalVotes()
+				+ "\n &eVotes this month: &7" + stats.getVotesThisMonth()
+				+ "\n &eCurrent Streak: &7" + stats.getStreak();
+		
+		Util.sendMessageFormatted(player, msg);
+	}
+	
 	public void showLeaderboard(CommandSender sender) {
 		List<Object[]> topVoters = io.getTopVoters(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), 10);
 		int num = 1;

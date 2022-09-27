@@ -65,8 +65,12 @@ public class VoteStats {
 	
 	public int getVotesThisMonth() {
 		VoteMonth now = new VoteMonth(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
+		Map<String, Integer> monthVotes = monthlySiteCounts.get(now);
+		
+		if(monthVotes == null) return 0;
+		
 		int sum = 0;
-		for(int votes : monthlySiteCounts.get(now).values()) {
+		for(int votes : monthVotes.values()) {
 			sum += votes;
 		}
 		return sum;

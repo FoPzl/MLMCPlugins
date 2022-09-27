@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.fopzl.vote.Util;
 import me.fopzl.vote.Vote;
@@ -37,7 +38,12 @@ public class MLVoteCommand implements CommandExecutor {
 			}
 		}
 		
-		if (args[0].equalsIgnoreCase("leaderboard")) {
+		switch(args[0]) {
+		case "stats":
+			if(!(sender instanceof Player)) return false;
+			main.showStats((Player)sender);
+			return true;
+		case "leaderboard":
 			main.showLeaderboard(sender);
 			return true;
 		}
