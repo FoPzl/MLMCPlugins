@@ -57,7 +57,11 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String lbl, String[] args) {
+<<<<<<< HEAD
 		if(args.length == 1) {
+=======
+		if(args.length == 0) {
+>>>>>>> branch 'master' of https://github.com/FoPzl/MLMCPlugins.git
 			List<String> options = new ArrayList<String>();
 			options.add("stats");
 			options.add("leaderboard");
