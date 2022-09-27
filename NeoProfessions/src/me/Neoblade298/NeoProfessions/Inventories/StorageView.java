@@ -371,7 +371,9 @@ public class StorageView extends ProfessionInventory {
 	}
 	
 	private void createVoucher(Player p, int amount, int slot) {
-		StoredItemInstance si = this.items.get(((page - 1) * 45) + slot);
+		int siSlot = ((page - 1) * 45) + slot;
+		if (this.items.size() <= siSlot) return;
+		StoredItemInstance si = this.items.get(siSlot);
 		if (si.giveVoucher(p, amount)) {
 			p.sendMessage("§4[§c§lMLMC§4] §7Successfully created voucher for " + si.getItem().getDisplay() + " §fx" + amount + "§7!");
 		}

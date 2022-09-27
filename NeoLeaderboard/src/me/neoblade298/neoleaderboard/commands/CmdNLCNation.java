@@ -87,10 +87,10 @@ public class CmdNLCNation implements Subcommand {
 				else {
 					NationEntry ne = PointsManager.getNationEntry(n.getUUID());
 					Iterator<TownEntry> iter = ne.getTopTowns(ftype).descendingIterator();
-					
-					ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Point Contribution: §e" + n.getName() + " §c§l«§8§m--------§6§l<");
+
+					ComponentBuilder builder = new ComponentBuilder("§c§lTop Towns in " + n.getName() + ": §e" + ftype.getDisplay());
 					int i = 1;
-					while (iter.hasNext() && i++ <= 10) {
+					while (iter.hasNext() && i++ < 10) {
 						TownEntry e = iter.next();
 						String name = e.getTown().getName();
 						// double effective = PointsManager.calculateEffectivePoints(ne, e.getPlayerPoints(ftype));

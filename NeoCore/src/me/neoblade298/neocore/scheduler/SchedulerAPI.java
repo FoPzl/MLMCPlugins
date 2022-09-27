@@ -76,7 +76,7 @@ public class SchedulerAPI {
 		if (minute == 0) {
 			runRepeaters(ScheduleInterval.HOUR);
 			
-			if (hour == 10) {
+			if (hour == 13) {
 				runRepeaters(ScheduleInterval.DAILY);
 			}
 		}

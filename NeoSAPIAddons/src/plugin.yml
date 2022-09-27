@@ -3,7 +3,7 @@
  version: 1.0
  description: Various commands and skills that SkillAPI is too bad to do by itself
  author: Neoblade298
- depend: [SkillAPI]
+ depend: [SkillAPI, NeoCore]
  softdepend: [MythicMobs]
  main: me.neoblade298.neosapiaddons.SAPIAddons
  commands: 

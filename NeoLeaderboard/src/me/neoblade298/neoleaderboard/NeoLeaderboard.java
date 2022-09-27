@@ -5,7 +5,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
+import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neoleaderboard.commands.*;
+import me.neoblade298.neoleaderboard.listeners.InstanceListener;
 import me.neoblade298.neoleaderboard.listeners.PointsListener;
 import me.neoblade298.neoleaderboard.listeners.TownyListener;
 import me.neoblade298.neoleaderboard.points.PointsManager;
@@ -18,21 +20,22 @@ public class NeoLeaderboard extends JavaPlugin {
 		Bukkit.getServer().getLogger().info("NeoLeaderboard Enabled");
 		inst = this;
 		
-		NeoCore.registerIOComponent(this, new PointsManager());
+		if (NeoCore.getInstanceType() != InstanceType.OTHER) {
+			NeoCore.registerIOComponent(this, new PointsManager());
 
-		PointsManager.initialize();
-		initCommands();
-		
-		PointsListener pl = new PointsListener();
-		Bukkit.getPluginManager().registerEvents(pl, this);
-		Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
-		
-	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pl);
+			PointsManager.initialize();
+			initCommands();
+			
+			Bukkit.getPluginManager().registerEvents(new PointsListener(), this);
+			Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
+		}
+		else if (NeoCore.getInstanceType() == InstanceType.OTHER) {
+			Bukkit.getPluginManager().registerEvents(new InstanceListener(), this);
+		}
 	}
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoLeaderboard Disabled");
-	    this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
 	    super.onDisable();
 	}
 	
@@ -56,7 +59,9 @@ public class NeoLeaderboard extends JavaPlugin {
 
 		mngr = new CommandManager("nladmin", "neoleaderboard.admin", ChatColor.DARK_RED, this);
 		mngr.registerCommandList("");
-		mngr
+		mngr.register(new CmdNLAAddPlayer());
+		mngr.register(new CmdNLAAddNation());
+		mngr.register(new CmdNLAReset());
 	}
 	
 	public static NeoLeaderboard inst() {

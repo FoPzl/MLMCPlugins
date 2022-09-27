@@ -56,10 +56,7 @@ public class TownEntry implements Comparable<TownEntry> {
 		total += amount;
 		
 		PlayerEntry pe = PointsManager.getPlayerEntry(uuid);
-		// Only add if the player is online
-		if (pe != null) {
-			players.putIfAbsent(uuid, pe);
-		}
+		players.putIfAbsent(uuid, pe);
 	}
 	
 	public void takePlayerPoints(double amount, PlayerPointType type, UUID uuid) {
@@ -71,7 +68,7 @@ public class TownEntry implements Comparable<TownEntry> {
 	}
 	
 	public double getPlayerPoints(PlayerPointType type) {
-		return playerPoints.get(type);
+		return playerPoints.getOrDefault(type, 0D);
 	}
 	
 	public int getContributors() {
@@ -131,8 +128,8 @@ public class TownEntry implements Comparable<TownEntry> {
 	public TreeSet<PlayerEntry> getTopPlayers(PlayerPointType type) {
 		if (System.currentTimeMillis() > playersLastSorted + SORT_COOLDOWN) {
 			topPlayers.clear();
-			for (PlayerEntry te : players.values()) {
-				topPlayers.add(te);
+			for (PlayerEntry pe : players.values()) {
+				topPlayers.add(pe);
 			}
 			playerCategoryLastSorted.put(type, System.currentTimeMillis());
 		}

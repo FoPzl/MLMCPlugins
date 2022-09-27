@@ -139,7 +139,7 @@ public class InstanceListener implements Listener {
 	private void handleTownChat(PluginMessageEvent e) {
 		UUID town = UUID.fromString(e.getMessages().get(1));
 		long timestamp = Long.parseLong(e.getMessages().get(3));
-		if (timestamp + TownyChatBridge.CHAT_TIMEOUT > System.currentTimeMillis()) return;
+		if (timestamp + TownyChatBridge.CHAT_TIMEOUT < System.currentTimeMillis()) return;
 		
 		handleTownChat(town, e.getMessages().get(2), e.getMessages().get(0));
 	}
@@ -156,7 +156,7 @@ public class InstanceListener implements Listener {
 	private void handleNationChat(PluginMessageEvent e) {
 		UUID town = UUID.fromString(e.getMessages().get(1));
 		long timestamp = Long.parseLong(e.getMessages().get(4));
-		if (timestamp + TownyChatBridge.CHAT_TIMEOUT > System.currentTimeMillis()) return;
+		if (timestamp + TownyChatBridge.CHAT_TIMEOUT < System.currentTimeMillis()) return;
 		
 		handleNationChat(town, e.getMessages().get(3), e.getMessages().get(2), e.getMessages().get(0));
 	}
@@ -171,13 +171,11 @@ public class InstanceListener implements Listener {
 			formatted = "&f[&6NC&f] &f" + name + ": &e" + msg;
 		}
 		
-		if (onlinePlayers.containsKey(tuuid)) {
-			UUID nation = townToNation.get(tuuid);
-			for (UUID townInNation : nationToTowns.get(nation)) {
-				if (onlinePlayers.containsKey(townInNation)) {
-					for (Player p : onlinePlayers.get(townInNation)) {
-						Util.msg(p, formatted, false);
-					}
+		UUID nation = townToNation.get(tuuid);
+		for (UUID townInNation : nationToTowns.get(nation)) {
+			if (onlinePlayers.containsKey(townInNation)) {
+				for (Player p : onlinePlayers.get(townInNation)) {
+					Util.msg(p, formatted, false);
 				}
 			}
 		}

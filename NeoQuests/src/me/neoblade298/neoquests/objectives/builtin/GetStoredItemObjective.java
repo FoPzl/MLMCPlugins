@@ -36,7 +36,7 @@ public class GetStoredItemObjective extends Objective {
 
 	public boolean checkEvent(ReceiveStoredItemEvent e, ObjectiveInstance o) {
 		if (id == e.getId()) {
-			o.setCount(StorageManager.getAmount(e.getPlayer(), id));
+			o.setCount(StorageManager.getAmount(e.getPlayer(), id), false);
 			return true;
 		}
 		return false;
@@ -52,7 +52,7 @@ public class GetStoredItemObjective extends Objective {
 	
 	@Override
 	public void initialize(ObjectiveInstance oi) {
-		oi.setCount(StorageManager.getAmount(oi.getPlayer(), id));
+		oi.setCount(StorageManager.getAmount(oi.getPlayer(), id), false);
 	}
 
 	@Override

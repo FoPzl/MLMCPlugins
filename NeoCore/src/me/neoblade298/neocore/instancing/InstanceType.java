@@ -4,5 +4,6 @@ public enum InstanceType {
 	TOWNY,
 	QUESTS,
 	DEV,
+	SESSIONS,
 	OTHER;
 }

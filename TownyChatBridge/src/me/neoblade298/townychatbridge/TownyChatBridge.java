@@ -11,7 +11,7 @@ import me.neoblade298.townychatbridge.towny.TownyListener;
 
 public class TownyChatBridge extends JavaPlugin implements Listener {
 	private static TownyChatBridge inst;
-	public static final int CHAT_TIMEOUT = 3000; // How long in ms before a cross-server chat expires
+	public static final int CHAT_TIMEOUT = 10000; // How long in ms before a cross-server chat expires
 	
 	public void onEnable() {
 		inst = this;

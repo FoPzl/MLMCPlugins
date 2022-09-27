@@ -45,14 +45,14 @@ public class CmdNLCBase implements Subcommand {
 			ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» Nation Categories «§8§m--------§6§l<");
 			for (NationPointType type : NationPointType.values()) {
 				builder.append("\n §6§l» §e" + type.getDisplay(), FormatRetention.NONE)
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc " + type)))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc " + type));
+				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc top " + type)))
+				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc top " + type));
 			}
 			builder.append("\n§6§l>§8§m--------§c§l» Player Categories «§8§m--------§6§l<", FormatRetention.NONE);
 			for (PlayerPointType type : PlayerPointType.values()) {
-				builder.append("\n §6§l» §e" + type.getDisplay(), FormatRetention.NONE)
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc " + type)))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc " + type));
+				builder.append("\n §6§l» §e" + type.getExtendedDisplay(), FormatRetention.NONE)
+				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("/nlc top " + type)))
+				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nlc top " + type));
 			}
 			s.spigot().sendMessage(builder.create());
 	}

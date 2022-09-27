@@ -15,7 +15,15 @@ public class Commands implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
-		if(args.length < 1 || !(sender instanceof Player)) return false;
+		if(args.length < 1) return false;
+		
+		if(!(sender instanceof Player)) {
+			if(args.length >= 1 && args[0] == "debug") {
+				return main.toggleDebug(sender);
+			} else {
+				return false;
+			}
+		}
 		
 		switch(args[0]) {
 			case "save":
@@ -31,6 +39,9 @@ public class Commands implements CommandExecutor {
 			case "del":
 				if(args.length < 2) return false;
 				return main.delete((Player)sender, args[1]);
+			case "debug":
+				if(!sender.hasPermission("fopzlskillprofiles.admin")) return false;
+				return main.toggleDebug(sender);
 			default:
 				return false;
 		}

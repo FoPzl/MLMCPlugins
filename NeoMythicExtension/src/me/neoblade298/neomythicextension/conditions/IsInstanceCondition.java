@@ -16,10 +16,10 @@ public class IsInstanceCondition implements ICasterCondition {
 	@Override
 	public boolean check(SkillCaster c) {
 		if (action) {
-			return NeoCore.getInstanceType() == InstanceType.OTHER;
+			return NeoCore.getInstanceType() == InstanceType.SESSIONS;
 		}
 		else {
-			return NeoCore.getInstanceType() != InstanceType.OTHER;
+			return NeoCore.getInstanceType() != InstanceType.SESSIONS;
 		}
 	}
 }

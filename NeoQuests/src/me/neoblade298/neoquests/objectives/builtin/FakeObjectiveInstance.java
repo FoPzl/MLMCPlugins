@@ -10,14 +10,11 @@ import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 
 public class FakeObjectiveInstance extends ObjectiveInstance {
+	// Finds #.letters
 	private static Pattern pattern = Pattern.compile("\\{(\\d)(\\.)(.*?)\\}");
-	private Objective obj;
-	private ObjectiveSetInstance set;
 
 	public FakeObjectiveInstance(Player p, Objective obj, ObjectiveSetInstance set) {
 		super(p, obj, set);
-		this.obj = obj;
-		this.set = set;
 	}
 
 	public String getDisplay() {

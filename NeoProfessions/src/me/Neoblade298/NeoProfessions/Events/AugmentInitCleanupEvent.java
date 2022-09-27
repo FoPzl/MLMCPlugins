@@ -6,7 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.Neoblade298.NeoProfessions.Augments.Augment;
-import me.Neoblade298.NeoProfessions.Augments.PlayerAugments;
+import me.Neoblade298.NeoProfessions.Augments.builtin.PlayerAugments;
 
 public class AugmentInitCleanupEvent extends Event {
 	private PlayerAugments paugs;

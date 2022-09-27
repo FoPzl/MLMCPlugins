@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.commands.CmdQuestsRecommended;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
@@ -107,7 +108,9 @@ public class Quester {
 		qi.setupInstances(true);
 		new BukkitRunnable() {
 			public void run() {
-				qi.displayObjectives(p);
+				if (qi.getStage() == 0) {
+					qi.displayObjectives(p);
+				}
 			}
 		}.runTaskLater(NeoQuests.inst(), 40L);
 	}
@@ -164,14 +167,21 @@ public class Quester {
 			for (String key : nullQuestlines) {
 				activeQuestlines.remove(key);
 			}
+			ComponentBuilder rec = new ComponentBuilder("§7§o[Recommended Quests] ")
+					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests recommended")))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended " + this.p.getName()))
+					.append("§7§o [Challenge Quests]", FormatRetention.NONE)
+					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges " + this.p.getName()));
+			s.spigot().sendMessage(rec.create());
 		}
-		ComponentBuilder rec = new ComponentBuilder("§7§o[Recommended Quests] ")
-				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests recommended")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended " + this.p.getName()))
-				.append("§7§o [Challenge Quests]", FormatRetention.NONE)
-				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges " + this.p.getName()));
-		s.spigot().sendMessage(rec.create());
+		else {
+			CmdQuestsRecommended.run(s, new String[] { s.getName() }, false);
+			ComponentBuilder rec = new ComponentBuilder("§7§o[Challenge Quests]")
+					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges " + this.p.getName()));
+			s.spigot().sendMessage(rec.create());
+		}
 	}
 	
 	// Call when switching to another quest account

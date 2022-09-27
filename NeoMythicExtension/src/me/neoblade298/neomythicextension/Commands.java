@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neomythicextension.objects.SpawnerDefinition;
 import me.neoblade298.neomythicextension.objects.SpawnerMaker;
 
@@ -173,8 +174,14 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			
-			if(args.length == 2 && args[0].equalsIgnoreCase("debug")) {
-		    	sender.sendMessage("Global score of " + args[1] + " is " + main.globalscores.get(args[1]));
+			if(args[0].equalsIgnoreCase("debug")) {
+				MythicExt.debug = !MythicExt.debug;
+				if (MythicExt.debug) {
+					Util.msg(sender, "&7Debug set to &etrue");
+				}
+				else {
+					Util.msg(sender, "&7Debug set to &efalse");
+				}
 		    	return true;
 		    }
 		    else if (args.length > 1 && args[0].equalsIgnoreCase("nbc")) {

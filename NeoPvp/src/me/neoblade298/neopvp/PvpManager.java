@@ -85,6 +85,11 @@ public class PvpManager implements IOComponent {
 	public String getKey() {
 		return "PvpManager";
 	}
+	
+	@Override
+	public int getPriority() {
+		return -1;
+	}
 
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {

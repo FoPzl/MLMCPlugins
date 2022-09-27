@@ -208,4 +208,9 @@ public class TownyAddons extends JavaPlugin implements org.bukkit.event.Listener
 	private double getBonusBlockPrice(int previousBlocks) {
 		return 1000 + (2 * previousBlocks) + (Math.pow(previousBlocks, 2) / 200);
 	}
+
+	@EventHandler
+	public void onTownCreate(NewTownEvent e) {
+		e.getTown().getAccount().deposit(500, "Starter money");
+	}
 }

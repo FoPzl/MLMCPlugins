@@ -27,7 +27,7 @@ public class NeoPvp extends JavaPlugin {
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoPvp Enabled");
 		inst = this;
-		if (NeoCore.getInstanceType() != InstanceType.OTHER) {
+		if (NeoCore.getInstanceType() == InstanceType.TOWNY) {
 			mngrs.add(new GeneratorManager());
 		}
 		initCommands();
@@ -39,12 +39,21 @@ public class NeoPvp extends JavaPlugin {
 	private void initCommands() {
 		CommandManager mngr = new CommandManager("adminwar", "mycommand.staff", ChatColor.DARK_RED, this);
 		mngr.registerCommandList("");
-		mngr.register(new CmdAWarCreate(), new CmdAWarDisplay(),
-				new CmdAWarInfo(), new CmdAWarLimit(), new CmdAWarNew(), new CmdAWarTeam1(),
-				new CmdAWarTeam2());
+		mngr.register(new CmdAWarCreate());
+		mngr.register(new CmdAWarClear());
+		mngr.register(new CmdAWarDisplay());
+		mngr.register(new CmdAWarInfo());
+		mngr.register(new CmdAWarInfo());
+		mngr.register(new CmdAWarLimit());
+		mngr.register(new CmdAWarNew());
+		mngr.register(new CmdAWarTeam1());
+		mngr.register(new CmdAWarTeam2());
+		mngr.register(new CmdAWarSetWorld());
+		mngr.register(new CmdAWarStart());
+		mngr.register(new CmdAWarEnd());
 		
 		mngr = new CommandManager("pvp", this);
-		mngr.registerCommandList("?");
+		mngr.registerCommandList("help");
 		mngr.register(new CmdPvpBase());
 		mngr.register(new CmdPvpBuyProtection());
 		mngr.register(new CmdPvpRemoveProtection());
@@ -56,6 +65,12 @@ public class NeoPvp extends JavaPlugin {
 		mngr.register(new CmdAPvpAddProtection());
 		mngr.register(new CmdAPvpRemoveProtection());
 		mngr.register(new CmdAPvpReload());
+		mngr.register(new CmdAPvpSet());
+		
+		mngr = new CommandManager("war", this);
+		mngr.registerCommandList("help");
+		mngr.register(new CmdWarBase());
+		mngr.register(new CmdWarSpawn());
 	}
 	
 	@Override

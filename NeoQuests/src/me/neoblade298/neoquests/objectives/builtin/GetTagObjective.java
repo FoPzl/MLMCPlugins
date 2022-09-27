@@ -50,7 +50,7 @@ public class GetTagObjective extends Objective {
 	@Override
 	public void initialize(ObjectiveInstance oi) {
 		if (NeoQuests.getPlayerTags(oi.getPlayer()).exists(tag, oi.getPlayer().getUniqueId())) {
-			oi.setCount(1);
+			oi.setCount(1, false);
 		}
 	}
 	

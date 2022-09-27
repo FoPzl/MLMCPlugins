@@ -13,8 +13,10 @@ public class InfoAPI {
 	
 	static {
 		bossLoader = (cfg, file) -> {
-			BossInfo bi = new BossInfo(cfg);
-			bossInfo.put(bi.getKey(), bi);
+			for (String key : cfg.getKeys(false)) {
+				BossInfo bi = new BossInfo(cfg.getConfigurationSection(key));
+				bossInfo.put(bi.getKey(), bi);
+			}
 		};
 	}
 	

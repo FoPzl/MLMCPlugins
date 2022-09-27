@@ -94,17 +94,19 @@ public class CmdNLBase implements Subcommand {
 					return;
 				}
 				HashMap<PlayerPointType, Double> cpoints = pe.getContributedPoints();
-				HashMap<PlayerPointType, Double> totalPoints = pe.getTotalPoints();
 				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Player Contributions: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
+				builder.append("\n§6TOTAL: §f" + PointsManager.formatPoints(pe.getContributed()), FormatRetention.NONE);
 				for (Entry<PlayerPointType, Double> e : cpoints.entrySet()) {
 					// double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
 					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(e.getValue()), FormatRetention.NONE);
 				}
+				/*
 				builder.append("\n§6§l>§8§m--------§c§l» §6Player Totals: §e" + p.getName() + " §c§l«§8§m--------§6§l<");
 				for (Entry<PlayerPointType, Double> e : totalPoints.entrySet()) {
 					// double effective = PointsManager.calculateEffectivePoints(ne, e.getValue());
 					builder.append("\n§6" + e.getKey().getDisplay() + ": §f" + PointsManager.formatPoints(e.getValue()), FormatRetention.NONE);
 				}
+				*/
 				s.spigot().sendMessage(builder.create());
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());

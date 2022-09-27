@@ -42,6 +42,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 	public HashMap<UUID, SpawnerMaker> spawnermakers;
 	public static MythicExt inst;
 	public static Economy econ;
+	public static boolean debug = false;
 	private BossInstances nbi;
 
 	@Override

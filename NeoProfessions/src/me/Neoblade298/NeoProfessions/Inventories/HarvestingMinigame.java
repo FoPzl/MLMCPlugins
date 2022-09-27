@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
@@ -194,6 +195,7 @@ public class HarvestingMinigame extends ProfessionInventory {
 				if (p.getOpenInventory().getTopInventory() == inv) {
 					p.closeInventory();
 				}
+				GardenManager.tryReturnToGarden(p, ProfessionType.HARVESTER);
 			}
 		}.runTaskLater(main, 40);
 	}

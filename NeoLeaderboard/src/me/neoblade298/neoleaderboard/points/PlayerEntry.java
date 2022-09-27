@@ -131,7 +131,7 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 	}
 	
 	public double getContributedPoints(PlayerPointType type) {
-		return contributedPoints.get(type);
+		return contributedPoints.getOrDefault(type, 0D);
 	}
 	
 	public HashMap<PlayerPointType, Double> getTotalPoints() {

@@ -35,8 +35,6 @@ public class TownyListener implements Listener {
 		PointsManager.deletePlayerEntry(e.getResident().getUUID(), true);
 	}
 	
-	// TODO: Unsure if this works for kicked towns and residents, test
-	
 	@EventHandler
 	public void onTownMerge(TownPreMergeEvent e) {
 		if (!e.getSuccumbingTown().hasNation()) return;

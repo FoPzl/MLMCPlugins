@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -76,6 +77,7 @@ public class GardenInventory extends ProfessionInventory {
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = meta.getLore();
 			lore.set(0, gslot.getTimerLine());
+			lore.add("§cRight click to uproot!");
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 		}
@@ -143,7 +145,12 @@ public class GardenInventory extends ProfessionInventory {
 				return;
 			}
 			else if (nbti.getInteger("type") == MATURE) {
+				GardenManager.addPlayerGardening(p, type);
 				GardenManager.getGarden(p, type).harvestSeed(p, slot);
+				return;
+			}
+			else if (nbti.getInteger("type") == IMMATURE && e.getClick() == ClickType.RIGHT){
+				GardenManager.getGarden(p, type).uprootSeed(p, slot);
 				return;
 			}
 		}

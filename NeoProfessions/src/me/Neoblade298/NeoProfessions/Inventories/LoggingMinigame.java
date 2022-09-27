@@ -19,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
+import me.Neoblade298.NeoProfessions.Managers.GardenManager;
 import me.Neoblade298.NeoProfessions.Managers.MinigameManager;
 import me.Neoblade298.NeoProfessions.Managers.ProfessionManager;
 import me.Neoblade298.NeoProfessions.Managers.StorageManager;
@@ -28,15 +29,15 @@ import me.Neoblade298.NeoProfessions.Storage.StoredItemInstance;
 
 public class LoggingMinigame extends ProfessionInventory {
 	private static float ERROR = 0.594604F;
-	private static int TOTAL_TICKS = 20;
-	private static int END_TICKS = 6;
+	private static int TOTAL_TICKS = 10;
+	private static int END_TICKS = 3;
 	int tickrate;
 	Professions main;
 	Player p;
 	int stage = 0;
 	ArrayList<MinigameDrop> drops;
 	ArrayList<FallingItem> falling = new ArrayList<FallingItem>();
-	double baseSpawnChance = 0.2;
+	double baseSpawnChance = 0.3;
 	int difficulty;
 	HashMap<Integer, MinigameDrop> items, itemsAfter; // Need 2 because 1 gets its items removed
 	ArrayList<ItemStack> toSpawn = new ArrayList<ItemStack>();
@@ -50,7 +51,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		this.p = p;
 		this.drops = drops;
 		this.difficulty = difficulty;
-		this.tickrate = 9 - (difficulty / 4);
+		this.tickrate = 18 - (difficulty / 2);
 		baseSpawnChance += difficulty * 0.15;
 		inv = Bukkit.createInventory(p, 54, name.replaceAll("&", "§"));
 		
@@ -194,6 +195,7 @@ public class LoggingMinigame extends ProfessionInventory {
 				if (p.getOpenInventory().getTopInventory() == inv) {
 					p.closeInventory();
 				}
+				GardenManager.tryReturnToGarden(p, ProfessionType.LOGGER);
 			}
 		}.runTaskLater(main, 40);
 	}
@@ -265,7 +267,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		
 		int numToSpawn = toSpawn.size() + (items.containsKey(tick) ? 1 : 0);
 		ItemStack[] contents = inv.getContents();
-		ThreadLocalRandom.current().ints(0, 9).distinct().limit(numToSpawn).forEach(num -> {
+		ThreadLocalRandom.current().ints(0, 18).distinct().limit(numToSpawn).forEach(num -> {
 			ItemStack item;
 			if (items.containsKey(tick)) {
 				item = generateDrop(items.get(tick), tick);
@@ -290,7 +292,7 @@ public class LoggingMinigame extends ProfessionInventory {
 		
 		public void moveDown(ItemStack[] contents) {
 			contents[pos] = null;
-			pos = pos + 9;
+			pos = pos + 18;
 			if (pos < 54) {
 				contents[pos] = item;
 			}

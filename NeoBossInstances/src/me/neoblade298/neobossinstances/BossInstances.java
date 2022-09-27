@@ -100,7 +100,6 @@ public class BossInstances extends JavaPlugin implements Listener {
 	public HashSet<String> joiningPlayers = new HashSet<String>();
 	public HashSet<String> leavingPlayers = new HashSet<String>();
 	public PlayerFields settings;
-	public static String color;
 	
 	private static BossInstances inst;
 
@@ -108,7 +107,7 @@ public class BossInstances extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		this.getCommand("boss").setExecutor(new Commands(this));
 		settings = NeoCore.createPlayerFields("BossMultipliers", this, false);
-		isInstance = NeoCore.getInstanceType() == InstanceType.OTHER;
+		isInstance = NeoCore.getInstanceType() == InstanceType.SESSIONS;
 		loadConfig();
 
 		// If not an instance, set up player cooldowns

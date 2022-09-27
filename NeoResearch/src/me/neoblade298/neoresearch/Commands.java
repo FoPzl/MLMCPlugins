@@ -1,6 +1,7 @@
 package me.neoblade298.neoresearch;
 
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -46,6 +47,7 @@ public class Commands implements CommandExecutor{
 				sender.sendMessage("§c/nr inspectgoals [player]");
 				sender.sendMessage("§c/nr attrs");
 				sender.sendMessage("§c/nr debug");
+				sender.sendMessage("§c/nr check [player] [research]");
 				return true;
 			}
 
@@ -81,7 +83,7 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + display + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
@@ -108,12 +110,12 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + bi.getDisplayWithLevel(false) + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
-				lore.add(bi.getDisplay(true));
+				lore.add(bi.getDisplayWithLevel(false));
 				
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -122,7 +124,7 @@ public class Commands implements CommandExecutor{
 				nbti.setString("internalmob", bi.getKey());
 				nbti.setInteger("level", level);
 				p.getInventory().addItem(nbti.getItem());
-				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + bi.getDisplay(true) + " §7to player §e" + p.getName());
+				sender.sendMessage("§4[§c§lMLMC§4] §7Spawned research book " + bi.getDisplayWithLevel(false) + " §7to player §e" + p.getName());
 				return true;
 			}
 
@@ -155,7 +157,7 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + display + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
@@ -177,11 +179,11 @@ public class Commands implements CommandExecutor{
 			}
 
 			// /nr createbookboss [player] [boss] [point amt]
-			else if (args[0].equalsIgnoreCase("createbookalias")) {
+			else if (args[0].equalsIgnoreCase("createbookboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
 				UUID uuid = p.getUniqueId();
 				BossInfo bi = InfoAPI.getBossInfo(args[2]);
-				String display = bi.getDisplay(true);
+				String display = bi.getDisplayWithLevel(false);
 				int amt = Integer.parseInt(args[3]);
 				int needed = amt * 2;
 				
@@ -202,12 +204,12 @@ public class Commands implements CommandExecutor{
 				ItemStack item = new ItemStack(Material.BOOK);
 				ItemMeta meta = item.getItemMeta();
 
-				meta.setDisplayName("§9Research Book");
+				meta.setDisplayName("§6Research Book §7- " + bi.getDisplayWithLevel(false) + " §7(§e" + amt + "§7)");
 				ArrayList<String> lore = new ArrayList<String>();
 				lore.add("§7Grants§e " + amt + " §7research points for");
 				lore.add(display);
 				
-				int level = bi.getLevel();
+				int level = bi.getLevel(false);
 
 				meta.setCustomModelData(100);
 				meta.setLore(lore);
@@ -233,11 +235,8 @@ public class Commands implements CommandExecutor{
 			// /nr givepointsboss [player] [boss] [amount]
 			else if (args[0].equalsIgnoreCase("givepointsboss")) {
 				Player p = Bukkit.getPlayer(args[1]);
-				BossInfo bi = InfoAPI.getBossInfo(args[2]);
-				int level = bi.getLevel();
 				int amount = Integer.parseInt(args[3]);
-				String display = bi.getDisplay(true);
-				main.giveResearchPointsAlias(p, amount, args[2], level, display, true);
+				main.giveResearchPointsBoss(p, amount, args[2], true);
 				sender.sendMessage("§4[§c§lMLMC§4] §7Gave points for " + args[2] + " §7to player §e" + p.getName());
 				return true;
 			}
@@ -295,6 +294,18 @@ public class Commands implements CommandExecutor{
 				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
 				sender.sendMessage("§4[§c§lMLMC§4] §e" + p.getName() + " §7is research level §e" + stats.getLevel() +
 						" §7with §e" + stats.getExp() + " / " + Research.getNextLevel().get(stats.getLevel()) + " §7exp.");
+				return true;
+			}
+			// /nr check [player] [researchgoal]
+			else if (args[0].equalsIgnoreCase("check") && args.length == 3) {
+				Player p = Bukkit.getPlayer(args[1]);
+				PlayerStats stats = Research.getPlayerStats(p.getUniqueId());
+				ResearchItem ri = Research.getResearchItems().get(args[2]);
+				for (Entry<String, Integer> e : ri.getGoals().entrySet()) {
+					int points = stats.getResearchPoints().getOrDefault(e.getKey(), 0);
+					int pointsReq = e.getValue();
+					sender.sendMessage("§c" + e.getKey() + "§7: §f" + points + " / " + pointsReq);
+				}
 				return true;
 			}
 			// /nr inspect [player] [internalmob]

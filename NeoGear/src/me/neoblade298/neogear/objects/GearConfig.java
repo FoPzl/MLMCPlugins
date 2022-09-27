@@ -338,7 +338,8 @@ public class GearConfig {
 			return "cannot upgrade legendary! Must be artifacted at /warp artifactupgrade";
 		}
 		String newRarity = rarityUpgrades.get(oldRarity);
-		String rarityDisplay = Gear.getRarities().get(newRarity).displayName;
+		Rarity r = Gear.getRarities().get(newRarity);
+		String rarityDisplay = r.displayName;
 		nbti.setString("rarity", newRarity);
 		
 		// Add slots if rarity increased to rare+
@@ -351,6 +352,9 @@ public class GearConfig {
 		}
 		nbti.applyNBT(item);
 		ItemMeta meta = item.getItemMeta();
+		if (meta.getDisplayName().contains("Standard")) {
+			meta.setDisplayName(r.colorCode + ChatColor.stripColor(meta.getDisplayName()));
+		}
 		List<String> lore = meta.getLore();
 		lore.set(2, "§7Rarity: " + rarityDisplay);
 		lore.set(4, "§7Max Slots: " + slotsMaxNew);
@@ -414,8 +418,13 @@ public class GearConfig {
 		List<String> lore = meta.getLore();
 		ListIterator<String> loreIter = lore.listIterator();
 		while (loreIter.hasNext()) {
-			if (loreIter.next().contains("---")) {
+			String line = loreIter.next();
+			if (line.contains("---")) {
 				break;
+			}
+			else if (line.contains("Level") && !line.endsWith("" + level)) {
+				loreIter.remove();
+				loreIter.add("§7Level: " + level);
 			}
 		}
 		

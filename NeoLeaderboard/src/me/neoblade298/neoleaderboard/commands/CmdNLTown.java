@@ -70,10 +70,9 @@ public class CmdNLTown implements Subcommand {
 				TownEntry te = ne.getTownEntry(t.getUUID());
 				Iterator<PlayerEntry> iter = te.getTopPlayers().descendingIterator();
 				
-				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Town Points: §e" + te.getTown().getName() + " §c§l«§8§m--------§6§l<")
-						.append("\n§7§o(Online only, view offline with §e/nl [name]§7§o)");
+				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Town Points: §e" + te.getTown().getName() + " §c§l«§8§m--------§6§l<");
 				int i = 0;
-				while (iter.hasNext() && i++ <= 10) {
+				while (iter.hasNext() && i++ < 10) {
 					PlayerEntry e = iter.next();
 					String name = e.getDisplay();
 					// double effective = PointsManager.calculateEffectivePoints(ne, e.getContributed());

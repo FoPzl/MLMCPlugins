@@ -62,7 +62,7 @@ public class CmdList implements Subcommand {
 			showPage(s, 1);
 		}
 		else {
-			if (StringUtils.isNumeric(args[0])) {
+			if (!StringUtils.isNumeric(args[0])) {
 				Util.msg(s, "&cInvalid subcommand!");
 			}
 			else {

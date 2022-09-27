@@ -1,0 +1,13 @@
+name: MLMCGuilds
+main: me.ShanaChans.MLMCGuilds.MLMCGuilds
+author: [ShanaChans]
+version: 1.0
+depend: [NeoCore]
+api-version: 1.16
+commands:
+   guild:
+      description: Create or join guilds!
+      usage: /guild
+   gc:
+      description: Toggle guild chat or send message to guild chat!
+      usage: /guild chat

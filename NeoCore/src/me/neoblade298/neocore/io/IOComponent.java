@@ -18,5 +18,6 @@ public interface IOComponent {
 	public default boolean canPreload() { return true; }
 	public default boolean canCleanup() { return true; }
 	public default boolean canAutosave() { return true; }
+	public default int getPriority() { return 0; } // Higher priorities save and load first
 	public String getKey();
 }

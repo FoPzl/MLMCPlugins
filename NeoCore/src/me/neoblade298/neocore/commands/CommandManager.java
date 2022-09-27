@@ -97,7 +97,7 @@ public class CommandManager implements CommandExecutor {
 	
 	private boolean check(Subcommand cmd, CommandSender s, String[] args) {
 		if (((perm != null && perm.length() != 0) && !s.hasPermission(perm)) && !s.isOp()) {
-			s.sendMessage("§cYou're missing the permission: " + cmd.getPermission());
+			s.sendMessage("§cYou're missing the permission: " + perm);
 			return false;
 		}
 		

@@ -60,14 +60,14 @@ public class CmdNations implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		String temp = "testNation";
+		String temp = "N/A";
 		
 		new BukkitRunnable() {
 			public void run() {
 				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
 				Iterator<NationEntry> iter = sorted.descendingIterator();
 				
-				ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + temp + " §c§l«\n")
+				ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + temp + "§c§l «\n")
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for details: §e/nations previous")))
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nations previous"));
 				builder.append("§6§l>§8§m--------§c§l» Nation Leaderboard «§8§m--------§6§l<", FormatRetention.NONE);

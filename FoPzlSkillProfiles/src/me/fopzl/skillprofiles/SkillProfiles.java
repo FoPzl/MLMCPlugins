@@ -7,10 +7,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +32,8 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	HashMap<UUID, Long> cooldowns = new HashMap<UUID, Long>(); // stores time last used
 	static final int COOLDOWN = 10000; // milliseconds
 	
+	boolean debug = false;
+	
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("FoPzlSkillProfiles Enabled");
 		this.getCommand("skillprofile").setExecutor(new Commands(this));
@@ -39,6 +43,12 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	public void onDisable() {
 		Bukkit.getServer().getLogger().info("FoPzlSkillProfiles Disabled");
 		super.onDisable();
+	}
+	
+	public boolean toggleDebug(CommandSender sender) {
+		debug = !debug;
+		sender.sendMessage("§7Debugging " + (debug ? "enabled" : "disabled"));
+		return true;
 	}
 	
 	@Override
@@ -51,6 +61,10 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	public void loadPlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
 		
+		if(debug) {
+			Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Starting loading player " + p.getName() + "(uuid=" + uuid + ")");
+		}
+		
 		/* base profiles */
 		PlayerProfiles pp = new PlayerProfiles();
 		playerProfiles.put(uuid, pp);
@@ -59,6 +73,10 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 			while(rs.next()) {
 				int accId = rs.getInt("accNum");
 				String name = rs.getString("name");
+				
+				if(debug) {
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading profile: accId = " + accId + ", profileName = " + name == null ? "(NULL)" : name);
+				}
 				
 				AccountProfiles ap;
 				if(pp.profiles.containsKey(accId)) {
@@ -86,6 +104,11 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				String attrName = rs.getString("name");
 				int attrValue = rs.getInt("value");
 				
+				if(debug) {
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading attribute for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading attribute: name = " + attrName == null ? "(NULL)" : attrName + ", value = " + attrValue);
+				}
+				
 				pp.profiles.get(accId).profiles.get(profName).attributes.put(attrName, attrValue);
 			}
 		} catch (SQLException e) {
@@ -103,6 +126,11 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				
 				String rattrName = rs.getString("name");
 				int rattrValue = rs.getInt("value");
+				
+				if(debug) {
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading research attribute for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading research attribute: name = " + rattrName == null ? "(NULL)" : rattrName + ", value = " + rattrValue);
+				}
 				
 				pp.profiles.get(accId).profiles.get(profName).researchAttributes.put(rattrName, rattrValue);
 			}
@@ -122,6 +150,11 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				String skillName = rs.getString("name");
 				int skillLevel = rs.getInt("value");
 				
+				if(debug) {
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill level for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill level: skill = " + skillName == null ? "(NULL)" : skillName + ", level = " + skillLevel);
+				}
+				
 				pp.profiles.get(accId).profiles.get(profName).skillLevels.put(skillName, skillLevel);
 			}
 		} catch (SQLException e) {
@@ -139,6 +172,11 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				
 				String skillName = rs.getString("name");
 				Material material = Material.valueOf(rs.getString("material"));
+				
+				if(debug) {
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bind for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bind: skill = " + skillName == null ? "(NULL)" : skillName + ", material = " + material == null ? "(NULL)" : material.toString());
+				}
 				
 				pp.profiles.get(accId).profiles.get(profName).skillBinds.put(skillName, material);
 			}
@@ -158,12 +196,21 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 				int slot = rs.getInt("slot");
 				String skillName = rs.getString("name");
 				
+				if(debug) {
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bar slot for profile: accId = " + accId + ", profileName = " + profName == null ? "(NULL)" : profName);
+					Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Loading skill bar slot: slot = " + slot + ", skill = " + skillName == null ? "(NULL)" : skillName);
+				}
+				
 				pp.profiles.get(accId).profiles.get(profName).skillBar.put(slot, skillName);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			playerProfiles.remove(uuid);
 			return;
+		}
+		
+		if(debug) {
+			Bukkit.getLogger().log(Level.INFO, "[FoPzlSkillProfiles] Finished loading player " + p.getName() + "(uuid=" + uuid + ")");
 		}
 	}
 	
@@ -175,42 +222,43 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 		try {
 			Statement baseStmt = NeoCore.getStatement();
 			baseStmt.executeUpdate("delete from skillprofiles_profile where uuid = '" + uuid + "';");
+			// FK constraint ensures rows in other tables are deleted as well
 			
 			for(Map.Entry<Integer, AccountProfiles> ppEntry : playerProfiles.get(uuid).profiles.entrySet()) {
 				for(Map.Entry<String, Profile> apEntry : ppEntry.getValue().profiles.entrySet()) {
 					String keyString = "'" + uuid + "', " + ppEntry.getKey() + ", '" + apEntry.getKey() + "'";
 					
-					baseStmt.executeUpdate("insert into skillprofiles_profile values (" + keyString + ");");
+					baseStmt.executeUpdate("replace into skillprofiles_profile values (" + keyString + ");");
 					
 					Profile prof = apEntry.getValue();
 					/* attributes */
-					delete.addBatch("delete from skillprofiles_attribute where prof_uuid = '" + uuid + "';");
+					//delete.addBatch("delete from skillprofiles_attribute where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> attrEntry : prof.attributes.entrySet()) {
-						insert.addBatch("insert into skillprofiles_attribute values (" + keyString + ", '" + attrEntry.getKey() + "', " + attrEntry.getValue() + ");");
+						insert.addBatch("replace into skillprofiles_attribute values (" + keyString + ", '" + attrEntry.getKey() + "', " + attrEntry.getValue() + ");");
 					}
 					
 					/* research attributes */
-					delete.addBatch("delete from skillprofiles_researchattribute where prof_uuid = '" + uuid + "';");
+					//delete.addBatch("delete from skillprofiles_researchattribute where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> rattrEntry : prof.researchAttributes.entrySet()) {
-						insert.addBatch("insert into skillprofiles_researchattribute values (" + keyString + ", '" + rattrEntry.getKey() + "', " + rattrEntry.getValue() + ");");
+						insert.addBatch("replace into skillprofiles_researchattribute values (" + keyString + ", '" + rattrEntry.getKey() + "', " + rattrEntry.getValue() + ");");
 					}
 					
 					/* skill levels */
-					delete.addBatch("delete from skillprofiles_skillLevel where prof_uuid = '" + uuid + "';");
+					//delete.addBatch("delete from skillprofiles_skillLevel where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Integer> skillEntry : prof.skillLevels.entrySet()) {
-						insert.addBatch("insert into skillprofiles_skillLevel values (" + keyString + ", '" + Util.sqlEscape(skillEntry.getKey()) + "', " + skillEntry.getValue() + ");");
+						insert.addBatch("replace into skillprofiles_skillLevel values (" + keyString + ", '" + Util.sqlEscape(skillEntry.getKey()) + "', " + skillEntry.getValue() + ");");
 					}
 					
 					/* skill binds */
-					delete.addBatch("delete from skillprofiles_skillBind where prof_uuid = '" + uuid + "';");
+					//delete.addBatch("delete from skillprofiles_skillBind where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<String, Material> bindEntry : prof.skillBinds.entrySet()) {
-						insert.addBatch("insert into skillprofiles_skillBind values (" + keyString + ", '" + Util.sqlEscape(bindEntry.getKey()) + "', '" + bindEntry.getValue().toString() + "');");
+						insert.addBatch("replace into skillprofiles_skillBind values (" + keyString + ", '" + Util.sqlEscape(bindEntry.getKey()) + "', '" + bindEntry.getValue().toString() + "');");
 					}
 					
 					/* skill bar */
-					delete.addBatch("delete from skillprofiles_skillBarSlot where prof_uuid = '" + uuid + "';");
+					//delete.addBatch("delete from skillprofiles_skillBarSlot where prof_uuid = '" + uuid + "';");
 					for(Map.Entry<Integer, String> slotEntry : prof.skillBar.entrySet()) {
-						insert.addBatch("insert into skillprofiles_skillBarSlot values (" + keyString + ", " + slotEntry.getKey() + ", '" + Util.sqlEscape(slotEntry.getValue()) + "');");
+						insert.addBatch("replace into skillprofiles_skillBarSlot values (" + keyString + ", " + slotEntry.getKey() + ", '" + Util.sqlEscape(slotEntry.getValue()) + "');");
 					}
 				}
 			}
@@ -226,18 +274,26 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	public void cleanup(Statement insert, Statement delete) {}
 	
 	@Override
-	public String getKey() {return null;}
+	public String getKey() {
+		return "SkillProfiles";
+	}
 
 	@Override
 	public void preloadPlayer(OfflinePlayer arg0, Statement arg1) {}
 	
 	public boolean save(Player player, String profileName) {
+		PlayerData data = SkillAPI.getPlayerData(player);
+		
+		if(!data.hasClass()) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7You have no class!");
+			return true;
+		}
+		
 		if(!profileName.matches("[A-z0-9_]{1,16}")) {
 			player.sendMessage("§4[§c§lMLMC§4] §cError: §7Invalid profile name");
 			return true;
 		}
 		
-		PlayerData data = SkillAPI.getPlayerData(player);
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
@@ -259,6 +315,12 @@ public class SkillProfiles extends JavaPlugin implements IOComponent {
 	
 	public boolean load(Player player, String profileName) {
 		PlayerData data = SkillAPI.getPlayerData(player);
+		
+		if(!data.hasClass()) {
+			player.sendMessage("§4[§c§lMLMC§4] §cError: §7You have no class!");
+			return true;
+		}
+		
 		int accId = SkillAPI.getPlayerAccountData(player).getActiveId();
 		UUID uuid = player.getUniqueId();
 		
@@ -407,12 +469,13 @@ class Profile {
 		skillBar = new HashMap<Integer, String>();
 	}
 	
+	@SuppressWarnings("unchecked") // annoying
 	public Profile(PlayerData data) {
 		/* attributes */
 		attributes = data.getInvestedAttributes();
 		
 		/* research attributes */
-		researchAttributes = Research.getPlayerAttributes(data.getPlayer()).getActiveAttrs();
+		researchAttributes = (HashMap<String, Integer>)Research.getPlayerAttributes(data.getPlayer()).getActiveAttrs().clone();
 		researchAttributes.remove("unused");
 		
 		/* skills */
@@ -450,7 +513,7 @@ class Profile {
 		StoredAttributes sAttr = Research.getPlayerAttributes(data.getPlayer());
 		sAttr.unvestAll();
 		for(Map.Entry<String, Integer> entry : researchAttributes.entrySet()) {
-			sAttr.addAttribute(entry.getKey(), entry.getValue());
+			sAttr.investAttribute(entry.getKey(), entry.getValue());
 		}
 		sAttr.applyAttributes(data.getPlayer());
 		

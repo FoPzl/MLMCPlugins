@@ -58,7 +58,7 @@ public class ResearchPointsMechanic implements ITargetedEntitySkill {
 					if (mm.isPresent()) {
 						display = mm.get().getDisplayName().get();
 					}
-					nr.giveResearchPointsAlias(p, cfg.amount, mob, level, display, false);
+					nr.giveResearchPointsBoss(p, cfg.amount, mob, false);
 				}
 				return SkillResult.SUCCESS;
 			}

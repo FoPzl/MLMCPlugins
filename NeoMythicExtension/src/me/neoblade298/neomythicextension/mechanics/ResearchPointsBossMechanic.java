@@ -31,7 +31,7 @@ public class ResearchPointsBossMechanic implements ITargetedEntitySkill {
         this.boss = config.getString("boss", "default");
 		this.bi = InfoAPI.getBossInfo(this.boss);
         this.amount = config.getInteger("a");
-        this.display = bi.getDisplay(true);
+        this.display = bi.getDisplayWithLevel(false);
         
         nr = (Research) Bukkit.getPluginManager().getPlugin("NeoResearch");
 	}
@@ -44,7 +44,7 @@ public class ResearchPointsBossMechanic implements ITargetedEntitySkill {
 					return SkillResult.CONDITION_FAILED;
 				}
 				Player p = (Player) target.getBukkitEntity();
-				nr.giveResearchPoints(p, this.amount, bi.getKey(), bi.getLevel(), false, null);
+				nr.giveResearchPointsBoss(p, this.amount, bi.getKey(), false);
 				return SkillResult.SUCCESS;
 			}
 			return SkillResult.INVALID_TARGET;

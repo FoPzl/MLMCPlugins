@@ -46,7 +46,7 @@ public class GardenUpgradeResult implements RecipeResult {
 	}
 	
 	@Override
-	public String getDisplay() {
+	public String getDisplay(Player p) {
 		return display;
 	}
 }

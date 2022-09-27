@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.wars.WarManager;
 
 public class CmdAWarCreate implements Subcommand {
@@ -12,12 +13,12 @@ public class CmdAWarCreate implements Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Views current war creator status";
+		return "Completes war creation and schedules it";
 	}
 
 	@Override
 	public String getKey() {
-		return "info";
+		return "create";
 	}
 
 	@Override
@@ -32,7 +33,9 @@ public class CmdAWarCreate implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		WarManager.displayWarCreation(s);
+		if (WarManager.completeWarCreation(s)) {
+			Util.msg(s, "Successfully completed war creation");
+		}
 	}
 	
 	@Override

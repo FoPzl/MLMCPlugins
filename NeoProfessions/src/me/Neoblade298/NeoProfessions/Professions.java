@@ -22,7 +22,7 @@ import me.Neoblade298.NeoProfessions.Managers.*;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
-import me.neoblade298.neocore.listeners.IOListener;
+import me.neoblade298.neocore.io.IOManager;
 import net.milkbowl.vault.economy.Economy;
 
 public class Professions extends JavaPlugin implements Listener {
@@ -82,7 +82,7 @@ public class Professions extends JavaPlugin implements Listener {
 		sm = new StorageManager(this);
 		getServer().getPluginManager().registerEvents(sm, this);
 		managers.add(sm);
-		IOListener.register(this, sm);
+		IOManager.register(this, sm);
 			
 		if (!isInstance) {
 			// Managers and listeners
@@ -100,10 +100,10 @@ public class Professions extends JavaPlugin implements Listener {
 			getServer().getPluginManager().registerEvents(cm, this);
 			getServer().getPluginManager().registerEvents(rm, this);
 			getServer().getPluginManager().registerEvents(mim, this);
-			IOListener.register(this, cm);
-			IOListener.register(this, pm);
-			IOListener.register(this, rm);
-			IOListener.register(this, gm);
+			IOManager.register(this, cm);
+			IOManager.register(this, pm);
+			IOManager.register(this, rm);
+			IOManager.register(this, gm);
 	
 			// Command listeners for all classes
 			this.getCommand("ebal").setExecutor(new EssenceBalanceCommand(this));
