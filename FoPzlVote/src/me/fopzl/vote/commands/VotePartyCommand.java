@@ -45,13 +45,15 @@ public class VotePartyCommand implements CommandExecutor, TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String lbl, String[] args) {
-		List<String> options = new ArrayList<String>();
-		options.add("status");
-		if(sender.hasPermission("mlvote.admin")) {
-			options.add("add");
-			options.add("set");
-		}
-		return options;
+		if(args.length == 1) {
+			List<String> options = new ArrayList<String>();
+			options.add("status");
+			if(sender.hasPermission("mlvote.admin")) {
+				options.add("add");
+				options.add("set");
+			}
+			return options;
+		} else return null;
 	}
 
 }
