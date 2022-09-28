@@ -13,8 +13,10 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BreathOfLifeAugment extends Augment implements ModHealAugment {
+	private double healMult = AugmentManager.getValue("breathoflife.heal-multiplier");
 	
 	public BreathOfLifeAugment() {
 		super();
@@ -30,7 +32,7 @@ public class BreathOfLifeAugment extends Augment implements ModHealAugment {
 
 	@Override
 	public double getHealMult(Player user) {
-		return 0.5;
+		return healMult;
 	}
 
 	@Override

@@ -14,8 +14,11 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BurstAugment extends Augment implements ModDamageDealtAugment {
+	private double damageMult = AugmentManager.getValue("burst.damage-multiplier");
+	private int minMp = (int) AugmentManager.getValue("burst.min-mp");
 	
 	public BurstAugment() {
 		super();
@@ -31,7 +34,7 @@ public class BurstAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.01 * (level / 5);
+		return damageMult * (level / 5);
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class BurstAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
 		PlayerData pdata = SkillAPI.getPlayerData(user);
-		return (pdata.getMana() / pdata.getMaxMana()) > 0.8 && pdata.getClass("class").getData().getManaName().endsWith("MP");
+		return (pdata.getMana() / pdata.getMaxMana()) > minMp && pdata.getClass("class").getData().getManaName().endsWith("MP");
 	}
 
 	public ItemStack getItem(Player user) {
@@ -50,7 +53,7 @@ public class BurstAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage above 80% mana.");
+		lore.add("§7damage above " + minMp + "% mana.");
 		lore.add("§cOnly works with mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
