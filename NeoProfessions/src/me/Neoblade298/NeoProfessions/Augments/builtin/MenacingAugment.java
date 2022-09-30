@@ -18,8 +18,16 @@ import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
 import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class MenacingAugment extends Augment implements ModDamageTakenAugment, ModManaGainAugment {
+	private double damageTakenMult = AugmentManager.getValue("menacing.regen-multiplier-base");
+	private double damageTakenMultLvl = AugmentManager.getValue("menacing.regen-multiplier-per-lvl");
+	private double resourceMult = AugmentManager.getValue("menacing.regen-multiplier-base");
+	private double resourceMultLvl = AugmentManager.getValue("menacing.regen-multiplier-per-lvl");
+	private int maxDistance = (int) AugmentManager.getValue("menacing.max-distance");
+	private int maxDistanceSq = (int) Math.pow(AugmentManager.getValue("menacing.max-distance"), 2);
+	
 	public MenacingAugment() {
 		super();
 		this.name = "Menacing";
@@ -39,12 +47,12 @@ public class MenacingAugment extends Augment implements ModDamageTakenAugment, M
 
 	@Override
 	public double getManaGainMult(Player user) {
-		return 0.02 * (level / 5);
+		return resourceMult * (resourceMultLvl * ((level / 5) - 1));
 	}
 	
 	@Override
 	public double getDamageTakenMult(LivingEntity user) {
-		return 0.005 * (level / 5);
+		return damageTakenMult * (damageTakenMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -56,7 +64,7 @@ public class MenacingAugment extends Augment implements ModDamageTakenAugment, M
 	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		Location diff = user.getLocation().subtract(target.getLocation());
 		double diffxy = (diff.getX() * diff.getX()) + (diff.getY() * diff.getY());
-		return diffxy >= 144;
+		return diffxy <= maxDistanceSq;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -64,7 +72,7 @@ public class MenacingAugment extends Augment implements ModDamageTakenAugment, M
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Decreases damage taken by §f" + formatPercentage(getDamageTakenMult(user)) + "%");
-		lore.add("§7when within 3 blocks of an enemy.");
+		lore.add("§7when within " + maxDistance + " blocks of an enemy.");
 		lore.add("§7Taking damage from this distance");
 		lore.add("§7increases resource regen by 10%");
 		lore.add("§7for 2 seconds.");

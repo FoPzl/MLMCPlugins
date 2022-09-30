@@ -52,7 +52,7 @@ public class WeightlessAugment extends Augment implements ModInitAugment, ModCle
 	
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.4;
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 	
 	@SuppressWarnings("deprecation")

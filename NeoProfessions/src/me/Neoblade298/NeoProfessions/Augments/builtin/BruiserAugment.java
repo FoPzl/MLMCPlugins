@@ -16,7 +16,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BruiserAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("bruiser.damage-multiplier");
+	private double damageMult = AugmentManager.getValue("bruiser.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("bruiser.damage-multiplier-per-lvl");
 	private int minHealth = (int) AugmentManager.getValue("bruiser.min-health");
 	private int maxHealth = (int) AugmentManager.getValue("bruiser.max-health");
 	
@@ -34,7 +35,7 @@ public class BruiserAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return damageMult * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

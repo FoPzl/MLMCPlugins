@@ -11,8 +11,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModRegenAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class LastBreathAugment extends Augment implements ModRegenAugment {
+	private double regenMult = AugmentManager.getValue("lastbreath.regen-multiplier-base");
+	private double regenMultLvl = AugmentManager.getValue("lastbreath.regen-multiplier-per-lvl");
+	private double maxHealth = AugmentManager.getValue("lastbreath.max-health");
 	
 	public LastBreathAugment() {
 		super();
@@ -28,7 +32,7 @@ public class LastBreathAugment extends Augment implements ModRegenAugment {
 
 	@Override
 	public double getRegenMult(Player user) {
-		return 0.02 * (level / 5);
+		return regenMult + (regenMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class LastBreathAugment extends Augment implements ModRegenAugment {
 	public boolean canUse(Player user) {
 		Player p = user.getPlayer();
 		double percentage = p.getHealth() / p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.5;
+		return percentage < maxHealth;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -48,7 +52,7 @@ public class LastBreathAugment extends Augment implements ModRegenAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases health regen by §f" + formatPercentage(getRegenMult(user)) + "%");
-		lore.add("§7while below 50% health.");
+		lore.add("§7while below " + formatPercentage(maxHealth) + "% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

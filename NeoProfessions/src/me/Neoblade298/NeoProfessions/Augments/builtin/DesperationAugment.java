@@ -14,9 +14,12 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DesperationAugment extends Augment implements ModDamageDealtAugment {
-	double manaTaken;
+	private double damageMult = AugmentManager.getValue("desperation.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("desperation.damage-multiplier-per-lvl");
+	private double maxMana = AugmentManager.getValue("desperation.max-mana");
 	
 	public DesperationAugment() {
 		super();
@@ -32,7 +35,7 @@ public class DesperationAugment extends Augment implements ModDamageDealtAugment
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.03 * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class DesperationAugment extends Augment implements ModDamageDealtAugment
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
 		PlayerData pdata = SkillAPI.getPlayerData(user);
-		return (pdata.getMana() / pdata.getMaxMana()) < 0.2 && pdata.getClass("class").getData().getManaName().endsWith("MP");
+		return (pdata.getMana() / pdata.getMaxMana()) < maxMana && pdata.getClass("class").getData().getManaName().endsWith("MP");
 	}
 
 	public ItemStack getItem(Player user) {

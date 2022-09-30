@@ -17,7 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModBuffAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BraceAugment extends Augment implements ModBuffAugment {
-	private double timeMult = AugmentManager.getValue("brace.time-multiplier");
+	private double timeMult = AugmentManager.getValue("brace.time-multiplier-base");
+	private double timeMultLvl = AugmentManager.getValue("brace.time-multiplier-per-lvl");
 	
 	public BraceAugment() {
 		super();
@@ -33,7 +34,7 @@ public class BraceAugment extends Augment implements ModBuffAugment {
 
 	@Override
 	public double getBuffTimeMult(LivingEntity user) {
-		return timeMult * (level / 5);
+		return timeMult + (timeMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

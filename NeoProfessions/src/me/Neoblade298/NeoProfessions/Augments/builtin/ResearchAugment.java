@@ -10,9 +10,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModResearchPointsAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class ResearchAugment extends Augment implements ModResearchPointsAugment {
+	private double chanceMult = AugmentManager.getValue("research.chance-multiplier-base");
+	private double chanceMultLvl = AugmentManager.getValue("research.chance-multiplier-per-lvl");
 	
 	public ResearchAugment() {
 		super();
@@ -33,7 +36,7 @@ public class ResearchAugment extends Augment implements ModResearchPointsAugment
 	
 	@Override
 	public double getRPChanceMult(Player user) {
-		return 0.01 * (level / 5);
+		return chanceMult + (chanceMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

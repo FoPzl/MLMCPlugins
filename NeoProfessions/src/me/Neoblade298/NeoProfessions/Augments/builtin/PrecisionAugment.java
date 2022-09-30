@@ -13,8 +13,11 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModCritCheckAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class PrecisionAugment extends Augment implements ModCritCheckAugment {
+	private double critMult = AugmentManager.getValue("precision.crit-chance-multiplier-base");
+	private double critMultLvl = AugmentManager.getValue("precision.crit-chance-multiplier-per-lvl");
 	
 	public PrecisionAugment() {
 		super();
@@ -30,7 +33,7 @@ public class PrecisionAugment extends Augment implements ModCritCheckAugment {
 
 	@Override
 	public double getCritChanceMult(Player user) {
-		return 0.005 * (level / 5);
+		return critMult + (critMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

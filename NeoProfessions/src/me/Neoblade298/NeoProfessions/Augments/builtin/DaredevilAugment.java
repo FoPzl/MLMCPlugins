@@ -14,8 +14,12 @@ import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
+	private double damageMult = AugmentManager.getValue("bruiser.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("bruiser.damage-multiplier-per-lvl");
+	private double minHealth = AugmentManager.getValue("bruiser.min-health");
 	
 	public DaredevilAugment() {
 		super();
@@ -31,7 +35,7 @@ public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
 
 	@Override
 	public double getDamageTakenMult(LivingEntity user) {
-		return 0.01 * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -42,7 +46,7 @@ public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
 	@Override
 	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
 		double percentage = (user.getPlayer().getHealth() / user.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-		return percentage < 0.3;
+		return percentage < minHealth;
 	}
 
 	public ItemStack getItem(Player user) {

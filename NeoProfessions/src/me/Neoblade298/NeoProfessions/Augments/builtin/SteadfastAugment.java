@@ -27,7 +27,7 @@ public class SteadfastAugment extends Augment implements ModTauntAugment {
 
 	@Override
 	public double getTauntGainMult(Player user) {
-		return 0.03 * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

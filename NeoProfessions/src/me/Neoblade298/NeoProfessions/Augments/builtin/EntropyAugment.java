@@ -24,6 +24,7 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 public class EntropyAugment extends Augment implements ModDamageTakenAugment {
 	HashMap<UUID, BukkitTask> regenTasks = new HashMap<UUID, BukkitTask>();
 	HashSet<UUID> toRefresh = new HashSet<UUID>();
+	private double healthRegen = AugmentManager.getValue("entropy.health-regen");
 	
 	public EntropyAugment() {
 		super();
@@ -73,7 +74,7 @@ public class EntropyAugment extends Augment implements ModDamageTakenAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Taking damage heals you for");
-		lore.add("§f4.5% §7max health over 3s");
+		lore.add("§f" + formatDouble(healthRegen) + "% §7max health over 3s");
 		lore.add("§7This does not stack, but it");
 		lore.add("§7does refresh on repeated hits.");
 		meta.setLore(lore);

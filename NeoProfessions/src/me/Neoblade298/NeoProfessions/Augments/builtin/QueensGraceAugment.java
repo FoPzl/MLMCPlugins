@@ -17,8 +17,12 @@ import com.sucy.skill.api.util.FlagManager;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModPotionAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class QueensGraceAugment extends Augment implements ModPotionAugment {
+	private int healthGain = (int) AugmentManager.getValue("queensgrace.health-gain");
+	private int manaGain = (int) AugmentManager.getValue("queensgrace.mana-gain");
+	private int cooldownSeconds = (int) AugmentManager.getValue("queensgrace.cooldown-seconds");
 	
 	public QueensGraceAugment() {
 		super();
@@ -39,9 +43,9 @@ public class QueensGraceAugment extends Augment implements ModPotionAugment {
 	
 	@Override
 	public void applyPotionEffects(Player user, EntityPotionEffectEvent e) {
-		FlagManager.addFlag(user, user, "aug_queensGrace", 100);
-		SkillAPI.getPlayerData(user).giveMana(5, ManaSource.SPECIAL);
-		user.setHealth(Math.min(user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), user.getHealth() + 50));
+		FlagManager.addFlag(user, user, "aug_queensGrace", (int) (cooldownSeconds * 20));
+		SkillAPI.getPlayerData(user).giveMana(manaGain, ManaSource.SPECIAL);
+		user.setHealth(Math.min(user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), user.getHealth() + healthGain));
 	}
 	
 	@Override
@@ -65,7 +69,7 @@ public class QueensGraceAugment extends Augment implements ModPotionAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Receiving any potion effect grants");
-		lore.add("§f50 §7health and §f5 §7mana. 5s");
+		lore.add("§f" + healthGain + " §7health and §f" + manaGain + " §7mana. " + cooldownSeconds + "s");
 		lore.add("§7cooldown. Only works with §9Mana&7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

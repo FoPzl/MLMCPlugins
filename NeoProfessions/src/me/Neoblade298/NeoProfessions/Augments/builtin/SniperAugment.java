@@ -12,8 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SniperAugment extends Augment implements ModDamageDealtAugment {
+	private int minDistance = (int) AugmentManager.getValue("sniper.min-distance");
+	private int minDistanceSq = (int) Math.pow(AugmentManager.getValue("sniper.min-distance"), 2);
+	private double damageMult = AugmentManager.getValue("overload.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("overload.damage-multiplier-per-lvl");
 	double manaTaken;
 	
 	public SniperAugment() {
@@ -30,7 +35,7 @@ public class SniperAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.01 * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -42,7 +47,7 @@ public class SniperAugment extends Augment implements ModDamageDealtAugment {
 	public boolean canUse(Player user, LivingEntity target) {
 		Location diff = user.getLocation().subtract(target.getLocation());
 		double diffxy = (diff.getX() * diff.getX()) + (diff.getY() * diff.getY());
-		return diffxy >= 144;
+		return diffxy >= minDistanceSq;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -50,7 +55,7 @@ public class SniperAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage further than 12 blocks away.");
+		lore.add("§7damage further than " + minDistance + " blocks away.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

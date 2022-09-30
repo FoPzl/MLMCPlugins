@@ -13,8 +13,11 @@ import com.sucy.skill.api.event.PlayerExperienceGainEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModExpAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class ExperienceAugment extends Augment implements ModExpAugment {
+	private double expMult = AugmentManager.getValue("experience.exp-mult-base");
+	private double expMultLvl = AugmentManager.getValue("experience.exp-mult-per-lvl");
 	
 	public ExperienceAugment() {
 		super();
@@ -35,7 +38,7 @@ public class ExperienceAugment extends Augment implements ModExpAugment {
 	
 	@Override
 	public double getExpMult(Player user) {
-		return 0.02 * (level / 5);
+		return expMult + (expMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

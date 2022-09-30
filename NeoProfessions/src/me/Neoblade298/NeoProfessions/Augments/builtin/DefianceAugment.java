@@ -13,8 +13,12 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DefianceAugment extends Augment implements ModManaGainAugment {
+	private double manaGainMult = AugmentManager.getValue("defiance.mana-gain-multiplier-base");
+	private double manaGainMultLvl = AugmentManager.getValue("defiance.mana-gain-multiplier-per-lvl");
+	private double minMana = AugmentManager.getValue("defiance.min-mana");
 	
 	public DefianceAugment() {
 		super();
@@ -30,7 +34,7 @@ public class DefianceAugment extends Augment implements ModManaGainAugment {
 
 	@Override
 	public double getManaGainMult(Player user) {
-		return 0.04 * (level / 5);
+		return manaGainMult + (manaGainMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class DefianceAugment extends Augment implements ModManaGainAugment {
 
 	@Override
 	public boolean canUse(PlayerData user, ManaSource src) {
-		return (user.getMana() / user.getMaxMana()) < 0.3;
+		return (user.getMana() / user.getMaxMana()) < minMana;
 	}
 
 	public ItemStack getItem(Player user) {

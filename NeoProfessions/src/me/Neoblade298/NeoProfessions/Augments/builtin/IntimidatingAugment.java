@@ -12,22 +12,26 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class IntimidatingAugment extends Augment implements ModDamageDealtAugment {
-	private double threatMult;
+	private double threatMult = AugmentManager.getValue("intimidating.threat-multiplier-base");
+	private double threatMultLvl = AugmentManager.getValue("intimidating.threat-multiplier-per-lvl");
 	
 	public IntimidatingAugment() {
 		super();
 		this.name = "Intimidating";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.threatMult = 0.01 * (level / 5);
 	}
 
 	public IntimidatingAugment(int level) {
 		super(level);
 		this.name = "Intimidating";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.threatMult = 0.01 * (level / 5);
+	}
+	
+	private double getThreatMultiplier() {
+		return threatMult * (threatMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -50,7 +54,7 @@ public class IntimidatingAugment extends Augment implements ModDamageDealtAugmen
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases threat from damaging an");
-		lore.add("§7enemy by §f" + formatPercentage(this.threatMult) + "%§7.");
+		lore.add("§7enemy by §f" + formatPercentage(getThreatMultiplier()) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

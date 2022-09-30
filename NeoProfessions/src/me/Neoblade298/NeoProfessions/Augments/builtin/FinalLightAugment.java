@@ -14,8 +14,12 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class FinalLightAugment extends Augment implements ModManaGainAugment {
+	private double manaMult = AugmentManager.getValue("finallight.mana-multiplier-base");
+	private double manaMultLvl = AugmentManager.getValue("finallight.mana-multiplier-per-lvl");
+	private int maxHealth = (int) AugmentManager.getValue("finallight.max-health");
 	
 	public FinalLightAugment() {
 		super();
@@ -31,7 +35,7 @@ public class FinalLightAugment extends Augment implements ModManaGainAugment {
 
 	@Override
 	public double getManaGainMult(Player user) {
-		return 0.08 * (level / 5);
+		return manaMult + (manaMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -42,7 +46,7 @@ public class FinalLightAugment extends Augment implements ModManaGainAugment {
 	@Override
 	public boolean canUse(PlayerData user, ManaSource src) {
 		double percentage = (user.getPlayer().getHealth() / user.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-		return percentage < 0.3;
+		return percentage < maxHealth;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -50,7 +54,7 @@ public class FinalLightAugment extends Augment implements ModManaGainAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases resource regen by §f" + formatPercentage(getManaGainMult(user)) + "% §7when");
-		lore.add("§7below 30% health.");
+		lore.add("§7below " + maxHealth + "% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

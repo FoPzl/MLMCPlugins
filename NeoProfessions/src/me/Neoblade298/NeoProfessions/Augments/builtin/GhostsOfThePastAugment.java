@@ -15,8 +15,10 @@ import com.sucy.skill.api.skills.SkillShot;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class GhostsOfThePastAugment extends Augment implements ModDamageDealtAugment {
+	private double damageMult = AugmentManager.getValue("ghostsofthepast.damage-multiplier");
 	
 	public GhostsOfThePastAugment() {
 		super();
@@ -32,7 +34,7 @@ public class GhostsOfThePastAugment extends Augment implements ModDamageDealtAug
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.2;
+		return damageMult;
 	}
 
 	@Override

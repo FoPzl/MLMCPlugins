@@ -14,8 +14,11 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
+	private double damageCap = AugmentManager.getValue("insidious.damage-cap");
+	private double chance = AugmentManager.getValue("insidious.chance");
 	
 	public InsidiousAugment() {
 		super();
@@ -41,7 +44,7 @@ public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target, PlayerCalculateDamageEvent e) {
-		return e.getDamage() < 300 && Professions.gen.nextDouble() <= 0.3;
+		return e.getDamage() < damageCap && Professions.gen.nextDouble() <= chance;
 	}
 	
 	@Override
@@ -58,8 +61,8 @@ public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Upon taking <300 damage pre-defense,");
-		lore.add("§f30%§7 chance to take 0 damage.");
+		lore.add("§7Upon taking <" + damageCap + " damage pre-defense,");
+		lore.add("§f" + formatPercentage(chance) + "%§7 chance to take 0 damage.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

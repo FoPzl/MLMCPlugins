@@ -14,8 +14,11 @@ import com.sucy.skill.api.util.BuffType;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModBuffAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CommanderAugment extends Augment implements ModBuffAugment {
+	double buffMult = AugmentManager.getValue("commander.buff-multiplier-base");
+	double buffMultLvl = AugmentManager.getValue("commander.buff-multiplier-per-lvl");
 	
 	public CommanderAugment() {
 		super();
@@ -31,7 +34,7 @@ public class CommanderAugment extends Augment implements ModBuffAugment {
 
 	@Override
 	public double getBuffMult(LivingEntity user) {
-		return 0.01 * (level / 5);
+		return buffMult + (buffMultLvl * ((level / 5) - 1);
 	}
 
 	@Override

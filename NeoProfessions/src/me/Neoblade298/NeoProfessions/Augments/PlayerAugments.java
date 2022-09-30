@@ -1,4 +1,4 @@
-package me.Neoblade298.NeoProfessions.Augments.builtin;
+package me.Neoblade298.NeoProfessions.Augments;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -12,8 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.Neoblade298.NeoProfessions.Augments.Augment;
-import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Objects.StoredAttributes;

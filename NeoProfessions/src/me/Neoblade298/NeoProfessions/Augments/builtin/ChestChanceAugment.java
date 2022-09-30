@@ -10,9 +10,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModChestDropAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
 public class ChestChanceAugment extends Augment implements ModChestDropAugment {
+	private double chestChance = AugmentManager.getValue("chestchance.chance-multiplier-base");
+	private double chestChanceLvl = AugmentManager.getValue("chestchance.chance-multiplier-per-lvl");
 	
 	public ChestChanceAugment() {
 		super();
@@ -33,7 +36,7 @@ public class ChestChanceAugment extends Augment implements ModChestDropAugment {
 	
 	@Override
 	public double getChestChanceMult(Player user) {
-		return 0.01 * (level / 5);
+		return chestChance + (chestChanceLvl * ((level / 5) - 1));
 	}
 
 	@Override

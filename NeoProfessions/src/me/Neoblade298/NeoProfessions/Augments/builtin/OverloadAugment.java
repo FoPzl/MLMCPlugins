@@ -15,22 +15,29 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class OverloadAugment extends Augment implements ModDamageDealtAugment {
-	double manaTaken;
+	private double damageMult = AugmentManager.getValue("overload.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("overload.damage-multiplier-per-lvl");
+	private double manaTaken = AugmentManager.getValue("overload.mana-taken-base");
+	private double manaTakenLvl = AugmentManager.getValue("overload.mana-taken-per-lvl");
+	private double minMana = AugmentManager.getValue("overload.min-mana");
 	
 	public OverloadAugment() {
 		super();
 		this.name = "Overload";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.manaTaken = (this.level / 5) * 0.5;
 	}
 
 	public OverloadAugment(int level) {
 		super(level);
 		this.name = "Overload";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.manaTaken = (this.level / 5) * 0.5;
+	}
+	
+	private double getManaTaken() {
+		return manaTaken + (manaTakenLvl * ((level / 5) - 1));
 	}
 	
 	@Override
@@ -40,7 +47,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.015 * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -60,7 +67,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
 		lore.add("§7damage while above 10% mana. Costs");
-		lore.add("§f" + this.manaTaken + " §7mana per damage instance.");
+		lore.add("§f" + formatDouble(getManaTaken()) + " §7mana per damage instance.");
 		lore.add("§cOnly works with mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

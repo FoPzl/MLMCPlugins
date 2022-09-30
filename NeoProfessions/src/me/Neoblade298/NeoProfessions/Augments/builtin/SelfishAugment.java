@@ -13,8 +13,11 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SelfishAugment extends Augment implements ModHealAugment {
+	private double healMult = AugmentManager.getValue("selfish.heal-multiplier-base");
+	private double healMultLvl = AugmentManager.getValue("selfish.heal-multiplier-per-lvl");
 	
 	public SelfishAugment() {
 		super();
@@ -30,7 +33,7 @@ public class SelfishAugment extends Augment implements ModHealAugment {
 
 	@Override
 	public double getHealMult(Player user) {
-		return 0.005 * (level / 5);
+		return healMult + (healMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

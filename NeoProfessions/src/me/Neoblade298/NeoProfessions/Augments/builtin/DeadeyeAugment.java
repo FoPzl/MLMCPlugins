@@ -14,9 +14,10 @@ import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
-	private static final double DAMAGE_MULTIPLIER = 0.5;
+	private double damageMult = AugmentManager.getValue("deadeye.damage-multiplier");
 	
 	public DeadeyeAugment() {
 		super();
@@ -32,7 +33,7 @@ public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtFlat(LivingEntity user, PlayerCalculateDamageEvent e) {
-		double newDamage = e.getDamage() * 0.5;
+		double newDamage = e.getDamage() * damageMult;
 		return Math.min(100, newDamage);
 	}
 
@@ -62,7 +63,7 @@ public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Increases damage by §f" + formatPercentage(DAMAGE_MULTIPLIER) + "% §7when dealing");
+		lore.add("§7Increases damage by §f" + formatPercentage(damageMult) + "% §7when dealing");
 		lore.add("§7damage further than 10 blocks away.");
 		lore.add("§7Capped to §f100 §7increase.");
 		meta.setLore(lore);

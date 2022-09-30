@@ -16,21 +16,27 @@ import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModCritCheckAugment;
 import me.Neoblade298.NeoProfessions.Augments.ModCritSuccessAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class FerociousAugment extends Augment implements ModCritCheckAugment, ModCritSuccessAugment {
-	private double cdr;
+	private double critMult = AugmentManager.getValue("ferocious.crit-multiplier-base");
+	private double critMultLvl = AugmentManager.getValue("ferocious.crit-multiplier-per-lvl");
+	private double cdr = AugmentManager.getValue("ferocious.cooldown-reduction-base");
+	private double cdrLvl = AugmentManager.getValue("ferocious.cooldown-reduction-per-lvl");
+	private double cdrFinal;
+	
 	public FerociousAugment() {
 		super();
 		this.name = "Ferocious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.CRIT_SUCCESS});
-		this.cdr = 0.1 * (level / 5);
+		this.cdrFinal = cdr + (cdrLvl * ((level / 5) - 1));
 	}
 
 	public FerociousAugment(int level) {
 		super(level);
 		this.name = "Ferocious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.CRIT_SUCCESS});
-		this.cdr = 0.1 * (level / 5);
+		this.cdrFinal = cdr + (cdrLvl * ((level / 5) - 1));
 	}
 	
 	@Override
@@ -42,7 +48,7 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 
 	@Override
 	public double getCritChanceMult(Player user) {
-		return -0.2 + (0.001 * (level / 5));
+		return critMult + (critMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

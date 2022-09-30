@@ -12,8 +12,11 @@ import com.sucy.skill.api.event.FlagApplyEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModFlagAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class HolyAugment extends Augment implements ModFlagAugment {
+	private double timeMult = AugmentManager.getValue("holy.time-multiplier-base");
+	private double timeMultLvl = AugmentManager.getValue("holy.time-multiplier-per-lvl");
 	
 	public HolyAugment() {
 		super();
@@ -29,7 +32,7 @@ public class HolyAugment extends Augment implements ModFlagAugment {
 
 	@Override
 	public double getFlagTimeMult(Player user) {
-		return -0.015 * (level / 5);
+		return timeMult * (timeMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class TenacityAugment extends Augment implements ModFlagAugment {
 
 	@Override
 	public double getFlagTimeMult(Player user) {
-		return -0.015 * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

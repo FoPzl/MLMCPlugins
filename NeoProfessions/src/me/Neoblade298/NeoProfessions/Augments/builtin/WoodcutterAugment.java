@@ -10,9 +10,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModProfessionHarvestAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class WoodcutterAugment extends Augment implements ModProfessionHarvestAugment {
+	private double chanceMult = AugmentManager.getValue("woodcutter.chance-multiplier-base");
+	private double chanceMultLvl = AugmentManager.getValue("woodcutter.chance-multiplier-per-lvl");
 	
 	public WoodcutterAugment() {
 		super();
@@ -28,7 +31,7 @@ public class WoodcutterAugment extends Augment implements ModProfessionHarvestAu
 	
 	@Override
 	public double getChance() {
-		return (this.level / 5) * 0.01;
+		return chanceMult + (chanceMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

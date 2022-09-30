@@ -14,8 +14,12 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModCritCheckAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CorneredAugment extends Augment implements ModCritCheckAugment {
+	double critMult = AugmentManager.getValue("cornered.crit-multiplier-base");
+	double critMultLvl = AugmentManager.getValue("cornered.crit-multiplier-per-lvl");
+	double minHealth = AugmentManager.getValue("cornered.min-health");
 	
 	public CorneredAugment() {
 		super();
@@ -31,7 +35,7 @@ public class CorneredAugment extends Augment implements ModCritCheckAugment {
 
 	@Override
 	public double getCritChanceMult(Player user) {
-		return 0.01 * (level / 5);
+		return critMult + (critMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -43,7 +47,7 @@ public class CorneredAugment extends Augment implements ModCritCheckAugment {
 	public boolean canUse(PlayerData user, PlayerCriticalCheckEvent e) {
 		Player p = user.getPlayer();
 		double percentage = p.getHealth() / p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.3;
+		return percentage < minHealth;
 	}
 
 	public ItemStack getItem(Player user) {

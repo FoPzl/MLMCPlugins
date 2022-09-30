@@ -13,8 +13,11 @@ import com.sucy.skill.api.event.PlayerCalculateDamageEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class ProtectionAugment extends Augment implements ModDamageTakenAugment {
+	private double damageTakenMult = AugmentManager.getValue("protection.damage-taken-multiplier-base");
+	private double damageTakenMultLvl = AugmentManager.getValue("protection.damage-taken-multiplier-per-lvl");
 	
 	public ProtectionAugment() {
 		super();
@@ -30,7 +33,7 @@ public class ProtectionAugment extends Augment implements ModDamageTakenAugment 
 
 	@Override
 	public double getDamageTakenMult(LivingEntity user) {
-		return 0.004 * (level / 5);
+		return damageTakenMult + (damageTakenMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

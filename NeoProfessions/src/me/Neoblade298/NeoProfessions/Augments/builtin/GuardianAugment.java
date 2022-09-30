@@ -14,8 +14,11 @@ import com.sucy.skill.api.util.BuffType;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModBuffAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class GuardianAugment extends Augment implements ModBuffAugment {
+	private double defenseMult = AugmentManager.getValue("guardian.defense-multiplier-base");
+	private double defenseMultLvl = AugmentManager.getValue("guardian.defense-multiplier-per-lvl");
 	
 	public GuardianAugment() {
 		super();
@@ -31,7 +34,7 @@ public class GuardianAugment extends Augment implements ModBuffAugment {
 
 	@Override
 	public double getBuffMult(LivingEntity user) {
-		return 0.02 * (level / 5);
+		return defenseMult + (defenseMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

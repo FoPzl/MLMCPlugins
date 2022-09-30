@@ -14,8 +14,11 @@ import com.sucy.skill.api.util.FlagManager;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SanguineThirstAugment extends Augment implements ModDamageDealtAugment {
+	private int cooldownSeconds = (int) AugmentManager.getValue("sanguinethirst.cooldown-seconds");
+	private double healing = AugmentManager.getValue("sanguinethirst.healing");
 	
 	public SanguineThirstAugment() {
 		super();
@@ -47,8 +50,8 @@ public class SanguineThirstAugment extends Augment implements ModDamageDealtAugm
 	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
 		Player p = user.getPlayer();
 		double max = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		p.setHealth(Math.min(max, p.getHealth() + (max * 0.02)));
-		FlagManager.addFlag(user, user, "aug_sanguineThirst", 200);
+		p.setHealth(Math.min(max, p.getHealth() + (max * healing)));
+		FlagManager.addFlag(user, user, "aug_sanguineThirst", cooldownSeconds * 20);
 	}
 
 	@Override
@@ -60,8 +63,8 @@ public class SanguineThirstAugment extends Augment implements ModDamageDealtAugm
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Dealing damage heals for §f2% §7your");
-		lore.add("§7max health. 10s cooldown.");
+		lore.add("§7Dealing damage heals for §f" + formatPercentage(healing) + "% §7your");
+		lore.add("§7max health. " + cooldownSeconds + "s cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

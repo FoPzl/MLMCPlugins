@@ -14,8 +14,11 @@ import com.sucy.skill.api.util.BuffType;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModBuffAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class InspireAugment extends Augment implements ModBuffAugment {
+	private double timeMult = AugmentManager.getValue("inspire.time-multiplier-base");
+	private double timeMultLvl = AugmentManager.getValue("inspire.time-multiplier-per-lvl");
 	
 	public InspireAugment() {
 		super();
@@ -31,7 +34,7 @@ public class InspireAugment extends Augment implements ModBuffAugment {
 
 	@Override
 	public double getBuffTimeMult(LivingEntity user) {
-		return 0.02 * (level / 5);
+		return timeMult * (timeMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

@@ -14,8 +14,12 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class RallyAugment extends Augment implements ModHealAugment {
+	private double healMult = AugmentManager.getValue("rally.heal-multiplier-base");
+	private double healMultLvl = AugmentManager.getValue("rally.heal-multiplier-per-lvl");
+	private double minHealth = AugmentManager.getValue("rally.min-health");
 	
 	public RallyAugment() {
 		super();
@@ -31,7 +35,7 @@ public class RallyAugment extends Augment implements ModHealAugment {
 
 	@Override
 	public double getHealMult(Player user) {
-		return 0.01 * (level / 5);
+		return healMult + (healMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -43,7 +47,7 @@ public class RallyAugment extends Augment implements ModHealAugment {
 	public boolean canUse(PlayerData user, LivingEntity target) {
 		Player p = user.getPlayer();
 		double percentage = p.getHealth() / p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage > 0.7;
+		return percentage > minHealth;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -51,7 +55,7 @@ public class RallyAugment extends Augment implements ModHealAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases healing by §f" + formatPercentage(getHealMult(user)) + "% §7while");
-		lore.add("§7above 70% health.");
+		lore.add("§7above " + formatPercentage(minHealth) + "% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

@@ -12,27 +12,30 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CalmingAugment extends Augment implements ModDamageDealtAugment {
-	double threatReduction;
+	private double threatReduc = AugmentManager.getValue("calming.threat-reduction-base");
+	private double threatReducLvl = AugmentManager.getValue("calming.threat-reduction-per-lvl");
+	private double finalThreatReduc;
 	
 	public CalmingAugment() {
 		super();
 		this.name = "Calming";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.threatReduction = (this.level / 5) * 0.02;
+		finalThreatReduc = threatReduc + (threatReducLvl * ((level / 5) - 1));
 	}
 
 	public CalmingAugment(int level) {
 		super(level);
 		this.name = "Calming";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		this.threatReduction = (this.level / 5) * 0.02;
+		finalThreatReduc = threatReduc + (threatReducLvl * (level / 5));
 	}
 	
 	@Override
 	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
-		MythicBukkit.inst().getAPIHelper().reduceThreat(target, user, damage * this.threatReduction);
+		MythicBukkit.inst().getAPIHelper().reduceThreat(target, user, damage * this.finalThreatReduc);
 	}
 
 	@Override
@@ -50,7 +53,7 @@ public class CalmingAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Reduces threat generated from dealing");
-		lore.add("§7damage by §f" + formatPercentage(this.threatReduction) + "%§7.");
+		lore.add("§7damage by §f" + formatPercentage(this.finalThreatReduc) + "%§7.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

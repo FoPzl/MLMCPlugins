@@ -11,8 +11,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModTauntAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class ImposingAugment extends Augment implements ModTauntAugment {
+	private double tauntMult = AugmentManager.getValue("imposing.taunt-multiplier-base");
+	private double tauntMultLvl = AugmentManager.getValue("imposing.taunt-multiplier-per-lvl");
+	private double minHealth = AugmentManager.getValue("imposing.min-health");
 	
 	public ImposingAugment() {
 		super();
@@ -28,7 +32,7 @@ public class ImposingAugment extends Augment implements ModTauntAugment {
 
 	@Override
 	public double getTauntGainMult(Player user) {
-		return 0.05 * (level / 5);
+		return tauntMult + (tauntMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -39,7 +43,7 @@ public class ImposingAugment extends Augment implements ModTauntAugment {
 	@Override
 	public boolean canUse(Player user) {
 		double percentage = user.getHealth() / user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage > 0.8;
+		return percentage > minHealth;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -47,7 +51,7 @@ public class ImposingAugment extends Augment implements ModTauntAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases taunts by §f" + formatPercentage(getTauntGainMult(user)) + "%");
-		lore.add("§7when above 80% health.");
+		lore.add("§7when above " + formatPercentage(minHealth) + "% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

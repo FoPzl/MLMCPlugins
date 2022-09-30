@@ -17,8 +17,10 @@ import com.sucy.skill.api.util.FlagManager;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class InexorableAugment extends Augment implements ModDamageTakenAugment {
+	private int secondsActive = (int) AugmentManager.getValue("inexorable.seconds-active");
 	
 	public InexorableAugment() {
 		super();
@@ -52,8 +54,8 @@ public class InexorableAugment extends Augment implements ModDamageTakenAugment 
 		// Not on CD
 		if (!FlagManager.hasFlag(user, "aug_cd_inexorable") && user.isBlocking()) {
 			FlagManager.addFlag(user, user, "aug_cd_inexorable", 400);
-			FlagManager.addFlag(user, user, "aug_inexorable", 100);
-			user.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 100, 0));
+			FlagManager.addFlag(user, user, "aug_inexorable", secondsActive * 20);
+			user.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, secondsActive * 20, 0));
 			return true;
 		}
 		
@@ -76,8 +78,8 @@ public class InexorableAugment extends Augment implements ModDamageTakenAugment 
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Blocking damage with the shield grants");
-		lore.add("§7invulnerability for 5 seconds while");
-		lore.add("§7the shield remains raised.");
+		lore.add("§7invulnerability for " + secondsActive + " seconds while");
+		lore.add("§7the shield remains raised. 20s cd on use.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

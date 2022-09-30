@@ -13,8 +13,12 @@ import com.sucy.skill.api.player.PlayerData;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class PerceptiveAugment extends Augment implements ModManaGainAugment {
+	private double manaMult = AugmentManager.getValue("perceptive.mana-multiplier-base");
+	private double manaMultLvl = AugmentManager.getValue("perceptive.mana-multiplier-per-lvl");
+	private double minMana = AugmentManager.getValue("perceptive.min-mana");
 	
 	public PerceptiveAugment() {
 		super();
@@ -30,7 +34,7 @@ public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 
 	@Override
 	public double getManaGainMult(Player user) {
-		return 0.02 * (level / 5);
+		return manaMult + (manaMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 
 	@Override
 	public boolean canUse(PlayerData user, ManaSource src) {
-		return ((user.getMana() / user.getMaxMana()) > 0.5) && 
+		return ((user.getMana() / user.getMaxMana()) > minMana) && 
 				!user.getClass("class").getData().getManaName().endsWith("MP");
 	}
 
@@ -49,7 +53,7 @@ public class PerceptiveAugment extends Augment implements ModManaGainAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases resource regen by §f" + formatPercentage(getManaGainMult(user)) + "% §7when");
-		lore.add("§7above 50% resource.");
+		lore.add("§7above " + formatPercentage(minMana) + "% resource.");
 		lore.add("§cDoesn't work with mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

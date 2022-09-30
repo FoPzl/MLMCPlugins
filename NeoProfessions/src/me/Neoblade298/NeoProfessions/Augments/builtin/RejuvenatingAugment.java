@@ -15,21 +15,26 @@ import com.sucy.skill.api.util.FlagManager;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class RejuvenatingAugment extends Augment implements ModHealAugment {
-	private double manaGain;
+	private double manaGain = AugmentManager.getValue("rejuvenating.mana-gain-base");
+	private double manaGainLvl = AugmentManager.getValue("rejuvenating.mana-gain-per-lvl");
+	private int cooldownSeconds = (int) AugmentManager.getValue("rejuvenating.cooldown-seconds");
 	public RejuvenatingAugment() {
 		super();
 		this.name = "Rejuvenating";
 		this.etypes = Arrays.asList(new EventType[] {EventType.HEAL});
-		this.manaGain = (level / 5);
 	}
 
 	public RejuvenatingAugment(int level) {
 		super(level);
 		this.name = "Rejuvenating";
 		this.etypes = Arrays.asList(new EventType[] {EventType.HEAL});
-		this.manaGain = (level / 5);
+	}
+	
+	private double getManaGain() {
+		return manaGain + (manaGainLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -40,7 +45,7 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 	@Override
 	public void applyHealEffects(PlayerData user, LivingEntity target, double healing) {
 		SkillAPI.getPlayerData((Player) target).giveMana(this.manaGain);
-		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_rejuvenating", 40);
+		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_rejuvenating", cooldownSeconds * 20);
 	}
 
 	@Override
@@ -58,8 +63,8 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Healing also grants healed player");
-		lore.add("§f" + this.manaGain + " §7mana. Only works on mana users.");
-		lore.add("§7Has a 2 second cooldown.");
+		lore.add("§f" + formatDouble(getManaGain()) + " §7mana. Only works on mana users.");
+		lore.add("§7Has a " + cooldownSeconds + " second cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

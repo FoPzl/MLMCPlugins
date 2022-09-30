@@ -14,8 +14,10 @@ import com.sucy.skill.api.util.FlagManager;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CrimsonPactAugment extends Augment implements ModDamageDealtAugment {
+	private double damageMult = AugmentManager.getValue("crimsonpact.damage-multiplier");
 	
 	public CrimsonPactAugment() {
 		super();
@@ -40,7 +42,7 @@ public class CrimsonPactAugment extends Augment implements ModDamageDealtAugment
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return 0.3;
+		return damageMult;
 	}
 
 	@Override
