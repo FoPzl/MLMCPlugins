@@ -23,20 +23,17 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 	private double critMultLvl = AugmentManager.getValue("ferocious.crit-multiplier-per-lvl");
 	private double cdr = AugmentManager.getValue("ferocious.cooldown-reduction-base");
 	private double cdrLvl = AugmentManager.getValue("ferocious.cooldown-reduction-per-lvl");
-	private double cdrFinal;
 	
 	public FerociousAugment() {
 		super();
 		this.name = "Ferocious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.CRIT_SUCCESS});
-		this.cdrFinal = cdr + (cdrLvl * ((level / 5) - 1));
 	}
 
 	public FerociousAugment(int level) {
 		super(level);
 		this.name = "Ferocious";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_CHECK, EventType.CRIT_SUCCESS});
-		this.cdrFinal = cdr + (cdrLvl * ((level / 5) - 1));
 	}
 	
 	@Override
@@ -44,6 +41,10 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
         for (PlayerSkill data : user.getSkills()) {
             data.subtractCooldown(this.cdr);
         }
+	}
+	
+	private double getCdr() {
+		return cdr + (cdrLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 		List<String> lore = meta.getLore();
 		lore.add("§7Decreases critical hit chance by §f" + formatPercentage(getCritChanceMult(user)) + "%,");
 		lore.add("§7but lower active skill cooldowns by");
-		lore.add("§f" + formatDouble(this.cdr) + " §7on critical hit.");
+		lore.add("§f" + formatDouble(getCdr()) + " §7on critical hit.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

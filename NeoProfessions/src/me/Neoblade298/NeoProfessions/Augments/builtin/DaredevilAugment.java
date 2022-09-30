@@ -17,9 +17,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DaredevilAugment extends Augment implements ModDamageTakenAugment {
-	private double damageMult = AugmentManager.getValue("bruiser.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("bruiser.damage-multiplier-per-lvl");
-	private double minHealth = AugmentManager.getValue("bruiser.min-health");
+	private double damageMult = AugmentManager.getValue("daredevil.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("daredevil.damage-multiplier-per-lvl");
+	private double minHealth = AugmentManager.getValue("daredevil.min-health");
 	
 	public DaredevilAugment() {
 		super();

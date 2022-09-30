@@ -34,7 +34,7 @@ public class CommanderAugment extends Augment implements ModBuffAugment {
 
 	@Override
 	public double getBuffMult(LivingEntity user) {
-		return buffMult + (buffMultLvl * ((level / 5) - 1);
+		return buffMult + (buffMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

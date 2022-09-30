@@ -19,8 +19,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 
 public class SpellweavingAugment extends Augment implements ModCritSuccessAugment {
-	private double manaGain = AugmentManager.getValue("rejuvenating.mana-gain-base");
-	private double manaGainLvl = AugmentManager.getValue("rejuvenating.mana-gain-per-lvl");
+	private double manaGain = AugmentManager.getValue("spellweaving.mana-gain-base");
+	private double manaGainLvl = AugmentManager.getValue("spellweaving.mana-gain-per-lvl");
 	private static final FlagSettings flag = new FlagSettings("aug_spellweaving", 40);
 	
 	public SpellweavingAugment() {
