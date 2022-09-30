@@ -30,6 +30,7 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 		TownyAPI api = TownyAPI.getInstance();
 		Resident r = api.getResident(uuid);
 		t = r.getTownOrNull();
+		if (t == null) return;
 		n = t.getNationOrNull();
 		if (n == null) return;
 		ne = PointsManager.getNationEntry(n.getUUID());
