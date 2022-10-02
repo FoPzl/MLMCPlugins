@@ -17,8 +17,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 public class SniperAugment extends Augment implements ModDamageDealtAugment {
 	private int minDistance = (int) AugmentManager.getValue("sniper.min-distance");
 	private int minDistanceSq = (int) Math.pow(AugmentManager.getValue("sniper.min-distance"), 2);
-	private double damageMult = AugmentManager.getValue("overload.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("overload.damage-multiplier-per-lvl");
+	private double damageMult = AugmentManager.getValue("sniper.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("sniper.damage-multiplier-per-lvl");
 	double manaTaken;
 	
 	public SniperAugment() {
