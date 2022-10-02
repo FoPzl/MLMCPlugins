@@ -26,7 +26,7 @@ import me.neoblade298.neoleaderboard.points.PointsManager;
 public class PointsListener implements Listener {
 	public static final double BLOCK_EDIT_POINTS = 0.002;
 	public static final double KILL_PLAYER_POINTS = 5;
-	public static final double KILL_BOSS_BASE_POINTS = 0.05;
+	public static final double KILL_BOSS_BASE_POINTS = 0.01;
 	public static final double MINUTES_ONLINE_POINTS = 0.1;
 	private static final HashMap<UUID, Long> deathCooldowns = new HashMap<UUID, Long>();
 	private static final long DEATH_COOLDOWN = 600000L;

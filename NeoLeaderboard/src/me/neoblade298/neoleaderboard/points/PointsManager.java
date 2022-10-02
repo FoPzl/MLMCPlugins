@@ -537,6 +537,7 @@ public class PointsManager implements IOComponent {
 					for (String db : dbs) {
 						stmt.addBatch(createCopyQuery(db));
 					}
+					stmt.addBatch("INSERT INTO neoleaderboard_previous_winner VALUES('" + n.getName() + "'," + winner.getTotalPoints() + ");");
 					stmt.executeBatch();
 					playerEntries.clear();
 					nationEntries.clear();
