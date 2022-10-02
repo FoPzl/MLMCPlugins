@@ -15,9 +15,11 @@ import com.sucy.skill.api.util.FlagManager;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 
 public class ThornsAugment extends Augment implements ModDamageTakenAugment {
+	private double maxHealth = AugmentManager.getValue("thorns.max-health-modifier-base");
 	private double maxHealthMod;
 	
 	private static FlagSettings flag = new FlagSettings("aug_thorns", 20);
@@ -34,6 +36,10 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 		this.name = "Thorns";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
 		this.maxHealthMod = (this.level / 5) * 0.002;
+	}
+	
+	private void getHealthMod() {
+		
 	}
 	
 	@Override

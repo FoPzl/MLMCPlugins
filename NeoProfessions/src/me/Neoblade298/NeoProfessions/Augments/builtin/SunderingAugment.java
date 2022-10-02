@@ -12,8 +12,11 @@ import com.sucy.skill.api.event.PlayerCriticalDamageEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModCritDamageAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SunderingAugment extends Augment implements ModCritDamageAugment {
+	private double damageMult = AugmentManager.getValue("sundering.crit-damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("sundering.crit-damage-multiplier-per-lvl");
 	
 	public SunderingAugment() {
 		super();

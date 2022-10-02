@@ -12,8 +12,11 @@ import com.sucy.skill.api.event.FlagApplyEvent;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModFlagAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class TenacityAugment extends Augment implements ModFlagAugment {
+	private double timeMult = AugmentManager.getValue("tenacity.time-multiplier-base");
+	private double timeMultLvl = AugmentManager.getValue("tenacity.time-multiplier-per-lvl");
 	
 	public TenacityAugment() {
 		super();
@@ -29,7 +32,7 @@ public class TenacityAugment extends Augment implements ModFlagAugment {
 
 	@Override
 	public double getFlagTimeMult(Player user) {
-		return damageMult + (damageMultLvl * ((level / 5) - 1));
+		return timeMult + (timeMultLvl * ((level / 5) - 1));
 	}
 
 	@Override
