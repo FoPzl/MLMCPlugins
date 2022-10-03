@@ -20,7 +20,7 @@ import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 
 public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	private double maxHealth = AugmentManager.getValue("thorns.max-health-modifier-base");
-	private double maxHealthMod;
+	private double maxHealthLvl = AugmentManager.getValue("thorns.max-health-modifier-per-lvl");
 	
 	private static FlagSettings flag = new FlagSettings("aug_thorns", 20);
 	
@@ -28,18 +28,16 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 		super();
 		this.name = "Thorns";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
-		this.maxHealthMod = (this.level / 5) * 0.002;
 	}
 
 	public ThornsAugment(int level) {
 		super(level);
 		this.name = "Thorns";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_TAKEN});
-		this.maxHealthMod = (this.level / 5) * 0.002;
 	}
 	
-	private void getHealthMod() {
-		
+	private double getHealthMod() {
+		return maxHealth + (maxHealthLvl * ((level / 5) - 1));
 	}
 	
 	@Override
@@ -69,7 +67,7 @@ public class ThornsAugment extends Augment implements ModDamageTakenAugment {
 	}
 	
 	private double getDamageReturned(Player p) {
-		return p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * this.maxHealthMod;
+		return p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * getHealthMod();
 	}
 
 	@Override

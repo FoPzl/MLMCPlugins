@@ -10,8 +10,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModTauntAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SteadfastAugment extends Augment implements ModTauntAugment {
+	private double tauntMult = AugmentManager.getValue("steadfast.taunt-multiplier-base");
+	private double tauntMultLvl = AugmentManager.getValue("steadfast.taunt-multiplier-per-lvl");
 	
 	public SteadfastAugment() {
 		super();
@@ -27,7 +30,7 @@ public class SteadfastAugment extends Augment implements ModTauntAugment {
 
 	@Override
 	public double getTauntGainMult(Player user) {
-		return damageMult + (damageMultLvl * ((level / 5) - 1));
+		return tauntMult + (tauntMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

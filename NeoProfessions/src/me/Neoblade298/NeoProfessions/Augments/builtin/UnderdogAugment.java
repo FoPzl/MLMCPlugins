@@ -12,8 +12,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.Neoblade298.NeoProfessions.Augments.Augment;
 import me.Neoblade298.NeoProfessions.Augments.EventType;
 import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
+import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
+	private double damageMult = AugmentManager.getValue("underdog.damage-multiplier-base");
+	private double damageMultLvl = AugmentManager.getValue("underdog.damage-multiplier-per-lvl");
+	private double maxHealth = AugmentManager.getValue("underdog.max-health");
 	
 	public UnderdogAugment() {
 		super();
@@ -40,7 +44,7 @@ public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
 		double percentage = user.getHealth() / user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		return percentage < 0.3;
+		return percentage < maxHealth;
 	}
 
 	public ItemStack getItem(Player user) {
@@ -48,7 +52,7 @@ public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when");
-		lore.add("§7below 30% health.");
+		lore.add("§7below " + formatPercentage(maxHealth) + "% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
