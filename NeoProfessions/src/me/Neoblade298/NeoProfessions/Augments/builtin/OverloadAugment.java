@@ -58,7 +58,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
 		PlayerData pdata = SkillAPI.getPlayerData(user);
-		return (pdata.getMana() / pdata.getMaxMana()) > 0.1 && pdata.getClass("class").getData().getManaName().endsWith("MP");
+		return (pdata.getMana() / pdata.getMaxMana()) > minMana && pdata.getClass("class").getData().getManaName().endsWith("MP");
 	}
 
 	public ItemStack getItem(Player user) {
@@ -66,7 +66,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage while above 10% mana. Costs");
+		lore.add("§7damage while above " + formatPercentage(minMana) + "% mana. Costs");
 		lore.add("§f" + formatDouble(getManaTaken()) + " §7mana per damage instance.");
 		lore.add("§cOnly works with mana.");
 		meta.setLore(lore);
