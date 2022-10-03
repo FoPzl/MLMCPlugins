@@ -17,7 +17,10 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("deadeye.damage-multiplier");
+	private static double damageMult = AugmentManager.getValue("deadeye.damage-multiplier");
+	private static int minDist = (int) AugmentManager.getValue("deadeye.distance-min");
+	private static double damageCap = AugmentManager.getValue("deadeye.damage-cap");
+	private static int minDistSq = (int) Math.pow(minDist, 2);
 	
 	public DeadeyeAugment() {
 		super();
@@ -34,7 +37,7 @@ public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public double getDamageDealtFlat(LivingEntity user, PlayerCalculateDamageEvent e) {
 		double newDamage = e.getDamage() * damageMult;
-		return Math.min(100, newDamage);
+		return Math.min(damageCap, newDamage);
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
 	public boolean canUse(Player user, LivingEntity target) {
 		Location diff = user.getLocation().subtract(target.getLocation());
 		double diffxy = (diff.getX() * diff.getX()) + (diff.getY() * diff.getY());
-		return diffxy >= 100;
+		return diffxy >= minDistSq;
 	}
 	
 	@Override
@@ -64,8 +67,8 @@ public class DeadeyeAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(damageMult) + "% §7when dealing");
-		lore.add("§7damage further than 10 blocks away.");
-		lore.add("§7Capped to §f100 §7increase.");
+		lore.add("§7damage further than " + minDist + " blocks away.");
+		lore.add("§7Capped to §f" + damageCap + " §7increase.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

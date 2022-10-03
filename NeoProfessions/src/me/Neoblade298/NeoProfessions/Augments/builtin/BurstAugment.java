@@ -17,8 +17,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BurstAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("burst.damage-multiplier");
-	private int minMp = (int) AugmentManager.getValue("burst.min-mp");
+	private static double damageMult = AugmentManager.getValue("burst.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("burst.damage-multiplier-per-lvl");
+	private static int minMp = (int) AugmentManager.getValue("burst.mana-percent-min");
 	
 	public BurstAugment() {
 		super();
@@ -34,7 +35,7 @@ public class BurstAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public double getDamageDealtMult(LivingEntity user) {
-		return damageMult * (level / 5);
+		return damageMult + (damageMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

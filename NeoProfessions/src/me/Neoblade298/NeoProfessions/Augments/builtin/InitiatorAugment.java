@@ -16,9 +16,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class InitiatorAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("initiator.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("initiator.damage-multiplier-per-lvl");
-	private double minHealth = AugmentManager.getValue("initiator.min-health");
+	private static double damageMult = AugmentManager.getValue("initiator.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("initiator.damage-multiplier-per-lvl");
+	private static double minHealth = AugmentManager.getValue("initiator.health-percent-min");
 	
 	public InitiatorAugment() {
 		super();

@@ -21,12 +21,12 @@ import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class MenacingAugment extends Augment implements ModDamageTakenAugment, ModManaGainAugment {
-	private double damageTakenMult = AugmentManager.getValue("menacing.regen-multiplier-base");
-	private double damageTakenMultLvl = AugmentManager.getValue("menacing.regen-multiplier-per-lvl");
-	private double resourceMult = AugmentManager.getValue("menacing.regen-multiplier-base");
-	private double resourceMultLvl = AugmentManager.getValue("menacing.regen-multiplier-per-lvl");
-	private int maxDistance = (int) AugmentManager.getValue("menacing.max-distance");
-	private int maxDistanceSq = (int) Math.pow(AugmentManager.getValue("menacing.max-distance"), 2);
+	private static double damageTakenMult = AugmentManager.getValue("menacing.damage-reduction-multiplier-base");
+	private static double damageTakenMultLvl = AugmentManager.getValue("menacing.damage-reduction-multiplier-per-lvl");
+	private static double resourceMult = AugmentManager.getValue("menacing.resource-regen-multiplier-base");
+	private static double resourceMultLvl = AugmentManager.getValue("menacing.resource-regen-multiplier-per-lvl");
+	private static int maxDistance = (int) AugmentManager.getValue("menacing.distance-max");
+	private static int maxDistanceSq = (int) Math.pow(AugmentManager.getValue("menacing.distance-max"), 2);
 	
 	public MenacingAugment() {
 		super();

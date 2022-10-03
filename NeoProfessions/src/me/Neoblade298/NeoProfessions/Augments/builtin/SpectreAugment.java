@@ -19,8 +19,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Objects.StoredAttributes;
 
 public class SpectreAugment extends Augment implements ModSkillCastAugment {
-	private int manaRegen = (int) AugmentManager.getValue("spectre.mana-regen");
-	private int healthRegen = (int) AugmentManager.getValue("spectre.health-regen");
+	private static int manaRegen = (int) AugmentManager.getValue("spectre.mana-regen");
+	private static int healthRegen = (int) AugmentManager.getValue("spectre.health-regen");
 	
 	public SpectreAugment() {
 		super();

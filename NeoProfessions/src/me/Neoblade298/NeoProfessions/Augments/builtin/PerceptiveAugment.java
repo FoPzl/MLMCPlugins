@@ -16,9 +16,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class PerceptiveAugment extends Augment implements ModManaGainAugment {
-	private double manaMult = AugmentManager.getValue("perceptive.mana-multiplier-base");
-	private double manaMultLvl = AugmentManager.getValue("perceptive.mana-multiplier-per-lvl");
-	private double minMana = AugmentManager.getValue("perceptive.min-mana");
+	private double manaMult = AugmentManager.getValue("perceptive.mana-regen-multiplier-base");
+	private double manaMultLvl = AugmentManager.getValue("perceptive.mana-regen-multiplier-per-lvl");
+	private double minMana = AugmentManager.getValue("perceptive.mana-percent-min");
 	
 	public PerceptiveAugment() {
 		super();

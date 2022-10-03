@@ -17,8 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SanguineThirstAugment extends Augment implements ModDamageDealtAugment {
-	private int cooldownSeconds = (int) AugmentManager.getValue("sanguinethirst.cooldown-seconds");
-	private double healing = AugmentManager.getValue("sanguinethirst.healing");
+	private static int cooldownSeconds = (int) AugmentManager.getValue("sanguinethirst.cooldown-seconds");
+	private static double healing = AugmentManager.getValue("sanguinethirst.heal-percent");
 	
 	public SanguineThirstAugment() {
 		super();

@@ -19,10 +19,10 @@ import me.Neoblade298.NeoProfessions.Augments.ModCritSuccessAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class FerociousAugment extends Augment implements ModCritCheckAugment, ModCritSuccessAugment {
-	private double critMult = AugmentManager.getValue("ferocious.crit-multiplier-base");
-	private double critMultLvl = AugmentManager.getValue("ferocious.crit-multiplier-per-lvl");
-	private double cdr = AugmentManager.getValue("ferocious.cooldown-reduction-base");
-	private double cdrLvl = AugmentManager.getValue("ferocious.cooldown-reduction-per-lvl");
+	private static double critMult = AugmentManager.getValue("ferocious.crit-chance-multiplier-base");
+	private static double critMultLvl = AugmentManager.getValue("ferocious.crit-chance-multiplier-per-lvl");
+	private static double cdr = AugmentManager.getValue("ferocious.cooldown-reduction-base");
+	private static double cdrLvl = AugmentManager.getValue("ferocious.cooldown-reduction-per-lvl");
 	
 	public FerociousAugment() {
 		super();

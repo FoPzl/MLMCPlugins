@@ -14,9 +14,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModTauntAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class ImposingAugment extends Augment implements ModTauntAugment {
-	private double tauntMult = AugmentManager.getValue("imposing.taunt-multiplier-base");
-	private double tauntMultLvl = AugmentManager.getValue("imposing.taunt-multiplier-per-lvl");
-	private double minHealth = AugmentManager.getValue("imposing.min-health");
+	private static double tauntMult = AugmentManager.getValue("imposing.taunt-multiplier-base");
+	private static double tauntMultLvl = AugmentManager.getValue("imposing.taunt-multiplier-per-lvl");
+	private static double minHealth = AugmentManager.getValue("imposing.health-percent-min");
 	
 	public ImposingAugment() {
 		super();

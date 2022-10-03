@@ -17,13 +17,16 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class HammerTimeAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("hammertime.damage-multiplier");
-	private int damageCap = (int) AugmentManager.getValue("hammertime.damage-cap");
+	private static double damageMult = AugmentManager.getValue("hammertime.damage-multiplier");
+	private static int damageCap = (int) AugmentManager.getValue("hammertime.damage-cap");
+	private static int distanceMax = (int) AugmentManager.getValue("hammertime.distance-max");
+	private static int distanceMaxSq;
 	
 	public HammerTimeAugment() {
 		super();
 		this.name = "Hammer Time";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
+		distanceMaxSq = (int) Math.pow(distanceMax, 2);
 	}
 
 	public HammerTimeAugment(int level) {
@@ -47,7 +50,7 @@ public class HammerTimeAugment extends Augment implements ModDamageDealtAugment 
 	public boolean canUse(Player user, LivingEntity target) {
 		Location diff = user.getLocation().subtract(target.getLocation());
 		double diffxy = (diff.getX() * diff.getX()) + (diff.getY() * diff.getY());
-		return diffxy <= 9;
+		return diffxy <= distanceMaxSq;
 	}
 	
 	@Override
@@ -65,7 +68,7 @@ public class HammerTimeAugment extends Augment implements ModDamageDealtAugment 
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(damageMult) + "% §7when dealing");
-		lore.add("§7damage closer than 3 blocks away.");
+		lore.add("§7damage closer than " + distanceMax + " blocks away.");
 		lore.add("§7Capped to §f" + damageCap + " §7increase.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

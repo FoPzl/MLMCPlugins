@@ -18,11 +18,11 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class OverloadAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("overload.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("overload.damage-multiplier-per-lvl");
-	private double manaTaken = AugmentManager.getValue("overload.mana-taken-base");
-	private double manaTakenLvl = AugmentManager.getValue("overload.mana-taken-per-lvl");
-	private double minMana = AugmentManager.getValue("overload.min-mana");
+	private static double damageMult = AugmentManager.getValue("overload.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("overload.damage-multiplier-per-lvl");
+	private static double manaTaken = AugmentManager.getValue("overload.mana-taken-base");
+	private static double manaTakenLvl = AugmentManager.getValue("overload.mana-taken-per-lvl");
+	private static double minMana = AugmentManager.getValue("overload.mana-percent-min");
 	
 	public OverloadAugment() {
 		super();

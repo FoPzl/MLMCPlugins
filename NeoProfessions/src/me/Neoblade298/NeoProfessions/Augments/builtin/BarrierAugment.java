@@ -20,8 +20,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModSkillCastAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BarrierAugment extends Augment implements ModSkillCastAugment {
-	private double damageReduction = AugmentManager.getValue("barrier.damage-reduction");
-	private int ticks = (int) AugmentManager.getValue("barrier.ticks");
+	private static double damageReduction = AugmentManager.getValue("barrier.damage-reduction");
+	private static int ticks = (int) AugmentManager.getValue("barrier.ticks");
 	
 	public BarrierAugment() {
 		super();

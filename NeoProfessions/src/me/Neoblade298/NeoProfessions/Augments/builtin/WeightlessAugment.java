@@ -18,8 +18,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModInitAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class WeightlessAugment extends Augment implements ModInitAugment, ModCleanupAugment, ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("weightless.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("weightless.damage-multiplier-per-lvl");
+	private static double damageMult = AugmentManager.getValue("weightless.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("weightless.damage-multiplier-per-lvl");
 	
 	public WeightlessAugment() {
 		super();

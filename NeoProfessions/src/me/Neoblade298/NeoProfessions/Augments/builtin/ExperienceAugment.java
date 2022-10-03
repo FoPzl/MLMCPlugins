@@ -16,8 +16,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModExpAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class ExperienceAugment extends Augment implements ModExpAugment {
-	private double expMult = AugmentManager.getValue("experience.exp-mult-base");
-	private double expMultLvl = AugmentManager.getValue("experience.exp-mult-per-lvl");
+	private static double expMult = AugmentManager.getValue("experience.experience-multiplier-base");
+	private static double expMultLvl = AugmentManager.getValue("experience.experience-multiplier-per-lvl");
 	
 	public ExperienceAugment() {
 		super();

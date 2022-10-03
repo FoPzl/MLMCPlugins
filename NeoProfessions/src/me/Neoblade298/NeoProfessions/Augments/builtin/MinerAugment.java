@@ -14,8 +14,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class MinerAugment extends Augment implements ModProfessionHarvestAugment {
-	private double chanceMult = AugmentManager.getValue("herbalist.chance-multiplier-base");
-	private double chanceMultLvl = AugmentManager.getValue("herbalist.chance-multiplier-per-lvl");
+	private static double chanceMult = AugmentManager.getValue("herbalist.chance-multiplier-base");
+	private static double chanceMultLvl = AugmentManager.getValue("herbalist.chance-multiplier-per-lvl");
 	
 	public MinerAugment() {
 		super();

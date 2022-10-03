@@ -17,9 +17,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModCritCheckAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CorneredAugment extends Augment implements ModCritCheckAugment {
-	double critMult = AugmentManager.getValue("cornered.crit-multiplier-base");
-	double critMultLvl = AugmentManager.getValue("cornered.crit-multiplier-per-lvl");
-	double minHealth = AugmentManager.getValue("cornered.min-health");
+	private static double critMult = AugmentManager.getValue("cornered.crit-multiplier-base");
+	private static double critMultLvl = AugmentManager.getValue("cornered.crit-multiplier-per-lvl");
+	private static double minHealth = AugmentManager.getValue("cornered.health-percent-min");
 	
 	public CorneredAugment() {
 		super();

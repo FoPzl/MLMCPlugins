@@ -17,8 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class OpportunistAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("opportunitist.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("opportunitist.damage-multiplier-per-lvl");
+	private static double damageMult = AugmentManager.getValue("opportunitist.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("opportunitist.damage-multiplier-per-lvl");
 	
 	public OpportunistAugment() {
 		super();

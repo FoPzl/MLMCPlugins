@@ -16,8 +16,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class ProtectionAugment extends Augment implements ModDamageTakenAugment {
-	private double damageTakenMult = AugmentManager.getValue("protection.damage-taken-multiplier-base");
-	private double damageTakenMultLvl = AugmentManager.getValue("protection.damage-taken-multiplier-per-lvl");
+	private static double damageTakenMult = AugmentManager.getValue("protection.damage-reduction-multiplier-base");
+	private static double damageTakenMultLvl = AugmentManager.getValue("protection.damage-reduction-multiplier-per-lvl");
 	
 	public ProtectionAugment() {
 		super();

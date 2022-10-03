@@ -16,10 +16,10 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BruiserAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("bruiser.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("bruiser.damage-multiplier-per-lvl");
-	private int minHealth = (int) AugmentManager.getValue("bruiser.min-health");
-	private int maxHealth = (int) AugmentManager.getValue("bruiser.max-health");
+	private static double damageMult = AugmentManager.getValue("bruiser.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("bruiser.damage-multiplier-per-lvl");
+	private static int minHealth = (int) AugmentManager.getValue("bruiser.health-percent-min");
+	private static int maxHealth = (int) AugmentManager.getValue("bruiser.health-percent-max");
 	
 	public BruiserAugment() {
 		super();

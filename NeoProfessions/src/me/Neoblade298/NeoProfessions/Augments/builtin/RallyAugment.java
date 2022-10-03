@@ -17,9 +17,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class RallyAugment extends Augment implements ModHealAugment {
-	private double healMult = AugmentManager.getValue("rally.heal-multiplier-base");
-	private double healMultLvl = AugmentManager.getValue("rally.heal-multiplier-per-lvl");
-	private double minHealth = AugmentManager.getValue("rally.min-health");
+	private static double healMult = AugmentManager.getValue("rally.heal-multiplier-base");
+	private static double healMultLvl = AugmentManager.getValue("rally.heal-multiplier-per-lvl");
+	private static double minHealth = AugmentManager.getValue("rally.health-percent-min");
 	
 	public RallyAugment() {
 		super();

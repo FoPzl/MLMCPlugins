@@ -16,9 +16,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DefianceAugment extends Augment implements ModManaGainAugment {
-	private double manaGainMult = AugmentManager.getValue("defiance.mana-gain-multiplier-base");
-	private double manaGainMultLvl = AugmentManager.getValue("defiance.mana-gain-multiplier-per-lvl");
-	private double minMana = AugmentManager.getValue("defiance.min-mana");
+	private static double manaGainMult = AugmentManager.getValue("defiance.mana-regen-multiplier-base");
+	private static double manaGainMultLvl = AugmentManager.getValue("defiance.mana-regen-multiplier-per-lvl");
+	private static double minMana = AugmentManager.getValue("defiance.mana-percent-min");
 	
 	public DefianceAugment() {
 		super();

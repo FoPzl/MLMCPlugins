@@ -17,9 +17,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModManaGainAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class FinalLightAugment extends Augment implements ModManaGainAugment {
-	private double manaMult = AugmentManager.getValue("finallight.mana-multiplier-base");
-	private double manaMultLvl = AugmentManager.getValue("finallight.mana-multiplier-per-lvl");
-	private int maxHealth = (int) AugmentManager.getValue("finallight.max-health");
+	private static double manaMult = AugmentManager.getValue("finallight.mana-regen-multiplier-base");
+	private static double manaMultLvl = AugmentManager.getValue("finallight.mana-regen-multiplier-per-lvl");
+	private static int maxHealth = (int) AugmentManager.getValue("finallight.health-percent-max");
 	
 	public FinalLightAugment() {
 		super();

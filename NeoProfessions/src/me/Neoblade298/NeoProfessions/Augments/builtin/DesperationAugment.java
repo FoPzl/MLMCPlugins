@@ -17,9 +17,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class DesperationAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("desperation.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("desperation.damage-multiplier-per-lvl");
-	private double maxMana = AugmentManager.getValue("desperation.max-mana");
+	private static double damageMult = AugmentManager.getValue("desperation.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("desperation.damage-multiplier-per-lvl");
+	private static double maxMana = AugmentManager.getValue("desperation.mana-percent-max");
 	
 	public DesperationAugment() {
 		super();

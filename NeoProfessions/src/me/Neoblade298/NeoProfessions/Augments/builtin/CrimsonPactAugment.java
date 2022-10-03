@@ -17,7 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CrimsonPactAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("crimsonpact.damage-multiplier");
+	private static double damageMult = AugmentManager.getValue("crimsonpact.damage-multiplier");
+	private static double selfDamage = AugmentManager.getValue("crimsonpact.damage-percent-self");
 	
 	public CrimsonPactAugment() {
 		super();
@@ -36,7 +37,7 @@ public class CrimsonPactAugment extends Augment implements ModDamageDealtAugment
 		if (!FlagManager.hasFlag(user, "aug_crimsonPact")) {
 			FlagManager.addFlag(user, user, "aug_crimsonPact", 40);
 			double max = user.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-			user.damage(max * 0.01);
+			user.damage(max * selfDamage);
 		}
 	}
 
@@ -70,7 +71,7 @@ public class CrimsonPactAugment extends Augment implements ModDamageDealtAugment
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "%§7.");
-		lore.add("§7Deals 1% of your max health to you");
+		lore.add("§7Deals " + formatPercentage(selfDamage) + "% of your max health to you");
 		lore.add("§7any time you deal damage. 2s cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

@@ -17,7 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class TorrentAugment extends Augment implements ModDamageDealtAugment {
-	private double healthGain = AugmentManager.getValue("torrent.health-gain");
+	private static double healthGain = AugmentManager.getValue("torrent.health-gain");
+	
 	public TorrentAugment() {
 		super();
 		this.name = "Torrent";

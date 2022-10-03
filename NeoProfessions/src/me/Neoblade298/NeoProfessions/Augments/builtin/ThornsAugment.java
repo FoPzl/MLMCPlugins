@@ -19,8 +19,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 
 public class ThornsAugment extends Augment implements ModDamageTakenAugment {
-	private double maxHealth = AugmentManager.getValue("thorns.max-health-modifier-base");
-	private double maxHealthLvl = AugmentManager.getValue("thorns.max-health-modifier-per-lvl");
+	private static double maxHealth = AugmentManager.getValue("thorns.health-percent-modifier-base");
+	private static double maxHealthLvl = AugmentManager.getValue("thorns.health-percent-modifier-per-lvl");
 	
 	private static FlagSettings flag = new FlagSettings("aug_thorns", 20);
 	

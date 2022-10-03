@@ -22,9 +22,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class EntropyAugment extends Augment implements ModDamageTakenAugment {
-	HashMap<UUID, BukkitTask> regenTasks = new HashMap<UUID, BukkitTask>();
-	HashSet<UUID> toRefresh = new HashSet<UUID>();
-	private double healthRegen = AugmentManager.getValue("entropy.health-regen");
+	private HashMap<UUID, BukkitTask> regenTasks = new HashMap<UUID, BukkitTask>();
+	private HashSet<UUID> toRefresh = new HashSet<UUID>();
+	private static double healthRegen = AugmentManager.getValue("entropy.health-percent");
 	
 	public EntropyAugment() {
 		super();

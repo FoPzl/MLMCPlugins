@@ -15,9 +15,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CalmingAugment extends Augment implements ModDamageDealtAugment {
-	private double threatReduc = AugmentManager.getValue("calming.threat-reduction-base");
-	private double threatReducLvl = AugmentManager.getValue("calming.threat-reduction-per-lvl");
-	private double finalThreatReduc;
+	private static double threatReduc = AugmentManager.getValue("calming.threat-reduction-base");
+	private static double threatReducLvl = AugmentManager.getValue("calming.threat-reduction-per-lvl");
+	private static double finalThreatReduc;
 	
 	public CalmingAugment() {
 		super();

@@ -17,8 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModBuffAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class GuardianAugment extends Augment implements ModBuffAugment {
-	private double defenseMult = AugmentManager.getValue("guardian.defense-multiplier-base");
-	private double defenseMultLvl = AugmentManager.getValue("guardian.defense-multiplier-per-lvl");
+	private static double defenseMult = AugmentManager.getValue("guardian.defense-multiplier-base");
+	private static double defenseMultLvl = AugmentManager.getValue("guardian.defense-multiplier-per-lvl");
 	
 	public GuardianAugment() {
 		super();

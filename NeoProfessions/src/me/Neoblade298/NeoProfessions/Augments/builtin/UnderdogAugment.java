@@ -15,9 +15,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class UnderdogAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("underdog.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("underdog.damage-multiplier-per-lvl");
-	private double maxHealth = AugmentManager.getValue("underdog.max-health");
+	private static double damageMult = AugmentManager.getValue("underdog.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("underdog.damage-multiplier-per-lvl");
+	private static double maxHealth = AugmentManager.getValue("underdog.health-percent-max");
 	
 	public UnderdogAugment() {
 		super();

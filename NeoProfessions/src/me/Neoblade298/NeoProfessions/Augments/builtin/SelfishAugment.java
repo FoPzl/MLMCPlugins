@@ -16,8 +16,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SelfishAugment extends Augment implements ModHealAugment {
-	private double healMult = AugmentManager.getValue("selfish.heal-multiplier-base");
-	private double healMultLvl = AugmentManager.getValue("selfish.heal-multiplier-per-lvl");
+	private static double healMult = AugmentManager.getValue("selfish.heal-multiplier-base");
+	private static double healMultLvl = AugmentManager.getValue("selfish.heal-multiplier-per-lvl");
 	
 	public SelfishAugment() {
 		super();

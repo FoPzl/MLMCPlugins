@@ -15,8 +15,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class IntimidatingAugment extends Augment implements ModDamageDealtAugment {
-	private double threatMult = AugmentManager.getValue("intimidating.threat-multiplier-base");
-	private double threatMultLvl = AugmentManager.getValue("intimidating.threat-multiplier-per-lvl");
+	private static double threatMult = AugmentManager.getValue("intimidating.threat-multiplier-base");
+	private static double threatMultLvl = AugmentManager.getValue("intimidating.threat-multiplier-per-lvl");
 	
 	public IntimidatingAugment() {
 		super();

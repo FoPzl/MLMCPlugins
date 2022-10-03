@@ -14,8 +14,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.PlayerProfessions.ProfessionType;
 
 public class WoodcutterAugment extends Augment implements ModProfessionHarvestAugment {
-	private double chanceMult = AugmentManager.getValue("woodcutter.chance-multiplier-base");
-	private double chanceMultLvl = AugmentManager.getValue("woodcutter.chance-multiplier-per-lvl");
+	private static double chanceMult = AugmentManager.getValue("woodcutter.chance-multiplier-base");
+	private static double chanceMultLvl = AugmentManager.getValue("woodcutter.chance-multiplier-per-lvl");
 	
 	public WoodcutterAugment() {
 		super();

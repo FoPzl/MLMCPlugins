@@ -14,8 +14,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
 public class ChestChanceAugment extends Augment implements ModChestDropAugment {
-	private double chestChance = AugmentManager.getValue("chestchance.chance-multiplier-base");
-	private double chestChanceLvl = AugmentManager.getValue("chestchance.chance-multiplier-per-lvl");
+	private static double chestChance = AugmentManager.getValue("chestchance.chance-multiplier-base");
+	private static double chestChanceLvl = AugmentManager.getValue("chestchance.chance-multiplier-per-lvl");
 	
 	public ChestChanceAugment() {
 		super();

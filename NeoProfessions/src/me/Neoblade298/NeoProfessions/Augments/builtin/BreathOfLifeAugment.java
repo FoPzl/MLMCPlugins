@@ -16,7 +16,7 @@ import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BreathOfLifeAugment extends Augment implements ModHealAugment {
-	private double healMult = AugmentManager.getValue("breathoflife.heal-multiplier");
+	private static double healMult = AugmentManager.getValue("breathoflife.heal-multiplier");
 	
 	public BreathOfLifeAugment() {
 		super();

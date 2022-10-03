@@ -20,9 +20,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModPotionAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class QueensGraceAugment extends Augment implements ModPotionAugment {
-	private int healthGain = (int) AugmentManager.getValue("queensgrace.health-gain");
-	private int manaGain = (int) AugmentManager.getValue("queensgrace.mana-gain");
-	private int cooldownSeconds = (int) AugmentManager.getValue("queensgrace.cooldown-seconds");
+	private static int healthGain = (int) AugmentManager.getValue("queensgrace.health-gain");
+	private static int manaGain = (int) AugmentManager.getValue("queensgrace.mana-gain");
+	private static int cooldownSeconds = (int) AugmentManager.getValue("queensgrace.cooldown-seconds");
 	
 	public QueensGraceAugment() {
 		super();

@@ -17,8 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModBuffAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class CommanderAugment extends Augment implements ModBuffAugment {
-	double buffMult = AugmentManager.getValue("commander.buff-multiplier-base");
-	double buffMultLvl = AugmentManager.getValue("commander.buff-multiplier-per-lvl");
+	private static double buffMult = AugmentManager.getValue("commander.buff-multiplier-base");
+	private static double buffMultLvl = AugmentManager.getValue("commander.buff-multiplier-per-lvl");
 	
 	public CommanderAugment() {
 		super();

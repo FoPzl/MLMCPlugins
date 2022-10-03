@@ -18,9 +18,10 @@ import me.Neoblade298.NeoProfessions.Augments.ModHealAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class RejuvenatingAugment extends Augment implements ModHealAugment {
-	private double manaGain = AugmentManager.getValue("rejuvenating.mana-gain-base");
-	private double manaGainLvl = AugmentManager.getValue("rejuvenating.mana-gain-per-lvl");
-	private int cooldownSeconds = (int) AugmentManager.getValue("rejuvenating.cooldown-seconds");
+	private static double manaGain = AugmentManager.getValue("rejuvenating.mana-gain-base");
+	private static double manaGainLvl = AugmentManager.getValue("rejuvenating.mana-gain-per-lvl");
+	private static int cooldownSeconds = (int) AugmentManager.getValue("rejuvenating.cooldown-seconds");
+	
 	public RejuvenatingAugment() {
 		super();
 		this.name = "Rejuvenating";

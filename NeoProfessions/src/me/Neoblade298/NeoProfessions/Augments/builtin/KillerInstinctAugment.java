@@ -18,6 +18,7 @@ import me.Neoblade298.NeoProfessions.Augments.ModCritCheckAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class KillerInstinctAugment extends Augment implements ModCritCheckAugment {
+	private static int distanceMax = (int) AugmentManager.getValue("distance-max");
 	
 	public KillerInstinctAugment() {
 		super();
@@ -44,7 +45,7 @@ public class KillerInstinctAugment extends Augment implements ModCritCheckAugmen
 	@Override
 	public boolean canUse(PlayerData user, PlayerCriticalCheckEvent e) {
 		boolean isWithin = false;
-		for (Entity ent : user.getPlayer().getNearbyEntities(4, 4, 4)) {
+		for (Entity ent : user.getPlayer().getNearbyEntities(distanceMax, distanceMax, distanceMax)) {
 			if (!ent.hasMetadata("NPC")
 	                && !ent.getType().equals(EntityType.ARMOR_STAND) && !(ent instanceof Player)) {
 				isWithin = true;
@@ -71,7 +72,7 @@ public class KillerInstinctAugment extends Augment implements ModCritCheckAugmen
 		lore.add("§7Set effect with 4:");
 		lore.add("§7Increase crit chance");
 		lore.add("§7by §f100%§7 when within");
-		lore.add("§f4§7 blocks of an enemy.");
+		lore.add("§f" + distanceMax + "§7 blocks of an enemy.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

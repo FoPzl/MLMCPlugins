@@ -21,7 +21,7 @@ import me.Neoblade298.NeoProfessions.Augments.ModPotionAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class PhantomAugment extends Augment implements ModPotionAugment, ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("phantom.damage-multiplier");
+	private static double damageMult = AugmentManager.getValue("phantom.damage-multiplier");
 	
 	public PhantomAugment() {
 		super();

@@ -15,8 +15,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModFlagAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class TenacityAugment extends Augment implements ModFlagAugment {
-	private double timeMult = AugmentManager.getValue("tenacity.time-multiplier-base");
-	private double timeMultLvl = AugmentManager.getValue("tenacity.time-multiplier-per-lvl");
+	private static double timeMult = AugmentManager.getValue("tenacity.time-multiplier-base");
+	private static double timeMultLvl = AugmentManager.getValue("tenacity.time-multiplier-per-lvl");
 	
 	public TenacityAugment() {
 		super();

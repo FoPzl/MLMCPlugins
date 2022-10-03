@@ -13,8 +13,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModTauntAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class SteadfastAugment extends Augment implements ModTauntAugment {
-	private double tauntMult = AugmentManager.getValue("steadfast.taunt-multiplier-base");
-	private double tauntMultLvl = AugmentManager.getValue("steadfast.taunt-multiplier-per-lvl");
+	private static double tauntMult = AugmentManager.getValue("steadfast.taunt-multiplier-base");
+	private static double tauntMultLvl = AugmentManager.getValue("steadfast.taunt-multiplier-per-lvl");
 	
 	public SteadfastAugment() {
 		super();

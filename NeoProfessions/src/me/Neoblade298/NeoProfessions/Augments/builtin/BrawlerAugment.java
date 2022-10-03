@@ -20,8 +20,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class BrawlerAugment extends Augment implements ModCritSuccessAugment, ModDamageTakenAugment {
-	private double decreaseDamage = AugmentManager.getValue("brawler.damage-reduction-base");
-	private double decreaseDamageLvl = AugmentManager.getValue("brawler.damage-reduction-per-lvl");
+	private static double decreaseDamage = AugmentManager.getValue("brawler.damage-reduction-base");
+	private static double decreaseDamageLvl = AugmentManager.getValue("brawler.damage-reduction-per-lvl");
 	
 	public BrawlerAugment() {
 		super();
@@ -68,6 +68,7 @@ public class BrawlerAugment extends Augment implements ModCritSuccessAugment, Mo
 		List<String> lore = meta.getLore();
 		lore.add("§7Upon critical hit, decrease damage taken");
 		lore.add("§7by §f" + formatPercentage(getDamageTakenMult(user)) + "%§7 for §f3s§7.");
+		lore.add("§73s cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

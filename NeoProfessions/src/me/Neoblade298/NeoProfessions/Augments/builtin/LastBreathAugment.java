@@ -14,9 +14,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModRegenAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class LastBreathAugment extends Augment implements ModRegenAugment {
-	private double regenMult = AugmentManager.getValue("lastbreath.regen-multiplier-base");
-	private double regenMultLvl = AugmentManager.getValue("lastbreath.regen-multiplier-per-lvl");
-	private double maxHealth = AugmentManager.getValue("lastbreath.max-health");
+	private static double regenMult = AugmentManager.getValue("lastbreath.health-regen-multiplier-base");
+	private static double regenMultLvl = AugmentManager.getValue("lastbreath.health-regen-multiplier-per-lvl");
+	private static double maxHealth = AugmentManager.getValue("lastbreath.health-percent-max");
 	
 	public LastBreathAugment() {
 		super();

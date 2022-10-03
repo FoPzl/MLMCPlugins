@@ -15,8 +15,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModFlagAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class HolyAugment extends Augment implements ModFlagAugment {
-	private double timeMult = AugmentManager.getValue("holy.time-multiplier-base");
-	private double timeMultLvl = AugmentManager.getValue("holy.time-multiplier-per-lvl");
+	private static double timeMult = AugmentManager.getValue("holy.time-multiplier-base");
+	private static double timeMultLvl = AugmentManager.getValue("holy.time-multiplier-per-lvl");
 	
 	public HolyAugment() {
 		super();
@@ -32,7 +32,7 @@ public class HolyAugment extends Augment implements ModFlagAugment {
 
 	@Override
 	public double getFlagTimeMult(Player user) {
-		return timeMult * (timeMultLvl * ((level / 5) - 1));
+		return timeMult + (timeMultLvl * ((level / 5) - 1));
 	}
 
 	@Override

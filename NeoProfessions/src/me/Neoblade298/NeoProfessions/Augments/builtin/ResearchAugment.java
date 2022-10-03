@@ -14,8 +14,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
 
 public class ResearchAugment extends Augment implements ModResearchPointsAugment {
-	private double chanceMult = AugmentManager.getValue("research.chance-multiplier-base");
-	private double chanceMultLvl = AugmentManager.getValue("research.chance-multiplier-per-lvl");
+	private static double chanceMult = AugmentManager.getValue("research.chance-multiplier-base");
+	private static double chanceMultLvl = AugmentManager.getValue("research.chance-multiplier-per-lvl");
 	
 	public ResearchAugment() {
 		super();

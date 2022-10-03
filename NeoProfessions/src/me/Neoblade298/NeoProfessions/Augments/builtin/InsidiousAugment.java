@@ -17,8 +17,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class InsidiousAugment extends Augment implements ModDamageTakenAugment {
-	private double damageCap = AugmentManager.getValue("insidious.damage-cap");
-	private double chance = AugmentManager.getValue("insidious.chance");
+	private static double damageCap = AugmentManager.getValue("insidious.damage-cap");
+	private static double chance = AugmentManager.getValue("insidious.dodge-chance");
 	
 	public InsidiousAugment() {
 		super();

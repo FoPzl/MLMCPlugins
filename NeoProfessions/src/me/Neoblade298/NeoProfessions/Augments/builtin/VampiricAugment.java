@@ -17,9 +17,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModCritSuccessAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class VampiricAugment extends Augment implements ModCritSuccessAugment {
-	private double healthGain = AugmentManager.getValue("vampiric.health-gain-base");
-	private double healthGainLvl = AugmentManager.getValue("vampiric.health-gain-per-lvl");
-	private int healthGainFinal;
+	private static double healthGain = AugmentManager.getValue("vampiric.health-gain-base");
+	private static double healthGainLvl = AugmentManager.getValue("vampiric.health-gain-per-lvl");
+	private static int healthGainFinal;
 	
 	public VampiricAugment() {
 		super();

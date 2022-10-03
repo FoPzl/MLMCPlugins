@@ -20,7 +20,7 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageTakenAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class InexorableAugment extends Augment implements ModDamageTakenAugment {
-	private int secondsActive = (int) AugmentManager.getValue("inexorable.seconds-active");
+	private static int secondsActive = (int) AugmentManager.getValue("inexorable.seconds-active");
 	
 	public InexorableAugment() {
 		super();

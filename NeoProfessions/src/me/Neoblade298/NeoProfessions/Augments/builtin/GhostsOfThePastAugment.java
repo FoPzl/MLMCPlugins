@@ -18,7 +18,8 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class GhostsOfThePastAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("ghostsofthepast.damage-multiplier");
+	private static double damageMult = AugmentManager.getValue("ghostsofthepast.damage-multiplier");
+	private static double corruptionDmg = AugmentManager.getValue("ghostsofthepast.corruption-percent-damage");
 	
 	public GhostsOfThePastAugment() {
 		super();
@@ -50,7 +51,7 @@ public class GhostsOfThePastAugment extends Augment implements ModDamageDealtAug
 	@Override
 	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
 		Skill skill = SkillAPI.getSkill("aug_ghostsOfThePast");
-        ((SkillShot) skill).cast(user, (int) (damage * 0.01));
+        ((SkillShot) skill).cast(user, (int) (damage * corruptionDmg));
 	}
 	
 	@Override
@@ -68,7 +69,7 @@ public class GhostsOfThePastAugment extends Augment implements ModDamageDealtAug
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7but deal");
-		lore.add("§71% of pre-buff damage to yourself");
+		lore.add("§7" + formatPercentage(corruptionDmg) + "% of pre-buff damage to yourself");
 		lore.add("§7as corruption damage.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

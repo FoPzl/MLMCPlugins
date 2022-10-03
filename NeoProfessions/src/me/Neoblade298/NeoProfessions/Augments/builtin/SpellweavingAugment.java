@@ -19,9 +19,11 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 
 public class SpellweavingAugment extends Augment implements ModCritSuccessAugment {
-	private double manaGain = AugmentManager.getValue("spellweaving.mana-gain-base");
-	private double manaGainLvl = AugmentManager.getValue("spellweaving.mana-gain-per-lvl");
-	private static final FlagSettings flag = new FlagSettings("aug_spellweaving", 40);
+	private static double manaGain = AugmentManager.getValue("spellweaving.mana-gain-base");
+	private static double manaGainLvl = AugmentManager.getValue("spellweaving.mana-gain-per-lvl");
+	private static int cooldownSeconds = (int) AugmentManager.getValue("spellweaving.cooldown-seconds");
+	private static final FlagSettings flag = new FlagSettings("aug_spellweaving", cooldownSeconds * 20);
+	private double manaGainFinal = manaGain + (manaGainLvl * ((level / 5) - 1));
 	
 	public SpellweavingAugment() {
 		super();
@@ -37,11 +39,7 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 	
 	@Override
 	public void applyCritSuccessEffects(PlayerData user, double chance) {
-		user.giveMana(this.manaGain, ManaSource.SPECIAL);
-	}
-	
-	private double getManaGain() {
-		return manaGain + (manaGainLvl * ((level / 5) - 1));
+		user.giveMana(manaGainFinal, ManaSource.SPECIAL);
 	}
 
 	@Override
@@ -63,9 +61,9 @@ public class SpellweavingAugment extends Augment implements ModCritSuccessAugmen
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Upon critical hit, gain §f" + formatDouble(getManaGain()) + " §7mana.");
+		lore.add("§7Upon critical hit, gain §f" + formatDouble(manaGainFinal) + " §7mana.");
 		lore.add("§7Only works with mana.");
-		lore.add("§7Has a 2 second cooldown.");
+		lore.add("§7" + cooldownSeconds + "s cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

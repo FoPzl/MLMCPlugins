@@ -15,9 +15,9 @@ import me.Neoblade298.NeoProfessions.Augments.ModDamageDealtAugment;
 import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 
 public class HeartyAugment extends Augment implements ModDamageDealtAugment {
-	private double damageMult = AugmentManager.getValue("hearty.damage-multiplier-base");
-	private double damageMultLvl = AugmentManager.getValue("hearty.damage-multiplier-per-lvl");
-	private double minHealth = AugmentManager.getValue("hearty.min-health");
+	private static double damageMult = AugmentManager.getValue("hearty.damage-multiplier-base");
+	private static double damageMultLvl = AugmentManager.getValue("hearty.damage-multiplier-per-lvl");
+	private static double minHealth = AugmentManager.getValue("hearty.health-percent-min");
 	
 	public HeartyAugment() {
 		super();
