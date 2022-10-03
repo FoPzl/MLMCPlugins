@@ -57,14 +57,14 @@ public class TorrentAugment extends Augment implements ModDamageDealtAugment {
 	@Override
 	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
 		Player p = user.getPlayer();
-		p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + this.healthGain));
+		p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + healthGain));
 	}
 
 	public ItemStack getItem(Player user) {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Heal for §f" + this.healthGain + " §7every");
+		lore.add("§7Heal for §f" + healthGain + " §7every");
 		lore.add("§75x you deal damage. 1s");
 		lore.add("§7cooldown per damage.");
 		meta.setLore(lore);

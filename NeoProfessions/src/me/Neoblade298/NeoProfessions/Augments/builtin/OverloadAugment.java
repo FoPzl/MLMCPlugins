@@ -23,6 +23,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 	private static double manaTaken = AugmentManager.getValue("overload.mana-taken-base");
 	private static double manaTakenLvl = AugmentManager.getValue("overload.mana-taken-per-lvl");
 	private static double minMana = AugmentManager.getValue("overload.mana-percent-min");
+	private double manaTakenFinal = manaTaken + (manaTakenLvl * ((level / 5) - 1));
 	
 	public OverloadAugment() {
 		super();
@@ -36,13 +37,9 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
 	}
 	
-	private double getManaTaken() {
-		return manaTaken + (manaTakenLvl * ((level / 5) - 1));
-	}
-	
 	@Override
 	public void applyDamageDealtEffects(Player user, LivingEntity target, double damage) {
-		SkillAPI.getPlayerData(user).useMana(this.manaTaken, ManaCost.SPECIAL);
+		SkillAPI.getPlayerData(user).useMana(manaTakenFinal, ManaCost.SPECIAL);
 	}
 
 	@Override
@@ -67,7 +64,7 @@ public class OverloadAugment extends Augment implements ModDamageDealtAugment {
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
 		lore.add("§7damage while above " + formatPercentage(minMana) + "% mana. Costs");
-		lore.add("§f" + formatDouble(getManaTaken()) + " §7mana per damage instance.");
+		lore.add("§f" + formatDouble(manaTakenFinal) + " §7mana per damage instance.");
 		lore.add("§cOnly works with mana.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

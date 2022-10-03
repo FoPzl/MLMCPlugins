@@ -23,6 +23,7 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 	private static double critMultLvl = AugmentManager.getValue("ferocious.crit-chance-multiplier-per-lvl");
 	private static double cdr = AugmentManager.getValue("ferocious.cooldown-reduction-base");
 	private static double cdrLvl = AugmentManager.getValue("ferocious.cooldown-reduction-per-lvl");
+	private double cdrFinal = cdr + (cdrLvl * ((level / 5) - 1));
 	
 	public FerociousAugment() {
 		super();
@@ -39,12 +40,8 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 	@Override
 	public void applyCritSuccessEffects(PlayerData user, double chance) {
         for (PlayerSkill data : user.getSkills()) {
-            data.subtractCooldown(this.cdr);
+            data.subtractCooldown(this.cdrFinal);
         }
-	}
-	
-	private double getCdr() {
-		return cdr + (cdrLvl * ((level / 5) - 1));
 	}
 
 	@Override
@@ -73,7 +70,7 @@ public class FerociousAugment extends Augment implements ModCritCheckAugment, Mo
 		List<String> lore = meta.getLore();
 		lore.add("§7Decreases critical hit chance by §f" + formatPercentage(getCritChanceMult(user)) + "%,");
 		lore.add("§7but lower active skill cooldowns by");
-		lore.add("§f" + formatDouble(getCdr()) + " §7on critical hit.");
+		lore.add("§f" + formatDouble(cdrFinal) + " §7on critical hit.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

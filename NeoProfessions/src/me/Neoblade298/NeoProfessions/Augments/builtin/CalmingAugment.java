@@ -17,20 +17,18 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 public class CalmingAugment extends Augment implements ModDamageDealtAugment {
 	private static double threatReduc = AugmentManager.getValue("calming.threat-reduction-base");
 	private static double threatReducLvl = AugmentManager.getValue("calming.threat-reduction-per-lvl");
-	private static double finalThreatReduc;
+	private double finalThreatReduc = threatReduc + (threatReducLvl * (level / 5));
 	
 	public CalmingAugment() {
 		super();
 		this.name = "Calming";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		finalThreatReduc = threatReduc + (threatReducLvl * ((level / 5) - 1));
 	}
 
 	public CalmingAugment(int level) {
 		super(level);
 		this.name = "Calming";
 		this.etypes = Arrays.asList(new EventType[] {EventType.DAMAGE_DEALT});
-		finalThreatReduc = threatReduc + (threatReducLvl * (level / 5));
 	}
 	
 	@Override

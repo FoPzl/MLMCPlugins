@@ -21,6 +21,7 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 	private static double manaGain = AugmentManager.getValue("rejuvenating.mana-gain-base");
 	private static double manaGainLvl = AugmentManager.getValue("rejuvenating.mana-gain-per-lvl");
 	private static int cooldownSeconds = (int) AugmentManager.getValue("rejuvenating.cooldown-seconds");
+	private double manaGainFinal = manaGain + (manaGainLvl * ((level / 5) - 1));
 	
 	public RejuvenatingAugment() {
 		super();
@@ -33,10 +34,6 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 		this.name = "Rejuvenating";
 		this.etypes = Arrays.asList(new EventType[] {EventType.HEAL});
 	}
-	
-	private double getManaGain() {
-		return manaGain + (manaGainLvl * ((level / 5) - 1));
-	}
 
 	@Override
 	public Augment createNew(int level) {
@@ -45,7 +42,7 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 
 	@Override
 	public void applyHealEffects(PlayerData user, LivingEntity target, double healing) {
-		SkillAPI.getPlayerData((Player) target).giveMana(this.manaGain);
+		SkillAPI.getPlayerData((Player) target).giveMana(manaGainFinal);
 		FlagManager.addFlag(user.getPlayer(), user.getPlayer(), "aug_rejuvenating", cooldownSeconds * 20);
 	}
 
@@ -64,7 +61,7 @@ public class RejuvenatingAugment extends Augment implements ModHealAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Healing also grants healed player");
-		lore.add("§f" + formatDouble(getManaGain()) + " §7mana. Only works on mana users.");
+		lore.add("§f" + formatDouble(manaGainFinal) + " §7mana. Only works on mana users.");
 		lore.add("§7Has a " + cooldownSeconds + " second cooldown.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);

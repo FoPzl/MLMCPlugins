@@ -19,26 +19,24 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 public class VampiricAugment extends Augment implements ModCritSuccessAugment {
 	private static double healthGain = AugmentManager.getValue("vampiric.health-gain-base");
 	private static double healthGainLvl = AugmentManager.getValue("vampiric.health-gain-per-lvl");
-	private static int healthGainFinal;
+	private int healthGainFinal = (int) (healthGain + (healthGainLvl * ((level / 5) - 1)));
 	
 	public VampiricAugment() {
 		super();
 		this.name = "Vampiric";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_SUCCESS});
-		this.healthGainFinal = (int) (healthGain + (healthGainLvl * ((level / 5) - 1)));
 	}
 
 	public VampiricAugment(int level) {
 		super(level);
 		this.name = "Vampiric";
 		this.etypes = Arrays.asList(new EventType[] {EventType.CRIT_SUCCESS});
-		this.healthGainFinal = (int) (healthGain + (healthGainLvl * ((level / 5) - 1)));
 	}
 	
 	@Override
 	public void applyCritSuccessEffects(PlayerData user, double chance) {
 		Player p = user.getPlayer();
-		p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + this.healthGainFinal));
+		p.setHealth(Math.min(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), p.getHealth() + healthGainFinal));
 	}
 
 	@Override
@@ -55,7 +53,7 @@ public class VampiricAugment extends Augment implements ModCritSuccessAugment {
 		ItemStack item = super.getItem(user);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§7Upon critical hit, gain §f" + formatDouble(this.healthGainFinal) + " §7health.");
+		lore.add("§7Upon critical hit, gain §f" + formatDouble(healthGainFinal) + " §7health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
