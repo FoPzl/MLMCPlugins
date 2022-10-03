@@ -51,6 +51,7 @@ public class NeoPlaceholders extends JavaPlugin {
 		new SkillAPIPlaceholders().register();
 		new LordboardPlaceholders().register();
 		new QuestTagPlaceholders().register();
+		new FoPzlVotePlaceholders().register();
 	}
 
 	public void onDisable() {
