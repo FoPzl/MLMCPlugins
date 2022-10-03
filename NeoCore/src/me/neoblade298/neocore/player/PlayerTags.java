@@ -111,8 +111,6 @@ public class PlayerTags {
 		this.changedValues.put(uuid, new HashSet<String>());
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM neocore_tags WHERE uuid = '" + uuid + "' AND `key` = '" + this.getKey() + "';");
-			int count = 0;
-			int expired = 0;
 			while (rs.next()) {
 				String tag = rs.getString(3);
 				long expiration = rs.getLong(4);
@@ -127,12 +125,7 @@ public class PlayerTags {
 				if (expiration == -1 || expiration < System.currentTimeMillis()) {
 					pSettings.put(tag, new Value(tag, expiration));
 				}
-				else {
-					expired++;
-				}
-				count++;
 			}
-			if (count > 0) Bukkit.getLogger().info("[NeoCore] Loaded " + count + " tags, " + expired + " expired for key " + this.getKey() + " for player " + uuid);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
