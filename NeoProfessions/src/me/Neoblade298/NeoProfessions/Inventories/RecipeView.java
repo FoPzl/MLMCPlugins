@@ -266,7 +266,10 @@ public class RecipeView extends ProfessionInventory {
 			return;
 		}
 		else if (type.equals("home")) {
-			if (this.returnTo.equals(StorageView.class.getName())) {
+			if (this.returnTo == null) {
+				return;
+			}
+			else if (this.returnTo.equals(StorageView.class.getName())) {
 				new StorageView(p, min, max);
 			}
 			else if (this.returnTo.equals(RecipeSelectInventory.class.getName())) {
