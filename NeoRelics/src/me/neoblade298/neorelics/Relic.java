@@ -93,6 +93,7 @@ public class Relic {
 		NBTItem nbti = new NBTItem(item);
 		nbti.setString("augment", key);
 		nbti.setInteger("level", level);
+		nbti.setDouble("value", (double) (1000 * (level / 5)));
 		return nbti.getItem();
 	}
 	
