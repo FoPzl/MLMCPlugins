@@ -47,15 +47,13 @@ public class FoPzlVotePlaceholders extends PlaceholderExpansion {
 		
 		String args[] = identifier.split("_");
 		// fopzlvote_all, fopzlvote_month, and fopzlvote_streak
-		if(args[0].equalsIgnoreCase("fopzlvote")) {
-			switch (args[1]) {
-			case "all":
-				return VoteInfo.getInstance().getStats(p).getTotalVotes() + "";
-			case "month":
-				return VoteInfo.getInstance().getStats(p).getVotesThisMonth() + "";
-			case "streak":
-				return VoteInfo.getInstance().getStats(p).getStreak() + "";
-			}
+		switch (args[0]) {
+		case "all":
+			return VoteInfo.getInstance().getStats(p).getTotalVotes() + "";
+		case "month":
+			return VoteInfo.getInstance().getStats(p).getVotesThisMonth() + "";
+		case "streak":
+			return VoteInfo.getInstance().getStats(p).getStreak() + "";
 		}
 		
     	return "§cInvalid placeholder!";
