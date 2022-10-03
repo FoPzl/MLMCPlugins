@@ -61,6 +61,7 @@ public class NeoLeaderboard extends JavaPlugin {
 		mngr.registerCommandList("");
 		mngr.register(new CmdNLAAddPlayer());
 		mngr.register(new CmdNLAAddNation());
+		mngr.register(new CmdNLAFinalize());
 		mngr.register(new CmdNLAReset());
 	}
 	
