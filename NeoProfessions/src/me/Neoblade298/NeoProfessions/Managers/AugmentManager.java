@@ -33,7 +33,7 @@ import com.sucy.skill.api.util.FlagManager;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.*;
-import me.Neoblade298.NeoProfessions.Augments.builtin.*;
+import me.Neoblade298.NeoProfessions.Augments.Builtin.*;
 import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
@@ -86,6 +86,24 @@ public class AugmentManager implements Listener, Manager {
 	@Override
 	public void reload() {
 		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
+
+		droptables.clear();
+		configValues.clear();
+		try {
+			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "augments/config.yml"), (cfg, file) -> {
+				for (String augment : cfg.getKeys(false)) {
+					for (String subkey : cfg.getConfigurationSection(augment).getKeys(false)) {
+						String key = augment + "." + subkey;
+						configValues.put(key, cfg.getDouble(key, 0));
+					}
+				}
+			});
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		augmentMap.clear();
 		augmentMap.put("barrier", new BarrierAugment());
 		augmentMap.put("brace", new BraceAugment());
@@ -154,21 +172,6 @@ public class AugmentManager implements Listener, Manager {
 			augmentMap.put(e.getKey().toLowerCase(), new BossRelic(e.getValue()));
 		}
 		
-		AugmentManager.droptables.clear();
-		try {
-			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
-			NeoCore.loadFiles(new File(main.getDataFolder(), "augments/config.yml"), (cfg, file) -> {
-				for (String augment : cfg.getKeys(false)) {
-					for (String subkey : cfg.getConfigurationSection(augment).getKeys(false)) {
-						String key = augment + "." + subkey;
-						configValues.put(key, cfg.getDouble(key, 0));
-					}
-				}
-			});
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static boolean isAugment(ItemStack item) {
