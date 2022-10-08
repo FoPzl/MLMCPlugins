@@ -4,9 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityResurrectEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 	
@@ -43,4 +45,8 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 		}
 	}
 	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		new BukkitRunnable() { public void run() { e.getEntity().spigot().respawn(); }}.runTaskLater(this, 20L);
+	}
 }
