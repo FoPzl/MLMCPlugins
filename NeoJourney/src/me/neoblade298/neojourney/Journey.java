@@ -11,30 +11,30 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
-	
+
 	public void onEnable() {
 		Bukkit.getServer().getLogger().info("NeoJourney Enabled");
 		getServer().getPluginManager().registerEvents(this, this);
-	    this.getCommand("njourney").setExecutor(new Commands(this));
+		this.getCommand("njourney").setExecutor(new Commands(this));
 	}
-	
+
 	public void onDisable() {
-	    org.bukkit.Bukkit.getServer().getLogger().info("NeoJourney Disabled");
-	    super.onDisable();
+		org.bukkit.Bukkit.getServer().getLogger().info("NeoJourney Disabled");
+		super.onDisable();
 	}
-	
+
 	@EventHandler
 	public void onMend(PlayerItemMendEvent e) {
 		e.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void onDurability(PlayerItemDamageEvent e) {
 		if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasCustomModelData()) {
 			e.setDamage((e.getDamage() + 1) / 2);
 		}
 	}
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onRevive(EntityResurrectEvent e) {
 		if (e.getEntity() instanceof Player) {
@@ -44,9 +44,16 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		new BukkitRunnable() { public void run() { e.getEntity().spigot().respawn(); }}.runTaskLater(this, 20L);
+		new BukkitRunnable() {
+			public void run() {
+				Player p = e.getEntity();
+				if (p.isDead()) {
+					e.getEntity().spigot().respawn();
+				}
+			}
+		}.runTaskLater(this, 20L);
 	}
 }
