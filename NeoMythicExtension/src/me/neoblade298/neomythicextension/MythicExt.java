@@ -226,9 +226,6 @@ public class MythicExt extends JavaPlugin implements Listener {
 		case "pluginmessage":
 			mechanic = new PluginMessageMechanic(cfg);
 			break;
-		case "elementdamage":
-			mechanic = new ElementDamageMechanic(cfg);
-			break;
 		}
 		if (mechanic != null) {
 			event.register(mechanic);
