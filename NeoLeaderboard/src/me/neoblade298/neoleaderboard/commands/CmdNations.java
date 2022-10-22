@@ -74,6 +74,10 @@ public class CmdNations implements Subcommand {
 				int i = 0;
 				while (iter.hasNext() && i++ <= 10) {
 					NationEntry e = iter.next();
+					if (e.getNation() == null) {
+						iter.remove();
+						continue;
+					}
 					String name = e.getNation().getName();
 					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getTotalPoints()), FormatRetention.NONE)
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildNationHover(e))))
