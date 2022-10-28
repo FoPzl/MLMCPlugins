@@ -3,10 +3,12 @@ package me.neoblade298.neojourney;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemMendEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -55,5 +57,11 @@ public class Journey extends JavaPlugin implements org.bukkit.event.Listener {
 				}
 			}
 		}.runTaskLater(this, 20L);
+	}
+	
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent e) {
+		ItemStack item = e.getItemInHand();
+		NBTItem nbti = new NBTItem(item);
 	}
 }
