@@ -791,6 +791,13 @@ public class BossInstances extends JavaPlugin implements Listener {
 				}
 			}
 		}
+		// If a player is damaging a mob
+		else if (e.getDamager() instanceof Player) {
+			Player p = (Player) e.getDamager();
+			if (p.isInvulnerable() && spectatingBoss.containsKey(p.getUniqueId())) {
+				e.setCancelled(true);
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
