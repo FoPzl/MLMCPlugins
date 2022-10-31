@@ -29,12 +29,14 @@ public class VoteIO implements IOComponent {
 		NeoCore.registerIOComponent(main, this);
 		
 		loadQueue();
+		loadVoteParty();
 		
 		SchedulerAPI.scheduleRepeating("FoPzlVote-Autosave-Queue", ScheduleInterval.FIFTEEN_MINUTES, new Runnable() {
 			public void run() {
 				new BukkitRunnable() {
 					public void run() {
 						saveQueue();
+						saveVoteParty();
 					}
 				}.runTaskAsynchronously(main);
 			}
@@ -126,6 +128,37 @@ public class VoteIO implements IOComponent {
 			main.getVoteInfo().playerStats.put(uuid, vs);
 		} catch (SQLException e) {
 			Bukkit.getLogger().warning("Failed to load vote data for player " + p.getName());
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveVoteParty() {
+		Statement stmt = NeoCore.getStatement();
+		
+		try {
+			stmt.execute("delete from fopzlvote_voteParty;");
+			stmt.execute("insert into fopzlvote_voteParty values (" + main.getVoteParty().getPoints() + ");");
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to save vote party points");
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadVoteParty() {
+		Statement stmt = NeoCore.getStatement();
+		
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("select points from fopzlvote_voteParty limit 1;");
+			if(rs.next()) {
+				int pts = rs.getInt("points");
+				
+				main.getVoteParty().setPoints(pts);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to load vote party points");
 			e.printStackTrace();
 		}
 	}

@@ -62,6 +62,10 @@ public class VoteParty {
 		points = pts;
 	}
 	
+	public int getPoints() {
+		return points;
+	}
+	
 	private void tick() {
 		if(points % cfg.notifyInterval == 0) {
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cfg.notifyCommand.replace("%points%", points + "").replace("%votesremaining%", (cfg.pointsToStart - points) + ""));

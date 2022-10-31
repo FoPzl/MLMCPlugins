@@ -94,6 +94,10 @@ public class Vote extends JavaPlugin {
 		return info;
 	}
 	
+	public VoteParty getVoteParty() {
+		return voteParty;
+	}
+	
 	public void cmdVote(String username, String serviceName) {
         JsonObject o = new JsonObject();
         o.addProperty("serviceName", serviceName);
