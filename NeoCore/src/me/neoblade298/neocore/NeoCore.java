@@ -21,7 +21,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.neoblade298.neocore.bar.BarAPI;
-import me.neoblade298.neocore.blockdata.CustomBlockData;
 import me.neoblade298.neocore.bungee.BungeeListener;
 import me.neoblade298.neocore.commands.*;
 import me.neoblade298.neocore.commands.builtin.*;
@@ -102,9 +101,6 @@ public class NeoCore extends JavaPlugin implements Listener {
         
         // teleports
         getServer().getPluginManager().registerEvents(new TeleportAPI(), this);
-        
-        // Block data
-        CustomBlockData.registerListener(this);
         
         // CommandSets
         CommandSetManager.reload();
