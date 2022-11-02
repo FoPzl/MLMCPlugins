@@ -129,7 +129,7 @@ public class Vote extends JavaPlugin {
 		String msg = "&4[&c&lMLMC&4] &eTop Monthly Voters:";
 		for(Object[] entry : topVoters) {
 			String username = Bukkit.getServer().getOfflinePlayer((UUID)entry[0]).getName();
-			msg += "\n&6&l" + num++ + ". &e" + username + " &7 - &f" + (String)entry[1];
+			msg += "\n&6&l" + num++ + ". &e" + username + " &7 - &f" + (int)entry[1];
 		}
 		
 		Util.sendMessageFormatted(sender, msg);
