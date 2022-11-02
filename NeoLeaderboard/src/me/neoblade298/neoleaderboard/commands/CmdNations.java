@@ -1,10 +1,13 @@
 package me.neoblade298.neoleaderboard.commands;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.TreeSet;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -60,14 +63,13 @@ public class CmdNations implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		String temp = "Kyokami";
-		
 		new BukkitRunnable() {
 			public void run() {
 				TreeSet<NationEntry> sorted = new TreeSet<NationEntry>(PointsManager.getNationEntries());
 				Iterator<NationEntry> iter = sorted.descendingIterator();
+				ArrayList<NationEntry> toDelete = new ArrayList<NationEntry>();
 				
-				ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + temp + "§c§l «\n")
+				ComponentBuilder builder = new ComponentBuilder("§c§l» §6§lTop Nation of " + month + ": §e§l§n" + PointsManager.getPreviousWinner() + "§c§l «\n")
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for details: §e/nations previous")))
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nations previous"));
 				builder.append("§6§l>§8§m--------§c§l» Nation Leaderboard «§8§m--------§6§l<", FormatRetention.NONE);
@@ -76,6 +78,9 @@ public class CmdNations implements Subcommand {
 					NationEntry e = iter.next();
 					if (e.getNation() == null) {
 						iter.remove();
+						i--;
+						Bukkit.getLogger().warning("[NeoLeaderboard] Found and deleted null nation entry " + e.getUuid());
+						toDelete.add(e);
 						continue;
 					}
 					String name = e.getNation().getName();
@@ -84,6 +89,10 @@ public class CmdNations implements Subcommand {
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl nation " + name));
 				}
 				s.spigot().sendMessage(builder.create());
+				
+				for (NationEntry e : toDelete) {
+					PointsManager.deleteNationEntry(e.getUuid());
+				}
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
 	}

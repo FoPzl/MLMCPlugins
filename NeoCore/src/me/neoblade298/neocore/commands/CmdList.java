@@ -2,10 +2,10 @@ package me.neoblade298.neocore.commands;
 
 import java.util.TreeMap;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import io.lumine.mythic.bukkit.utils.lib.lang3.StringUtils;
 import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
 import net.md_5.bungee.api.ChatColor;

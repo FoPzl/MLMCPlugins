@@ -102,7 +102,6 @@ public class NeoCore extends JavaPlugin implements Listener {
         // teleports
         getServer().getPluginManager().registerEvents(new TeleportAPI(), this);
         
-        
         // CommandSets
         CommandSetManager.reload();
         

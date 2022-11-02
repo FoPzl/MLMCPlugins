@@ -36,6 +36,7 @@ public class PointsManager implements IOComponent {
 	private static HashMap<UUID, PlayerEntry> playerEntries = new HashMap<UUID, PlayerEntry>();
 	private static HashMap<UUID, NationEntry> nationEntries = new HashMap<UUID, NationEntry>();
 	private static HashMap<UUID, Long> lastSaved = new HashMap<UUID, Long>();
+	private static String prevWinner = "N/A";
 	private static final double MAX_PLAYER_CONTRIBUTION = 1000;
 	private static final DecimalFormat df = new DecimalFormat("##.00");
 	private static List<String> dbs = Arrays.asList("neoleaderboard_nations", "neoleaderboard_contributed", "neoleaderboard_nationpoints",
@@ -94,6 +95,11 @@ public class PointsManager implements IOComponent {
 							Bukkit.getLogger().warning("[NeoLeaderboard] Failed to initialize player " + uuid);
 						}
 					}
+					
+					// Get most recent nation winner
+					rs = stmt.executeQuery("SELECT * FROM neoleaderboard_previous_winner ORDER BY timestamp DESC");
+					rs.next();
+					prevWinner = rs.getString("name");
 					
 					// Calculate player points
 					calculatePoints();
@@ -515,7 +521,22 @@ public class PointsManager implements IOComponent {
 					return -1;
 				}
 				else {
-					return n2.getNation().getName().compareTo(n1.getNation().getName());
+					if (n1.getNation() != null && n2.getNation() != null) {
+						return n2.getNation().getName().compareTo(n1.getNation().getName());
+					}
+					else {
+						if (n1.getNation() == null) {
+							PointsManager.deleteNationEntry(n1.getUuid());
+							Bukkit.getLogger().warning("[NeoLeaderboard] Found and deleted null nation entry " + n1.getUuid());
+							return 1;
+						}
+						else if (n2.getNation() == null) {
+							PointsManager.deleteNationEntry(n2.getUuid());
+							Bukkit.getLogger().warning("[NeoLeaderboard] Found and deleted null nation entry " + n2.getUuid());
+							return -1;
+						}
+						return 0;
+					}
 				}
 			}
 		};
@@ -532,22 +553,20 @@ public class PointsManager implements IOComponent {
 				saveAll();
 				
 				Statement stmt = NeoCore.getStatement();
+				Statement delete = NeoCore.getStatement();
 				
 				try {
 					for (String db : dbs) {
+						delete.addBatch("DELETE FROM " + db + ";");
 						stmt.addBatch(createCopyQuery(db));
 					}
-					stmt.addBatch("INSERT INTO neoleaderboard_previous_winner VALUES('" + n.getName() + "'," + winner.getTotalPoints() + ");");
+					delete.executeBatch();
+					stmt.addBatch("INSERT INTO neoleaderboard_previous_winner VALUES('" + n.getName() + "'," + winner.getTotalPoints() + "," 
+							+ System.currentTimeMillis() + ");");
 					stmt.executeBatch();
 					playerEntries.clear();
 					nationEntries.clear();
-					
-
-					Statement delete = NeoCore.getStatement();
-					for (String db : dbs) {
-						delete.addBatch("DELETE FROM " + db + ";");
-					}
-					delete.executeBatch();
+			
 					
 					for (Nation nation : TownyUniverse.getInstance().getNations()) {
 						nationEntries.putIfAbsent(nation.getUUID(), new NationEntry(nation.getUUID()));
@@ -579,5 +598,9 @@ public class PointsManager implements IOComponent {
 			}
 			Bukkit.getLogger().info("[NeoLeaderboard] Calculated " + count + " contributions for player " + pe.getUuid() + " to town " + pe.getTown());
 		}
+	}
+	
+	public static String getPreviousWinner() {
+		return prevWinner;
 	}
 }
