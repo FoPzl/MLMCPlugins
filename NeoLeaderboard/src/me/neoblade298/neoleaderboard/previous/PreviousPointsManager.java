@@ -1,17 +1,7 @@
 package me.neoblade298.neoleaderboard.previous;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.TreeSet;
-import java.util.UUID;
-
-import org.bukkit.scheduler.BukkitRunnable;
-
-import me.neoblade298.neocore.NeoCore;
-import me.neoblade298.neoleaderboard.NeoLeaderboard;
-import me.neoblade298.neoleaderboard.points.NationPointType;
 import me.neoblade298.neoleaderboard.points.PlayerPointType;
 import me.neoblade298.neoleaderboard.points.PointType;
 
@@ -24,6 +14,7 @@ public class PreviousPointsManager {
 	private static HashMap<PlayerPointType, TreeSet<PreviousEntry>> topPlayerCategories = new HashMap<PlayerPointType, TreeSet<PreviousEntry>>();
 	
 	public static void reload() {
+		/*
 		topNations.clear();
 		topTowns.clear();
 		topPlayers.clear();
@@ -86,11 +77,11 @@ public class PreviousPointsManager {
 						}
 					}
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}.runTaskAsynchronously(NeoLeaderboard.inst());
+		*/
 	}
 
 	public static TreeSet<PreviousEntry> getTopNations() {
