@@ -45,7 +45,16 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 		switch(args[0]) {
 		case "stats":
 			if(!(sender instanceof Player)) return false;
-			main.showStats((Player)sender);
+			if(args.length > 1) {
+				Player onlinePlayer = Bukkit.getPlayer(args[1]);
+				if(onlinePlayer == null) {
+					Util.sendMessageFormatted(sender, "&4[&c&lMLMC&4] &7Player &e" + args[1] + " &7offline.");
+					return true;
+				}
+				main.showStats(sender, onlinePlayer);
+			} else {
+				main.showStats(sender, (Player)sender);
+			}
 			return true;
 		case "leaderboard":
 			main.showLeaderboard(sender);

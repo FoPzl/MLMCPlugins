@@ -112,7 +112,7 @@ public class Vote extends JavaPlugin {
 		voteParty.addPoints(1);
 	}
 	
-	public void showStats(Player player) {
+	public void showStats(CommandSender showTo, Player player) {
 		VoteStats stats = info.getStats(player);
 		
 		String msg = "&4[&c&lMLMC&4] &eVote Stats for &6" + player.getName() + "&e:"
@@ -120,7 +120,7 @@ public class Vote extends JavaPlugin {
 				+ "\n &eVotes this month: &7" + stats.getVotesThisMonth()
 				+ "\n &eCurrent Streak: &7" + stats.getStreak();
 		
-		Util.sendMessageFormatted(player, msg);
+		Util.sendMessageFormatted(showTo, msg);
 	}
 	
 	public void showLeaderboard(CommandSender sender) {
