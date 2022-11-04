@@ -51,6 +51,7 @@ public class VoteIO implements IOComponent {
 	@Override
 	public void cleanup(Statement insert, Statement delete) {
 		saveQueue();
+		saveVoteParty();
 	}
 
 	@Override
