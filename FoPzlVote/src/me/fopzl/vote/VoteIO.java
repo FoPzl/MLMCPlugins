@@ -112,7 +112,6 @@ public class VoteIO implements IOComponent {
 			if(!rs.next()) return;
 			
 			VoteStats vs = new VoteStats(rs.getInt("totalVotes"), rs.getInt("voteStreak"), rs.getObject("whenLastVoted", LocalDateTime.class));
-			//rs.close(); // TODO: verify if this is needed
 			
 			rs = stmt.executeQuery("select * from fopzlvote_playerHist where uuid = '" + uuid + "';");
 			while(rs.next()) {

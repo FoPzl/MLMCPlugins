@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.fopzl.vote.Vote;
-import me.fopzl.vote.VoteInfo;
 
 public class FoPzlVotePlaceholders extends PlaceholderExpansion {
 	@Override
