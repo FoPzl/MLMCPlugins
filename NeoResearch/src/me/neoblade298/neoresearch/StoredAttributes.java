@@ -49,7 +49,7 @@ public class StoredAttributes {
 			}
 			// Must be deep copy
 			data.addBonusAttributes(attr, -active.getOrDefault(attr, 0));
-			active.put(attr, Integer.valueOf(stored.get(attr)));
+			active.put(attr, stored.get(attr));
 			data.addBonusAttributes(attr, stored.get(attr));
 		}
 	}

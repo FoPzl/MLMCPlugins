@@ -52,7 +52,7 @@ public class Garden {
 	
 	public void uprootSeed(Player p, int slot) {
 		GardenSlot gs = slots.get(slot);
-		if (gs != null && gs.canHarvest()) {
+		if (gs != null && !gs.canHarvest()) {
 			slots.remove(slot);
 		}
 	}

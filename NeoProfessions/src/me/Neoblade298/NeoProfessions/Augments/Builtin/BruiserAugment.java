@@ -18,8 +18,8 @@ import me.Neoblade298.NeoProfessions.Managers.AugmentManager;
 public class BruiserAugment extends Augment implements ModDamageDealtAugment {
 	private static double damageMult = AugmentManager.getValue("bruiser.damage-multiplier-base");
 	private static double damageMultLvl = AugmentManager.getValue("bruiser.damage-multiplier-per-lvl");
-	private static int minHealth = (int) AugmentManager.getValue("bruiser.health-percent-min");
-	private static int maxHealth = (int) AugmentManager.getValue("bruiser.health-percent-max");
+	private static double minHealth = AugmentManager.getValue("bruiser.health-percent-min");
+	private static double maxHealth = AugmentManager.getValue("bruiser.health-percent-max");
 	
 	public BruiserAugment() {
 		super();
@@ -58,7 +58,7 @@ public class BruiserAugment extends Augment implements ModDamageDealtAugment {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		lore.add("§7Increases damage by §f" + formatPercentage(getDamageDealtMult(user)) + "% §7when dealing");
-		lore.add("§7damage to an enemy at " + minHealth + "-" + maxHealth + "% health.");
+		lore.add("§7damage to an enemy at " + formatPercentage(minHealth) + " - " + formatPercentage(maxHealth) + "% health.");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
