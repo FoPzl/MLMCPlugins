@@ -27,7 +27,7 @@ public class VoteListener implements Listener {
 	public void onVote(final VotifierEvent e) {
 		com.vexsoftware.votifier.model.Vote vote = e.getVote();
 		String site = vote.getServiceName();
-		if(main.isValidSite(site)) {
+		if(main.isValidSite(site) || site.equalsIgnoreCase("freevote")) {
 			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(vote.getUsername());
 			Util.broadcastFormatted("&4[&c&lMLVote&4] &e" + p.getName() + " &7just voted on &c" + site + "&7!");
 			
@@ -48,6 +48,7 @@ public class VoteListener implements Listener {
 			}
 			
 			main.incVoteParty();
+			main.setCooldown((Player)p, site);
 		}
 	}
 	
