@@ -48,6 +48,7 @@ public class VoteListener implements Listener {
 			}
 			
 			main.incVoteParty();
+			main.setCooldown((Player)p, site);
 		}
 	}
 	

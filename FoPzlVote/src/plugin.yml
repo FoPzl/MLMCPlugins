@@ -6,7 +6,7 @@ version: 1.0
 api-version: 1.19
 commands:
    mlvote:
-      usage: "§cUsage: §7/<command> stats/leaderboard"
+      usage: "§cUsage: §7/<command> stats/cooldown/leaderboard"
       permission: mlvote.general
    voteparty:
       aliases: [vp]

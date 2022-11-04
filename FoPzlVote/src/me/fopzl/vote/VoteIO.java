@@ -242,4 +242,41 @@ public class VoteIO implements IOComponent {
 		
 		return topVoters;
 	}
+	
+	public void setCooldown(Player player, String voteSite) {
+		try {
+			Statement stmt = NeoCore.getStatement();
+			
+			UUID uuid = player.getUniqueId();
+			String whenLastVoted = LocalDateTime.now().toString();
+			
+			stmt.execute("replace into fopzlvote_siteCooldowns values ('" + uuid + "', '" + voteSite + "', '" + whenLastVoted + "');");
+			
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to save voteSite cooldown");
+			e.printStackTrace();
+		}
+	}
+	
+	public LocalDateTime getCooldown(Player player, String voteSite) {
+		try {
+			Statement stmt = NeoCore.getStatement();
+			
+			UUID uuid = player.getUniqueId();
+			
+			ResultSet rs = stmt.executeQuery("select whenLastVoted from fopzlvote_siteCooldowns where uuid = '" + uuid + "' and voteSite = '" + voteSite + "';");
+			if(rs.next()) {
+				return rs.getTimestamp("whenLastVoted").toLocalDateTime();
+			}
+			
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to load voteSite cooldown");
+			e.printStackTrace();
+		}
+		
+		//return LocalDateTime.of(0, 1, 1, 0, 0);
+		return LocalDateTime.MIN;
+	}
 }
