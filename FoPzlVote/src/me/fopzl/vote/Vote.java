@@ -34,6 +34,8 @@ public class Vote extends JavaPlugin {
 	private VoteInfo info;
 	private VoteIO io;
 	
+	private static Vote instance;
+	
 	public void onEnable() {
 		super.onEnable();
 		
@@ -55,6 +57,8 @@ public class Vote extends JavaPlugin {
 		
 		loadAllConfigs();
 		
+		instance = this;
+		
 		Bukkit.getServer().getLogger().info("FoPzlVote Enabled");
 	}
 	
@@ -65,8 +69,8 @@ public class Vote extends JavaPlugin {
 		super.onDisable();
 	}
 	
-	public Vote getInstance() {
-		return this;
+	public static Vote getInstance() {
+		return instance;
 	}
 	
 	public void loadAllConfigs() {

@@ -3,6 +3,7 @@ package me.neoblade298.neoplaceholders.placeholders;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.fopzl.vote.Vote;
 import me.fopzl.vote.VoteInfo;
 
 public class FoPzlVotePlaceholders extends PlaceholderExpansion {
@@ -49,11 +50,13 @@ public class FoPzlVotePlaceholders extends PlaceholderExpansion {
 		// fopzlvote_all, fopzlvote_month, and fopzlvote_streak
 		switch (args[0]) {
 		case "all":
-			return VoteInfo.getInstance().getStats(p).getTotalVotes() + "";
+			return Vote.getInstance().getVoteInfo().getStats(p).getTotalVotes() + "";
 		case "month":
-			return VoteInfo.getInstance().getStats(p).getVotesThisMonth() + "";
+			return Vote.getInstance().getVoteInfo().getStats(p).getVotesThisMonth() + "";
 		case "streak":
-			return VoteInfo.getInstance().getStats(p).getStreak() + "";
+			return Vote.getInstance().getVoteInfo().getStats(p).getStreak() + "";
+		case "cooldown":
+			return Vote.getInstance().getCooldown(p, args[1]).replace('&', '§');
 		}
 		
     	return "§cInvalid placeholder!";
