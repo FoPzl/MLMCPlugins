@@ -52,6 +52,7 @@ public class GardenSlot {
 				lore.add(line);
 			}
 		}
+		if (!isComplete) lore.add("§cRight click to uproot!");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);

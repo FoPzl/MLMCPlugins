@@ -55,7 +55,7 @@ public class CmdPvpUniqueKills implements Subcommand {
 			// If there's still an arg to use
 			int page = 0;
 			if (args.length > offset) {
-				page = Integer.parseInt(args[offset + 1]);
+				page = Integer.parseInt(args[offset]);
 			}
 			PvpManager.getAccount(p).displayUniqueKills(s, page);
 		}

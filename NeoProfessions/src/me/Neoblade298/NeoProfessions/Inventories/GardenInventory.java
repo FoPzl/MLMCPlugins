@@ -70,6 +70,9 @@ public class GardenInventory extends ProfessionInventory {
 		NBTItem nbti = new NBTItem(item);
 		if (nbti.getInteger("type") == IMMATURE) {
 			GardenSlot gslot = garden.getSlots().get(slot);
+			if (gslot == null) {
+				return createEmptySlot();
+			}
 			if (gslot.getEndTime() <= System.currentTimeMillis()) {
 				nbti.setInteger("type", MATURE);
 				return gslot.getIcon();
@@ -77,7 +80,6 @@ public class GardenInventory extends ProfessionInventory {
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = meta.getLore();
 			lore.set(0, gslot.getTimerLine());
-			lore.add("§cRight click to uproot!");
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 		}
@@ -151,6 +153,9 @@ public class GardenInventory extends ProfessionInventory {
 			}
 			else if (nbti.getInteger("type") == IMMATURE && e.getClick() == ClickType.RIGHT){
 				GardenManager.getGarden(p, type).uprootSeed(p, slot);
+				ItemStack[] contents = inv.getContents();
+				contents[slot] = createEmptySlot();
+				inv.setContents(contents);
 				return;
 			}
 		}
