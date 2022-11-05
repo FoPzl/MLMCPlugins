@@ -152,7 +152,7 @@ public class Vote extends JavaPlugin {
 	public void showCooldowns(CommandSender showTo, Player player) {
 		String msg = "&4[&c&lMLVote&4] &eVote Site Cooldowns for &6" + player.getName() + "&e:";
 		for(Entry<String, VoteSiteInfo> site : voteSites.entrySet()) {
-			String cd = getCooldown(player, site.getValue().nickname);
+			String cd = getCooldown(player, site.getKey());
 			msg += "\n &e" + site.getValue().nickname + ": " + cd;
 		}
 		
@@ -191,11 +191,11 @@ public class Vote extends JavaPlugin {
 		io.setCooldown(player, voteSites.get(voteServiceName).nickname);
 	}
 	
-	public String getCooldown(Player player, String voteSite) {
-		LocalDateTime lastVoted = io.getCooldown(player, voteSite);
-		VoteCooldown cd = voteSites.get(voteSite).cooldown;
+	public String getCooldown(Player player, String voteServiceName) {
+		VoteSiteInfo vsi = voteSites.get(voteServiceName);
+		LocalDateTime lastVoted = io.getCooldown(player, vsi.nickname);
 		
-		Duration dur = cd.getCooldownRemaining(lastVoted);
+		Duration dur = vsi.cooldown.getCooldownRemaining(lastVoted);
 		
 		if(dur.isNegative()) return "&aReady!";
 		else return String.format("&c%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart());
