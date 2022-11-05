@@ -16,6 +16,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.neoblade298.neocore.util.Util;
+
 public class Commands implements CommandExecutor {
 	Main main;
 	private static DateFormat dateformat = new SimpleDateFormat("MM-dd-yy");
@@ -35,7 +37,7 @@ public class Commands implements CommandExecutor {
 					ppr.setUser(args[1]);
 					ppr.setOffense("Banned word");
 					ppr.setAction("Automuted by bot");
-					ppr.setDescription("Said banned word: " + args[2]);
+					ppr.setDescription("Said: " + Util.connectArgs(args, 2));
 					ppr.postConsole(s);
 				}
 			}
