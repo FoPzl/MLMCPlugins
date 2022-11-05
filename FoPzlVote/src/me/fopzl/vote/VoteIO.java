@@ -29,12 +29,14 @@ public class VoteIO implements IOComponent {
 		NeoCore.registerIOComponent(main, this);
 		
 		loadQueue();
+		loadVoteParty();
 		
 		SchedulerAPI.scheduleRepeating("FoPzlVote-Autosave-Queue", ScheduleInterval.FIFTEEN_MINUTES, new Runnable() {
 			public void run() {
 				new BukkitRunnable() {
 					public void run() {
 						saveQueue();
+						saveVoteParty();
 					}
 				}.runTaskAsynchronously(main);
 			}
@@ -49,6 +51,7 @@ public class VoteIO implements IOComponent {
 	@Override
 	public void cleanup(Statement insert, Statement delete) {
 		saveQueue();
+		saveVoteParty();
 	}
 
 	@Override
@@ -110,7 +113,6 @@ public class VoteIO implements IOComponent {
 			if(!rs.next()) return;
 			
 			VoteStats vs = new VoteStats(rs.getInt("totalVotes"), rs.getInt("voteStreak"), rs.getObject("whenLastVoted", LocalDateTime.class));
-			//rs.close(); // TODO: verify if this is needed
 			
 			rs = stmt.executeQuery("select * from fopzlvote_playerHist where uuid = '" + uuid + "';");
 			while(rs.next()) {
@@ -126,6 +128,37 @@ public class VoteIO implements IOComponent {
 			main.getVoteInfo().playerStats.put(uuid, vs);
 		} catch (SQLException e) {
 			Bukkit.getLogger().warning("Failed to load vote data for player " + p.getName());
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveVoteParty() {
+		Statement stmt = NeoCore.getStatement();
+		
+		try {
+			stmt.execute("delete from fopzlvote_voteParty;");
+			stmt.execute("insert into fopzlvote_voteParty values (" + main.getVoteParty().getPoints() + ");");
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to save vote party points");
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadVoteParty() {
+		Statement stmt = NeoCore.getStatement();
+		
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("select points from fopzlvote_voteParty limit 1;");
+			if(rs.next()) {
+				int pts = rs.getInt("points");
+				
+				main.getVoteParty().setPoints(pts);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to load vote party points");
 			e.printStackTrace();
 		}
 	}
@@ -208,5 +241,42 @@ public class VoteIO implements IOComponent {
 		}
 		
 		return topVoters;
+	}
+	
+	public void setCooldown(Player player, String voteSite) {
+		try {
+			Statement stmt = NeoCore.getStatement();
+			
+			UUID uuid = player.getUniqueId();
+			String whenLastVoted = LocalDateTime.now().toString();
+			
+			stmt.execute("replace into fopzlvote_siteCooldowns values ('" + uuid + "', '" + voteSite + "', '" + whenLastVoted + "');");
+			
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to save voteSite cooldown");
+			e.printStackTrace();
+		}
+	}
+	
+	public LocalDateTime getCooldown(Player player, String voteSite) {
+		try {
+			Statement stmt = NeoCore.getStatement();
+			
+			UUID uuid = player.getUniqueId();
+			
+			ResultSet rs = stmt.executeQuery("select whenLastVoted from fopzlvote_siteCooldowns where uuid = '" + uuid + "' and voteSite = '" + voteSite + "';");
+			if(rs.next()) {
+				return rs.getTimestamp("whenLastVoted").toLocalDateTime();
+			}
+			
+			stmt.close();
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to load voteSite cooldown");
+			e.printStackTrace();
+		}
+		
+		//return LocalDateTime.of(0, 1, 1, 0, 0);
+		return LocalDateTime.MIN;
 	}
 }

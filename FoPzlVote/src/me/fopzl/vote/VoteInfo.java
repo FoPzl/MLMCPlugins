@@ -9,18 +9,10 @@ import org.bukkit.entity.Player;
 public class VoteInfo {
 	public Map<UUID, VoteStats> playerStats;
 	public Map<UUID, Map<String, Integer>> queuedRewards;
-
-	private static VoteInfo instance;
 	
 	public VoteInfo() {
 		playerStats = new HashMap<UUID, VoteStats>();
 		queuedRewards = new HashMap<UUID, Map<String, Integer>>();
-		
-		instance = this;
-	}
-	
-	public static VoteInfo getInstance() {
-		return instance;
 	}
 	
 	public VoteStats getStats(Player p) {

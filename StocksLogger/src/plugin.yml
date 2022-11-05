@@ -1,0 +1,6 @@
+name: StocksLogger
+main: me.fopzl.stockslogger.StocksLogger
+author: [FoPzl]
+depend: [Stocks, Vault]
+version: 1.0
+api-version: 1.19

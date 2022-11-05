@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,6 +21,7 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 		this.main = main;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 		if(args.length < 1) return false;
@@ -45,7 +47,25 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 		switch(args[0]) {
 		case "stats":
 			if(!(sender instanceof Player)) return false;
-			main.showStats((Player)sender);
+			if(args.length > 1) {
+				Player onlinePlayer = Bukkit.getPlayer(args[1]);
+				if(onlinePlayer == null) {
+					Util.sendMessageFormatted(sender, "&4[&c&lMLMC&4] &7Player &e" + args[1] + " &7offline.");
+					return true;
+				}
+				main.showStats(sender, onlinePlayer);
+			} else {
+				main.showStats(sender, (Player)sender);
+			}
+			return true;
+		case "cooldown":
+			if(!(sender instanceof Player)) return false;
+			if(args.length > 1) {
+				OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
+				main.showCooldowns(sender, (Player)player);
+			} else {
+				main.showCooldowns(sender, (Player)sender);
+			}
 			return true;
 		case "leaderboard":
 			main.showLeaderboard(sender);
@@ -60,6 +80,7 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 		if(args.length == 1) {
 			List<String> options = new ArrayList<String>();
 			options.add("stats");
+			options.add("cooldown");
 			options.add("leaderboard");
 			if(sender.hasPermission("mlvote.admin")) {
 				options.add("vote");
