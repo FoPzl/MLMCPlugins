@@ -100,7 +100,6 @@ public class Vote extends JavaPlugin {
 		for(String siteNick : siteSec.getKeys(false)) {
 			VoteSiteInfo vsi = new VoteSiteInfo();
 			vsi.nickname = siteNick;
-			voteSites.put(siteNick, vsi);
 			
 			ConfigurationSection subSec = siteSec.getConfigurationSection(siteNick);
 			vsi.serviceName = subSec.getString("serviceName");
@@ -109,6 +108,8 @@ public class Vote extends JavaPlugin {
 			String timezone = subSec.getString("timezone");
 			
 			vsi.cooldown = new VoteCooldown(cdType, cdTime, timezone);
+			
+			voteSites.put(vsi.serviceName, vsi);
 		}
 		
 		VoteStats.setStreakLimit(cfg.getInt("streak-vote-limit"));
