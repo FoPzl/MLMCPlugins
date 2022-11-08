@@ -1,9 +1,0 @@
-name: NeoShinies
-author: Neoblade298
-main: me.neoblade298.neoshinies.Main
-version: 1.00
-api-version: 1.14
-commands:
-  neoshinies:
-    description: Does its job
-    usage: /neoshinies [playername] [received item]
