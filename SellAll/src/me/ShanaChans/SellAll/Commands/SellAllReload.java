@@ -43,7 +43,7 @@ public class SellAllReload implements Subcommand
 	public void run(CommandSender sender, String[] args) 
 	{	
 		Player player = (Player) sender;
-		player.sendMessage("ง6SellAll Config reloaded!");
+		player.sendMessage("ยง6SellAll Config reloaded!");
 		SellAllManager.inst().loadConfigs();
 	}
 

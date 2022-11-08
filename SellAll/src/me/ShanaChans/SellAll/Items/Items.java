@@ -16,10 +16,10 @@ public class Items
 	{
 		ItemStack item = new ItemStack(Material.STICK);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("ง6Sell Stick");
+		meta.setDisplayName("ยง6Sell Stick");
 		
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("ง7Right click on chest to sell");
+		lore.add("ยง7Right click on chest to sell");
 		
 		meta.setLore(lore);
 		meta.addEnchant(Enchantment.LUCK, 1, true);

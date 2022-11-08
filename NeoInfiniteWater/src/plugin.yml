@@ -1,8 +1,0 @@
-name: NeoInfiniteWater
-main: me.neoblade298.neoinfinitewater.InfiniteWater
-author: [Neoblade298]
-version: 1.0
-api-version: 1.16
-commands:
-   water:
-      description: Toggle usage

@@ -41,12 +41,12 @@ public class SellAllSort implements Subcommand
 		if(!SellAllManager.settings.exists("SellAllSort", player.getUniqueId()))
 		{
 			SellAllManager.settings.set("SellAllSort", player.getUniqueId());
-			player.sendMessage("ง6Sell All Sort: Alphabetical");
+			player.sendMessage("ยง6Sell All Sort: Alphabetical");
 		}
 		else
 		{
 			SellAllManager.settings.reset("SellAllSort", player.getUniqueId());
-			player.sendMessage("ง6Sell All Sort: ID");
+			player.sendMessage("ยง6Sell All Sort: ID");
 		}
 	}
 

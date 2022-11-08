@@ -1,8 +1,0 @@
-name: NeoWarnings
-author: Neoblade298
-main: me.neoblade298.neowarnings.Main
-version: 1.00
-commands:
-  warning:
-    description: Does its job
-    usage: /warning

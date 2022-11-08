@@ -1,9 +1,0 @@
-name: NeoVoteParty
-main: me.neoblade298.neovoteparty.VoteParty
-author: [Neoblade298]
-version: 1.0
-api-version: 1.16
-commands:
-   vp:
-      description: Does its job
-      usage: /vp
