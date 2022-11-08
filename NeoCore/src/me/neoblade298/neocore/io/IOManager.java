@@ -159,7 +159,7 @@ public class IOManager implements Listener {
 					// Save account
 					long timestamp = System.currentTimeMillis();
 					for (IOComponent io : orderedComponents) {
-						if (disabledKeys.contains(io.getKey().toUpperCase())) {
+						if (!disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.savePlayer(p, insert, delete);
 								int deleted = 0, inserted = 0;
@@ -220,7 +220,7 @@ public class IOManager implements Listener {
 
 					// Save account
 					for (IOComponent io : orderedComponents) {
-						if (disabledKeys.contains(io.getKey().toUpperCase())) {
+						if (!disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.autosavePlayer(p, insert, delete);
 								delete.executeBatch();
@@ -258,7 +258,7 @@ public class IOManager implements Listener {
 
 					// Save account
 					for (IOComponent io : orderedComponents) {
-						if (disabledKeys.contains(io.getKey().toUpperCase())) {
+						if (!disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.preloadPlayer(p, stmt);
 								stmt.executeBatch();
@@ -307,7 +307,7 @@ public class IOManager implements Listener {
 
 					// Save account
 					for (IOComponent io : orderedComponents) {
-						if (disabledKeys.contains(io.getKey().toUpperCase())) {
+						if (!disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.loadPlayer(p, stmt);
 								stmt.executeBatch();
@@ -343,7 +343,7 @@ public class IOManager implements Listener {
 			
 			// Any final cleanup
 			for (IOComponent io : orderedComponents) {
-				if (disabledKeys.contains(io.getKey().toUpperCase())) {
+				if (!disabledKeys.contains(io.getKey().toUpperCase())) {
 					try {
 						Bukkit.getLogger().info("[NeoCore] Cleaning up component " + io.getKey());
 						io.cleanup(insert, delete);
