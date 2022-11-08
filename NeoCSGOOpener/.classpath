@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="src/spigot-api-1.13.2-R0.1-20190416.105208-207-shaded.jar"/>
-	<classpathentry kind="lib" path="src/me/neoblade298/neocsgoopener/CratesPlus-4.5.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
