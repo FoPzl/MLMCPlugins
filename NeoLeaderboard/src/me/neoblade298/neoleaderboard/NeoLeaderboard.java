@@ -20,7 +20,7 @@ public class NeoLeaderboard extends JavaPlugin {
 		Bukkit.getServer().getLogger().info("NeoLeaderboard Enabled");
 		inst = this;
 		
-		if (NeoCore.getInstanceType() != InstanceType.OTHER) {
+		if (NeoCore.getInstanceType() != InstanceType.SESSIONS) {
 			NeoCore.registerIOComponent(this, new PointsManager());
 
 			PointsManager.initialize();
@@ -29,7 +29,7 @@ public class NeoLeaderboard extends JavaPlugin {
 			Bukkit.getPluginManager().registerEvents(new PointsListener(), this);
 			Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
 		}
-		else if (NeoCore.getInstanceType() == InstanceType.OTHER) {
+		else if (NeoCore.getInstanceType() == InstanceType.SESSIONS) {
 			Bukkit.getPluginManager().registerEvents(new InstanceListener(), this);
 		}
 	}
