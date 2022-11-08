@@ -141,7 +141,7 @@ public class Vote extends JavaPlugin {
 	public void showStats(CommandSender showTo, Player player) {
 		VoteStats stats = info.getStats(player);
 		
-		String msg = "&4[&c&lMLVote&4] &eVote Stats for &6" + player.getName() + "&e:"
+		String msg = "&4[&c&lMLMC&4] &eVote Stats for &6" + player.getName() + "&e:"
 				+ "\n &eAll time votes: &7" + stats.getTotalVotes()
 				+ "\n &eVotes this month: &7" + stats.getVotesThisMonth()
 				+ "\n &eCurrent Streak: &7" + stats.getStreak();
@@ -150,7 +150,7 @@ public class Vote extends JavaPlugin {
 	}
 	
 	public void showCooldowns(CommandSender showTo, Player player) {
-		String msg = "&4[&c&lMLVote&4] &eVote Site Cooldowns for &6" + player.getName() + "&e:";
+		String msg = "&4[&c&lMLMC&4] &eVote Site Cooldowns for &6" + player.getName() + "&e:";
 		for(Entry<String, VoteSiteInfo> site : voteSites.entrySet()) {
 			String cd = getCooldown(player, site.getKey());
 			msg += "\n &e" + site.getValue().nickname + ": " + cd;
@@ -162,7 +162,7 @@ public class Vote extends JavaPlugin {
 	public void showLeaderboard(CommandSender sender) {
 		List<Object[]> topVoters = io.getTopVoters(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), 10);
 		int num = 1;
-		String msg = "&4[&c&lMLVote&4] &eTop Monthly Voters:";
+		String msg = "&4[&c&lMLMC&4] &eTop Monthly Voters:";
 		for(Object[] entry : topVoters) {
 			String username = Bukkit.getServer().getOfflinePlayer((UUID)entry[0]).getName();
 			msg += "\n&6&l" + num++ + ". &e" + username + " &7- &f" + (int)entry[1];
