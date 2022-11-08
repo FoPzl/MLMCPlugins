@@ -1,6 +1,0 @@
-# When "Ratface" is killed, all mobs in the list under Ratface are added to the total damage chart
-# for the boss, use this to include minions
-Ratface:
-  - Ratface
-SpiderQueen:
-  - SpiderQueen
