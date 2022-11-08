@@ -25,9 +25,9 @@ public class SellAllInventory extends CustomInventory
 	
 	public SellAllInventory(Player p) 
 	{
-		inv = Bukkit.createInventory(p, 54, "§cPlace items here to sell");
+		inv = Bukkit.createInventory(p, 54, "Â§cPlace items here to sell");
 		ItemStack[] contents = inv.getContents();
-		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "§aConfirm Sell", "§7You can check the value of", "§7item with §c/value");
+		contents[SELL_ICON] = createGuiItem(Material.LIME_CONCRETE, "Â§aConfirm Sell", "Â§7You can check the value of", "Â§7item with Â§c/value");
 		inv.setContents(contents);
 		
 		setupInventory(p, inv, this);

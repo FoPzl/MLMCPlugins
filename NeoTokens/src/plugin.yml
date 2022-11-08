@@ -1,8 +1,0 @@
-name: NeoTokens
-main: me.neoblade298.neotokens.Tokens
-author: [Neoblade298]
-version: 1.0
-api-version: 1.16
-commands:
-   tokens:
-      description: Brings up token menu

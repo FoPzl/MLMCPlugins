@@ -13,7 +13,8 @@ import me.neoblade298.neocore.io.IOType;
 import me.neoblade298.neocore.util.Util;
 
 public class CmdIODisable implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("save/preload/load/cleanup", false)));
+	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("action", true),
+			new CommandArgument("io key", false)));
 
 	@Override
 	public String getPermission() {
@@ -37,13 +38,14 @@ public class CmdIODisable implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		if (args.length == 0) {
-			Util.msg(s, "&7Valid IO actions: save, preload, load, cleanup");
-		}
-		else {
-			IOType type = IOType.valueOf(args[0].toUpperCase());
+		IOType type = IOType.valueOf(args[0].toUpperCase());
+		if (args.length == 1) {
 			IOManager.disableIO(type);
 			Util.msg(s, "Successfully set " + type + " to disabled.");
+		}
+		else {
+			IOManager.disableIO(type, args[1]);
+			Util.msg(s, "Successfully set " + type + " to disabled for manager " + args[1] + ".");
 		}
 	}
 
