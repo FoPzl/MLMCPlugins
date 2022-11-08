@@ -38,7 +38,7 @@ public class IOManager implements Listener {
 	private static HashMap<UUID, Long> lastSave = new HashMap<UUID, Long>();
 	private static HashMap<String, IOComponent> components = new HashMap<String, IOComponent>();
 	private static TreeSet<IOComponent> orderedComponents;
-	private static HashSet<IOType> disabledIO = new HashSet<IOType>();
+	private static HashMap<IOType, HashSet<String>> disabledIO = new HashMap<IOType, HashSet<String>>();
 	private static HashMap<IOType, HashSet<UUID>> performingIO = new HashMap<IOType, HashSet<UUID>>();
 	private static HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>> postIORunnables = new HashMap<IOType, HashMap<UUID, ArrayList<PostIOTask>>>();
 	private static HashSet<UUID> isSaving = new HashSet<UUID>();
@@ -48,6 +48,7 @@ public class IOManager implements Listener {
 		for (IOType type : IOType.values()) {
 			performingIO.put(type, new HashSet<UUID>());
 			postIORunnables.put(type, new HashMap<UUID, ArrayList<PostIOTask>>());
+			disabledIO.put(type, new HashSet<String>());
 		}
 		
 
@@ -128,7 +129,8 @@ public class IOManager implements Listener {
 	*/
 	
 	private void save(Player p) {
-		if (disabledIO.contains(IOType.SAVE)) {
+		HashSet<String> disabledKeys = disabledIO.get(IOType.SAVE);
+		if (disabledKeys.contains("*")) {
 			return;
 		}
 		
@@ -157,7 +159,7 @@ public class IOManager implements Listener {
 					// Save account
 					long timestamp = System.currentTimeMillis();
 					for (IOComponent io : orderedComponents) {
-						if (io.canSave()) {
+						if (disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.savePlayer(p, insert, delete);
 								int deleted = 0, inserted = 0;
@@ -195,7 +197,8 @@ public class IOManager implements Listener {
 	}
 	
 	public void autosave(Player p) {
-		if (disabledIO.contains(IOType.AUTOSAVE)) {
+		HashSet<String> disabledKeys = disabledIO.get(IOType.AUTOSAVE);
+		if (disabledKeys.contains("*")) {
 			return;
 		}
 		
@@ -217,7 +220,7 @@ public class IOManager implements Listener {
 
 					// Save account
 					for (IOComponent io : orderedComponents) {
-						if (io.canAutosave()) {
+						if (disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.autosavePlayer(p, insert, delete);
 								delete.executeBatch();
@@ -241,7 +244,8 @@ public class IOManager implements Listener {
 	
 	private void preload(OfflinePlayer p) {
 		IOType type = IOType.PRELOAD;
-		if (disabledIO.contains(type)) {
+		HashSet<String> disabledKeys = disabledIO.get(type);
+		if (disabledKeys.contains("*")) {
 			return;
 		}
 		performingIO.get(type).add(p.getUniqueId());
@@ -254,7 +258,7 @@ public class IOManager implements Listener {
 
 					// Save account
 					for (IOComponent io : orderedComponents) {
-						if (io.canPreload()) {
+						if (disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.preloadPlayer(p, stmt);
 								stmt.executeBatch();
@@ -277,7 +281,8 @@ public class IOManager implements Listener {
 	
 	private void load(Player p) {
 		IOType type = IOType.LOAD;
-		if (disabledIO.contains(type)) {
+		HashSet<String> disabledKeys = disabledIO.get(type);
+		if (disabledKeys.contains("*")) {
 			return;
 		}
 		performingIO.get(type).add(p.getUniqueId());
@@ -302,7 +307,7 @@ public class IOManager implements Listener {
 
 					// Save account
 					for (IOComponent io : orderedComponents) {
-						if (io.canLoad()) {
+						if (disabledKeys.contains(io.getKey().toUpperCase())) {
 							try {
 								io.loadPlayer(p, stmt);
 								stmt.executeBatch();
@@ -326,7 +331,8 @@ public class IOManager implements Listener {
 	}
 	
 	public static void handleDisable() {
-		if (disabledIO.contains(IOType.CLEANUP)) {
+		HashSet<String> disabledKeys = disabledIO.get(IOType.CLEANUP);
+		if (disabledKeys.contains("*")) {
 			return;
 		}
 		
@@ -337,7 +343,7 @@ public class IOManager implements Listener {
 			
 			// Any final cleanup
 			for (IOComponent io : orderedComponents) {
-				if (io.canCleanup()) {
+				if (disabledKeys.contains(io.getKey().toUpperCase())) {
 					try {
 						Bukkit.getLogger().info("[NeoCore] Cleaning up component " + io.getKey());
 						io.cleanup(insert, delete);
@@ -368,12 +374,20 @@ public class IOManager implements Listener {
 		return null;
 	}
 	
+	public static void disableIO(IOType type, String key) {
+		disabledIO.get(type).add(key.toUpperCase());
+	}
+	
 	public static void disableIO(IOType type) {
-		disabledIO.add(type);
+		disableIO(type, "*");
+	}
+
+	public static void enableIO(IOType type, String key) {
+		disabledIO.get(type).remove(key.toUpperCase());
 	}
 
 	public static void enableIO(IOType type) {
-		disabledIO.remove(type);
+		enableIO(type, "*");
 	}
 	
 	public static void addPostIORunnable(BukkitRunnable task, IOType type, UUID uuid, boolean async) {
@@ -417,5 +431,9 @@ public class IOManager implements Listener {
 	public static boolean toggleDebug() {
 		debug = !debug;
 		return debug;
+	}
+	
+	public static HashMap<IOType, HashSet<String>> getDisabledIO() {
+		return disabledIO;
 	}
 }

@@ -182,6 +182,7 @@ public class NeoCore extends JavaPlugin implements Listener {
 		mngr.register(new CmdIODebug());
 		mngr.register(new CmdIOEnable());
 		mngr.register(new CmdIODisable());
+		mngr.register(new CmdIODisabled());
 		mngr.register(new CmdIOList());
 		mngr.register(new CmdIORemoveSaving());
 		mngr.register(new CmdIOViewSaving());
