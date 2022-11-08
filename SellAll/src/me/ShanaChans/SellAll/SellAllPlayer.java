@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -118,7 +119,7 @@ public class SellAllPlayer
     	
     	if(totalCost == 0)
     	{
-    		player.sendMessage("ง6No items to be sold.");
+    		player.sendMessage("ยง6No items to be sold.");
     	}
     	else
     	{
@@ -136,18 +137,20 @@ public class SellAllPlayer
 	
 	public void getSellLog(boolean sell, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, double totalCost)
 	{
-		ComponentBuilder builder = new ComponentBuilder("ง6[Hover For Sell Log]");
+		ComponentBuilder builder = new ComponentBuilder("ยง6[Hover For Sell Log]");
+		Bukkit.getLogger().info("[Sellall] Player " + player.getName() + " sold:");
 		DecimalFormat df = new DecimalFormat("0.00");
 		String text = "";
 		if(!sell)
 		{
-    		text = "ง7งoClick to confirm or do /sellall confirm\n";
+    		text = "ยง7ยงoClick to confirm or do /sellall confirm\n";
     	}
     	for(Material mat : itemAmount.keySet())
     	{
-    		text = text.concat("ง6" + mat.name() + " ง7(" + itemAmount.get(mat) + "x) - " + "งe" + df.format(itemTotal.get(mat)) + "g\n");
+    		Bukkit.getLogger().info("- " + mat + " (" + itemAmount.get(mat) + "x) - " + df.format(itemTotal.get(mat)) + "g");
+    		text = text.concat("ยง6" + mat.name() + " ยง7(" + itemAmount.get(mat) + "x) - " + "ยงe" + df.format(itemTotal.get(mat)) + "g\n");
     	}	
-    	text = text.concat("ง7TOTAL - งe" + df.format(totalCost) + "g");
+    	text = text.concat("ยง7TOTAL - ยงe" + df.format(totalCost) + "g");
     	if(sell)
     	{
     		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text)));
@@ -232,11 +235,11 @@ public class SellAllPlayer
 		PaginatedList<String> list = new PaginatedList<String>();
 		for(Material mat : sort.keySet())
 		{
-			list.add("ง7" + mat.name() + ": " + itemAmountSold.getOrDefault(mat, 0) + " / " + SellAllManager.getItemCaps().get(mat));
+			list.add("ยง7" + mat.name() + ": " + itemAmountSold.getOrDefault(mat, 0) + " / " + SellAllManager.getItemCaps().get(mat));
 		}
 		if(-1 < pageNumber && pageNumber < list.pages())
 		{
-			player.sendMessage("ง6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
+			player.sendMessage("ยง6O---={ " + displayPlayer.getName() + "'s Sell Limits }=---O");
 			for(String output : list.get(pageNumber))
 			{
 				player.sendMessage(output);
@@ -246,7 +249,7 @@ public class SellAllPlayer
 			list.displayFooter(player, pageNumber, nextPage, prevPage);
 			return;
 		}
-		player.sendMessage("ง7Invalid page");
+		player.sendMessage("ยง7Invalid page");
 	}
 	
 	/**
@@ -262,7 +265,7 @@ public class SellAllPlayer
 			if(-1 < newAmount && newAmount < (itemSellCap.getOrDefault(mat, SellAllManager.getItemCaps().get(mat)) + 1))
 			{
 				itemAmountSold.put(mat, newAmount);
-				player.sendMessage("ง6Changed sold amount!");
+				player.sendMessage("ยง6Changed sold amount!");
 			}
 		}
 	}
