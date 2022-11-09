@@ -37,7 +37,7 @@ public class SellAllValue implements Subcommand
 	public void run(CommandSender sender, String[] args) 
 	{
 		Player p = (Player) sender;
-		SellAllManager.getValue(p);
+		SellAllManager.getPlayers().get(p.getUniqueId()).getValue(p);
 	}
 
 }

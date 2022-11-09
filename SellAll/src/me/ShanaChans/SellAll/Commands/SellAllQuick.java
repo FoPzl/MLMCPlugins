@@ -47,7 +47,13 @@ public class SellAllQuick implements Subcommand
 		
 		if(!(player.getGameMode() == GameMode.CREATIVE))
 		{
-			SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, false);
+			if(!SellAllManager.settings.exists("SellAllNoConfirm", player.getUniqueId()))
+			{
+				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, false);
+				return;
+			}
+			
+			SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, true);
 			return;
 		}
 		player.sendMessage("§6You can not sell in creative!");

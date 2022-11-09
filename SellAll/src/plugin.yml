@@ -11,6 +11,3 @@ commands:
    value:
        description: Get the value of the item in your hand!
        usage: /value
-   cap:
-       description: Get the cap of the item in your hand!
-       usage: /cap

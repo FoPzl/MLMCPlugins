@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import de.tr7zw.nbtapi.NBTItem;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.util.PaginatedList;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -227,6 +228,58 @@ public class SellAllPlayer
 			return;
 		}
 		player.sendMessage("§7Invalid page");
+	}
+	
+	public void getValue(Player p)
+	{
+		ItemStack item = p.getInventory().getItemInMainHand();
+        
+        if (item == null || item.getType().isAir()) 
+        {
+            p.sendMessage("§6You're not holding anything!");
+            return;
+        }
+        
+        NBTItem nbti = new NBTItem(item);
+        double value = 0;
+        
+        if (!nbti.getString("value").isBlank()) 
+        {
+            value = Double.parseDouble(nbti.getString("value"));
+        }
+        else 
+        {
+            value = nbti.getDouble("value");
+        }
+        
+        String name = item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().name();
+        
+        if(value == 0)
+        {
+        	if(SellAllManager.getItemPrices().containsKey(item.getType()))
+        	{
+        		name = item.getType().name();
+        		value = SellAllManager.getItemPrices().get(item.getType());
+        	}
+        	else
+        	{
+        		p.sendMessage("§6This item does not have a price!");
+        		return;
+        	}
+        }
+        
+        p.sendMessage("§6Value of §7" + name + "§7: §e" + value + "g");
+        if(SellAllManager.getItemPrices().containsKey(item.getType()))
+    	{
+            p.sendMessage("§7Base Limit§7: §e" + (int)(SellAllManager.getItemCaps().get(item.getType())) + " §7Multiplier: §e1.0x");
+        	for(int i=1; i <= SellAllManager.getTierAmount(); i++)
+        	{
+        		p.sendMessage("§7Tier " + i + " Limit§7: §e" + (int)(SellAllManager.getItemCaps().get(item.getType()) * SellAllManager.getTierMultiplier() * i) + " §7Multiplier: §e" + Math.pow(SellAllManager.getTierPriceMultiplier(), i) + "x");
+        	}
+ 
+            p.sendMessage("§6Current Amount Sold§7: §e" + itemAmountSold.getOrDefault(item.getType(), 0));
+    	}
+        
 	}
 	
 	/**

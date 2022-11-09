@@ -7,7 +7,9 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -15,11 +17,12 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Chest;
+import org.bukkit.block.Container;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -28,7 +31,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -36,14 +38,11 @@ import me.ShanaChans.SellAll.Commands.SellAllCap;
 import me.ShanaChans.SellAll.Commands.SellAllCommand;
 import me.ShanaChans.SellAll.Commands.SellAllConfirm;
 import me.ShanaChans.SellAll.Commands.SellAllGive;
-import me.ShanaChans.SellAll.Commands.SellAllItemCap;
 import me.ShanaChans.SellAll.Commands.SellAllList;
 import me.ShanaChans.SellAll.Commands.SellAllQuick;
 import me.ShanaChans.SellAll.Commands.SellAllReload;
 import me.ShanaChans.SellAll.Commands.SellAllReset;
 import me.ShanaChans.SellAll.Commands.SellAllSet;
-import me.ShanaChans.SellAll.Commands.SellAllSort;
-import me.ShanaChans.SellAll.Commands.SellAllTiers;
 import me.ShanaChans.SellAll.Commands.SellAllValue;
 import me.ShanaChans.SellAll.Inventories.CustomInventory;
 import me.neoblade298.neocore.NeoCore;
@@ -64,6 +63,7 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private static TreeMap<Double, String> permBoosters = new TreeMap<Double, String>();
 	private static HashMap<UUID, Inventory> playerConfirmInv = new HashMap<UUID, Inventory>();
 	public static HashMap<Player, CustomInventory> viewingInventory = new HashMap<Player, CustomInventory>();
+	private static HashSet<Material> containers = new HashSet<Material>();
 	private static double moneyCap;
 	private static double tierMultiplier;
 	private static double tierPriceMultiplier;
@@ -103,24 +103,19 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 	private void initCommands() {
 		CommandManager sellAll = new CommandManager("sellall", this);
 		CommandManager value = new CommandManager("value", this);
-		CommandManager cap = new CommandManager("cap", this);
 		sellAll.register(new SellAllCommand());
 		sellAll.register(new SellAllCap());
 		sellAll.register(new SellAllList());
-		sellAll.register(new SellAllSort());
 		sellAll.register(new SellAllSet());
 		sellAll.register(new SellAllGive());
 		sellAll.register(new SellAllReload());
 		sellAll.register(new SellAllQuick());
 		sellAll.register(new SellAllConfirm());
-		sellAll.register(new SellAllTiers());
 		sellAll.register(new SellAllReset());
 		value.register(new SellAllValue());
-		cap.register(new SellAllItemCap());
 		sellAll.registerCommandList("help");
 		this.getCommand("sellall").setExecutor(sellAll);
 		this.getCommand("value").setExecutor(value);
-		this.getCommand("cap").setExecutor(cap);
 	}
 
 	public void loadConfigs() 
@@ -173,6 +168,16 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 		}
 		
+        List<String> containerList = SellAllManager.cfg.getStringList("containers");
+		
+		for(int i = 0; i < containerList.size(); i++)
+		{
+			if(Material.valueOf(containerList.get(i)) != null)
+			{
+				containers.add(Material.valueOf(containerList.get(i)));
+			}
+		}
+		
 		sec = SellAllManager.cfg.getConfigurationSection("multipliers");
 		
 		for (String key : sec.getKeys(false)) 
@@ -188,19 +193,25 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void rightClick(PlayerInteractEvent e) 
 	{
 		Player player = e.getPlayer();
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND
-				&& e.getClickedBlock().getType() == Material.CHEST && e.getItem() != null) 
+				&& containers.contains(e.getClickedBlock().getType()) && e.getItem() != null) 
 		{
 			NBTItem heldItem = new NBTItem(e.getItem());
 			if (heldItem.hasKey("sellStick")) {
 				e.setCancelled(true);
-				Chest chest = (Chest) e.getClickedBlock().getState();
-				Inventory inv = chest.getInventory();
-				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player, false);
+				Container container = (Container) e.getClickedBlock().getState();
+				Inventory inv = container.getInventory();
+				if(!SellAllManager.settings.exists("SellAllNoConfirm", player.getUniqueId()))
+				{
+					SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player, false);
+					return;
+				}
+				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(inv, player, true);
+				return;
 			}
 		}
 	}
@@ -369,82 +380,6 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		}
 	}
 	
-	public static void getTier(Player p)
-	{
-		ItemStack item = p.getInventory().getItemInMainHand();
-        
-        if (item == null || item.getType().isAir()) 
-        {
-            p.sendMessage("§6You're not holding anything!");
-            return;
-        }
-			
-        Material mat = item.getType();
-        
-        if(itemCaps.containsKey(mat))
-        {
-        	p.sendMessage("§7Base Limit: §6" + itemCaps.get(mat) + " §7Multiplier: §61.0x");
-    		for(int i=1; i <= SellAllManager.getTierAmount(); i++)
-    		{
-    			p.sendMessage("§7Tier " + i + " Limit: §6" + (int)(itemCaps.get(mat) * tierMultiplier * i) + " §7Multiplier: §6" + Math.pow(tierPriceMultiplier, i) + "x");
-    		}
-        }
-	}
-	
-	public static void getValue(Player p)
-	{
-		ItemStack item = p.getInventory().getItemInMainHand();
-        
-        if (item == null || item.getType().isAir()) 
-        {
-            p.sendMessage("§6You're not holding anything!");
-            return;
-        }
-        
-        NBTItem nbti = new NBTItem(item);
-        double value = 0;
-        
-        if (!nbti.getString("value").isBlank()) 
-        {
-            value = Double.parseDouble(nbti.getString("value"));
-        }
-        else 
-        {
-            value = nbti.getDouble("value");
-        }
-        
-        String name = item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().name();
-        
-        if(value == 0)
-        {
-        	if(itemPrices.containsKey(item.getType()))
-        	{
-        		name = item.getType().name();
-        		value = itemPrices.get(item.getType());
-        	}
-        	else
-        	{
-        		p.sendMessage("§6This item does not have a price!");
-        		return;
-        	}
-        }
-        
-        p.sendMessage("§6Value of §7" + name + "§7: §e" + value + "g");
-	}
-	
-	public static void getCap(Player p)
-	{
-		ItemStack items = p.getInventory().getItemInMainHand();
-		if(items != null && !items.hasItemMeta())
-		{
-			Material material = items.getType();	
-    		if(SellAllManager.getItemPrices().containsKey(material))
-    		{
-    			p.sendMessage("§6Cap of §7" + material.name() + "§7: §e" + itemCaps.get(material));
-    		}
-		}
-	}
-	
 	public static HashMap<UUID, Inventory> getPlayerConfirmInv() 
 	{
 		return playerConfirmInv;
@@ -498,5 +433,9 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			viewingInventory.get(p).handleInventoryClose(e);
 			viewingInventory.remove(p);
 		}
+	}
+
+	public static HashSet<Material> getContainers() {
+		return containers;
 	}
 }
