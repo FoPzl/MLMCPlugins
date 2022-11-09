@@ -29,7 +29,7 @@ public class VoteListener implements Listener {
 		String site = vote.getServiceName();
 		if(main.isValidSite(site) || site.equalsIgnoreCase("freevote")) {
 			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(vote.getUsername());
-			Util.broadcastFormatted("&4[&c&lMLMCe&4] &e" + p.getName() + " &7just voted on &c" + site + "&7!");
+			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + site + "&7!");
 			
 			if(p.isOnline()) {
 				main.rewardVote((Player)p, site);
