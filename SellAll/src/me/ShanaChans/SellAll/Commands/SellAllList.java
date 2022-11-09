@@ -38,7 +38,13 @@ public class SellAllList implements Subcommand
 	{
 		return null;
 	}
-
+	
+	@Override
+	public String[] getAliases() 
+	{
+		return new String[] {"price", "prices"};
+	}
+	
 	@Override
 	public SubcommandRunner getRunner() 
 	{

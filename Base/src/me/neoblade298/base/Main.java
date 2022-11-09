@@ -9,11 +9,11 @@ public class Main extends JavaPlugin {
 	private static Main inst;
 	
 	public void onEnable() {
-		inst = this;
 		Bukkit.getServer().getLogger().info("NeoPPRs Enabled");
 		// Bukkit.getPluginManager().registerEvents(this, this);
 		initCommands();
 		
+		inst = this;
 	}
 	
 	public void onDisable() {

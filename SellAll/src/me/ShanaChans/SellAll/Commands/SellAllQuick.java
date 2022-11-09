@@ -1,5 +1,6 @@
 package me.ShanaChans.SellAll.Commands;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -44,7 +45,18 @@ public class SellAllQuick implements Subcommand
 	{
 		Player player = (Player) sender;
 		
-		SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, false);
+		if(!(player.getGameMode() == GameMode.CREATIVE))
+		{
+			if(!SellAllManager.settings.exists("SellAllNoConfirm", player.getUniqueId()))
+			{
+				SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, false);
+				return;
+			}
+			
+			SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, true);
+			return;
+		}
+		player.sendMessage("§6You can not sell in creative!");
 	}
 
 }

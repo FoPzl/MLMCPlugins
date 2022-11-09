@@ -1,0 +1,16 @@
+name: MLMCGift
+author: Alex Diss
+main: me.neoblade298.mlmcgift.Main
+version: 1.0
+api-version: 1.13
+softdepend: [Vault]
+commands:
+  gift:
+    description: Gifts target player the item(s) in hand
+    usage: "Usage: /<command> <player>"
+    permission: mlmcgift.gift
+    permission-message: You do not have permission to gift.
+permissions:
+  mlmcgift.gift:
+    description: Allows use of /gift
+    default: true

@@ -1,5 +1,6 @@
 package me.ShanaChans.SellAll.Commands;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,7 +40,12 @@ public class SellAllCommand implements Subcommand
 	{
 		Player player = (Player) sender;
 		
-		new SellAllInventory(player);
+		if(!(player.getGameMode() == GameMode.CREATIVE))
+		{
+			new SellAllInventory(player);
+			return;
+		}
+		player.sendMessage("§6You can not sell in creative!");
 	}
 
 }
