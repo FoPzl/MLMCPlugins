@@ -95,8 +95,10 @@ public class SellAllPlayer
 		DecimalFormat df = new DecimalFormat("0.00");
 		String text = "";
 		text = text.concat("§c§oRed§7§o item amounts = reduced item value & over soft cap\n");
+		Bukkit.getLogger().info("[Sellall] Player " + player.getName() + " sold:");
     	for(Material mat : itemAmount.keySet())
     	{
+    		Bukkit.getLogger().info("- " + mat + " (" + itemAmount.get(mat) + "x) - " + df.format(itemTotal.get(mat)) + "g");
     		if(itemAmountSold.getOrDefault(mat, 0) > SellAllManager.getItemCaps().get(mat))
     		{
     			text = text.concat("§6" + mat.name() + " §c(" + itemAmount.get(mat) + "x)§7 - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
