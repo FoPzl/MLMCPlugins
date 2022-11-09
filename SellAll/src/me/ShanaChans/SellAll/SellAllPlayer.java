@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -72,7 +73,7 @@ public class SellAllPlayer
     	
     	if(totalCost == 0)
     	{
-    		player.sendMessage("§6No items to be sold.");
+    		player.sendMessage("Â§6No items to be sold.");
     	}
     	else
     	{
@@ -90,22 +91,22 @@ public class SellAllPlayer
 	
 	public void getSellLog(boolean sell, Player player, HashMap<Material, Integer> itemAmount, HashMap<Material, Double> itemTotal, double totalCost)
 	{
-		ComponentBuilder builder = new ComponentBuilder(sell ? "§6[Hover For Sell Log]" : "§6[Click to Confirm]");
+		ComponentBuilder builder = new ComponentBuilder(sell ? "Â§6[Hover For Sell Log]" : "Â§6[Click to Confirm]");
 		DecimalFormat df = new DecimalFormat("0.00");
 		String text = "";
-		text = text.concat("§c§oRed§7§o item amounts = reduced item value & over soft cap\n");
+		text = text.concat("Â§cÂ§oRedÂ§7Â§o item amounts = reduced item value & over soft cap\n");
     	for(Material mat : itemAmount.keySet())
     	{
     		if(itemAmountSold.getOrDefault(mat, 0) > SellAllManager.getItemCaps().get(mat))
     		{
-    			text = text.concat("§6" + mat.name() + " §c(" + itemAmount.get(mat) + "x)§7 - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
+    			text = text.concat("Â§6" + mat.name() + " Â§c(" + itemAmount.get(mat) + "x)Â§7 - " + "Â§e" + df.format(itemTotal.get(mat)) + "g\n");
     		}
     		else
     		{
-    			text = text.concat("§6" + mat.name() + " §7(" + itemAmount.get(mat) + "x) - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
+    			text = text.concat("Â§6" + mat.name() + " Â§7(" + itemAmount.get(mat) + "x) - " + "Â§e" + df.format(itemTotal.get(mat)) + "g\n");
     		}
     	}	
-    	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
+    	text = text.concat("Â§7TOTAL - Â§e" + df.format(totalCost) + "g");
     	if(sell)
     	{
     		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text)));
@@ -211,13 +212,13 @@ public class SellAllPlayer
 		PaginatedList<String> list = new PaginatedList<String>();
 		for(Material mat : sort.keySet())
 		{
-			list.add("§7" + mat.name() + ": " + itemAmountSold.getOrDefault(mat, 0) + " / " + SellAllManager.getItemCaps().get(mat));
+			list.add("Â§7" + mat.name() + ": " + itemAmountSold.getOrDefault(mat, 0) + " / " + SellAllManager.getItemCaps().get(mat));
 		}
 		if(-1 < pageNumber && pageNumber < list.pages())
 		{
-			player.sendMessage("§6O---={ " + displayPlayer.getName() + "'s Sell Soft Limits }=---O");
-			player.sendMessage("§eWarning: Going over the soft cap will cause item values to be");
-			player.sendMessage("§ediminished. At hard cap can no longer sell.");
+			player.sendMessage("Â§6O---={ " + displayPlayer.getName() + "'s Sell Soft Limits }=---O");
+			player.sendMessage("Â§eWarning: Going over the soft cap will cause item values to be");
+			player.sendMessage("Â§ediminished. At hard cap can no longer sell.");
 			for(String output : list.get(pageNumber))
 			{
 				player.sendMessage(output);
@@ -227,7 +228,7 @@ public class SellAllPlayer
 			list.displayFooter(player, pageNumber, nextPage, prevPage);
 			return;
 		}
-		player.sendMessage("§7Invalid page");
+		player.sendMessage("Â§7Invalid page");
 	}
 	
 	public void getValue(Player p)
@@ -236,7 +237,7 @@ public class SellAllPlayer
         
         if (item == null || item.getType().isAir()) 
         {
-            p.sendMessage("§6You're not holding anything!");
+            p.sendMessage("Â§6You're not holding anything!");
             return;
         }
         
@@ -263,21 +264,21 @@ public class SellAllPlayer
         	}
         	else
         	{
-        		p.sendMessage("§6This item does not have a price!");
+        		p.sendMessage("Â§6This item does not have a price!");
         		return;
         	}
         }
         
-        p.sendMessage("§6Value of §7" + name + "§7: §e" + value + "g");
+        p.sendMessage("Â§6Value of Â§7" + name + "Â§7: Â§e" + value + "g");
         if(SellAllManager.getItemPrices().containsKey(item.getType()))
     	{
-            p.sendMessage("§7Base Limit§7: §e" + (int)(SellAllManager.getItemCaps().get(item.getType())) + " §7Multiplier: §e1.0x");
+            p.sendMessage("Â§7Base LimitÂ§7: Â§e" + (int)(SellAllManager.getItemCaps().get(item.getType())) + " Â§7Multiplier: Â§e1.0x");
         	for(int i=1; i <= SellAllManager.getTierAmount(); i++)
         	{
-        		p.sendMessage("§7Tier " + i + " Limit§7: §e" + (int)(SellAllManager.getItemCaps().get(item.getType()) * SellAllManager.getTierMultiplier() * i) + " §7Multiplier: §e" + Math.pow(SellAllManager.getTierPriceMultiplier(), i) + "x");
+        		p.sendMessage("Â§7Tier " + i + " LimitÂ§7: Â§e" + (int)(SellAllManager.getItemCaps().get(item.getType()) * SellAllManager.getTierMultiplier() * i) + " Â§7Multiplier: Â§e" + Math.pow(SellAllManager.getTierPriceMultiplier(), i) + "x");
         	}
  
-            p.sendMessage("§6Current Amount Sold§7: §e" + itemAmountSold.getOrDefault(item.getType(), 0));
+            p.sendMessage("Â§6Current Amount SoldÂ§7: Â§e" + itemAmountSold.getOrDefault(item.getType(), 0));
     	}
         
 	}
@@ -295,7 +296,7 @@ public class SellAllPlayer
 			if(-1 < newAmount && newAmount < (itemSellCap.getOrDefault(mat, SellAllManager.getItemCaps().get(mat)) + 1))
 			{
 				itemAmountSold.put(mat, newAmount);
-				player.sendMessage("§6Changed sold amount!");
+				player.sendMessage("Â§6Changed sold amount!");
 			}
 		}
 	}

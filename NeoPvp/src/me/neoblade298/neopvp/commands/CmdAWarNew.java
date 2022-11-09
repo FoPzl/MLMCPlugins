@@ -1,18 +1,14 @@
 package me.neoblade298.neopvp.commands;
 
-import java.util.Arrays;
-
 import org.bukkit.command.CommandSender;
 
-import me.neoblade298.neocore.commands.CommandArgument;
-import me.neoblade298.neocore.commands.CommandArguments;
 import me.neoblade298.neocore.commands.Subcommand;
 import me.neoblade298.neocore.commands.SubcommandRunner;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.wars.War;
 import me.neoblade298.neopvp.wars.WarManager;
 
 public class CmdAWarNew implements Subcommand {
-	private static final CommandArguments args = new CommandArguments(Arrays.asList(new CommandArgument("key")));
 
 	@Override
 	public String getDescription() {
@@ -36,13 +32,13 @@ public class CmdAWarNew implements Subcommand {
 
 	@Override
 	public void run(CommandSender s, String[] args) {
-		WarManager.newWar(s, new War(args[0]));
+		WarManager.newWar(s, new War(args[0], Util.translateColors(Util.connectArgs(args, 1))));
 		WarManager.displayWarCreation(s);
 	}
 	
 	@Override
-	public CommandArguments getArgs() {
-		return args;
+	public String getArgOverride() {
+		return "[key] [display]";
 	}
 
 }

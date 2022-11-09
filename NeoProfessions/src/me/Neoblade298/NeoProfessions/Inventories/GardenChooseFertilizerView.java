@@ -65,9 +65,9 @@ public class GardenChooseFertilizerView extends ProfessionInventory {
 	}
 
 	protected ItemStack createNoFertilizerButton() {
-		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§9Don't use Fertilizer");
+		meta.setDisplayName("§9Plant without Fertilizer");
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
 		nbti.setInteger("id", -1);

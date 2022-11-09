@@ -38,12 +38,12 @@ public class CreateSlotInventory extends ProfessionInventory {
 		goldPrices.put(5, new ScaleSet(1000, 1000));
 		goldPrices.put(6, new ScaleSet(1200, 1200));
 		
-		essencePrices.put(1, 2);
-		essencePrices.put(2, 4);
-		essencePrices.put(3, 8);
-		essencePrices.put(4, 16);
-		essencePrices.put(5, 24);
-		essencePrices.put(6, 40);
+		essencePrices.put(1, 6);
+		essencePrices.put(2, 12);
+		essencePrices.put(3, 18);
+		essencePrices.put(4, 24);
+		essencePrices.put(5, 36);
+		essencePrices.put(6, 48);
 	}
 
 	public CreateSlotInventory(Professions main, Player p) {

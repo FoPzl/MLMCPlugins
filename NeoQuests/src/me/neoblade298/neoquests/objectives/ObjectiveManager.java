@@ -19,6 +19,7 @@ public class ObjectiveManager {
 		register(new CreateTownObjective());
 		register(new DeliverItemsObjective());
 		register(new FakeObjective());
+		register(new FakeBarObjective());
 		register(new GetSkillObjective());
 		register(new GetStoredItemObjective());
 		register(new GetTagObjective());

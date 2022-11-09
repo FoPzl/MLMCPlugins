@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +11,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.lumine.mythic.bukkit.utils.lib.lang3.StringUtils;
 import net.md_5.bungee.api.ChatColor;
 
 public class CommandManager implements CommandExecutor {
@@ -97,7 +97,7 @@ public class CommandManager implements CommandExecutor {
 	
 	private boolean check(Subcommand cmd, CommandSender s, String[] args) {
 		if (((perm != null && perm.length() != 0) && !s.hasPermission(perm)) && !s.isOp()) {
-			s.sendMessage("§cYou're missing the permission: " + cmd.getPermission());
+			s.sendMessage("§cYou're missing the permission: " + perm);
 			return false;
 		}
 		

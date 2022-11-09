@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -30,8 +31,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.info.BossInfo;
+import me.neoblade298.neocore.info.InfoAPI;
 import me.neoblade298.neocore.io.IOComponent;
-import me.neoblade298.neocore.listeners.IOListener;
+import me.neoblade298.neocore.io.IOManager;
 import me.neoblade298.neoresearch.ResearchItem;
 import me.neoblade298.neoresearch.inventories.InventoryListeners;
 import me.neoblade298.neoresearch.inventories.ResearchInventory;
@@ -74,7 +77,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 		enabledWorlds.add("Dev");
 		enabledWorlds.add("ClassPVP");
 		enabledWorlds.add("Argyll");
-		IOListener.register(this, this);
+		IOManager.register(this, this);
 
 		loadConfig();
 	}
@@ -279,7 +282,10 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 						}
 	
 						int acct = SkillAPI.getPlayerAccountData(p).getActiveId();
-						pAttrs.get(acct).applyAttributes(p);
+						if (pAttrs.containsKey(acct)) {
+							pAttrs.get(acct).applyAttributes(p);
+						}
+						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 						playerStats.put(uuid, new PlayerStats(main, level, exp, completedResearchItems, researchPoints, mobKills));
 					}
 					con.close();
@@ -305,11 +311,17 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 	}
 	
 	@Override
+	public int getPriority() {
+		return 5;
+	}
+	
+	@Override
 	public void autosavePlayer(Player p, Statement insert, Statement delete) {
 		UUID uuid = p.getUniqueId();
 		try {
 			PlayerStats stats = playerStats.get(uuid);
 			if (playerStats.containsKey(uuid)) {
+				int expectedAttrs = 0;
 	
 				// Save account
 				insert.addBatch("REPLACE INTO research_accounts VALUES ('" + uuid + "','" + stats.getLevel()
@@ -329,14 +341,30 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 				for (Entry<String, ResearchItem> entry : stats.getCompletedResearchItems().entrySet()) {
 					String name = entry.getValue().getId();
 					insert.addBatch("REPLACE INTO research_completed values('" + uuid + "','" + name + "');");
+					expectedAttrs += entry.getValue().getAttrs();
 				}
 			
-				// Save attrs
+				// Save each account
 				for (Integer key : playerAttrs.get(uuid).keySet()) {
+					int actualAttrs = 0;
+					
 					StoredAttributes pAttrs = playerAttrs.get(uuid).get(key);
 					for (String attr : StoredAttributes.attrs) {
 						insert.addBatch("REPLACE INTO research_attributes values('" + uuid + "','" + attr + "'," + pAttrs.getAttribute(attr) + "," +
 								key + ");");
+						if (p.getName().equals("Neoblade298")) {
+							Bukkit.getLogger().info("REPLACE INTO research_attributes values('" + uuid + "','" + attr + "'," + pAttrs.getAttribute(attr) + "," +
+								key + ");");
+						}
+						actualAttrs += pAttrs.getAttribute(attr);
+					}
+					
+					if (actualAttrs > expectedAttrs) {
+						Bukkit.getLogger().log(Level.INFO, "[NeoResearch] Saving account " + p.getName() + 
+								" Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
+						for (Entry<String, Integer> ent : pAttrs.getStoredAttrs().entrySet()) {
+							Bukkit.getLogger().log(Level.INFO, ent.getKey() + ": " + ent.getValue());
+						}
 					}
 				}
 			}
@@ -507,26 +535,29 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 		}
 	}
 	
-	public void giveResearchPointsAlias(Player p, int amount, String mob, int lvl, String display, boolean announce) {
+	public void giveResearchPointsBoss(Player p, int amount, String boss, boolean announce) {
 		UUID uuid = p.getUniqueId();
 		if (playerStats.containsKey(uuid)) {
 			PlayerStats pStats = playerStats.get(uuid);
 			HashMap<String, Integer> mobKills = pStats.getMobKills();
 			HashMap<String, Integer> researchPoints = pStats.getResearchPoints();
 			int pLevel = pStats.getLevel();
+			BossInfo bi = InfoAPI.getBossInfo(boss);
+			String display = bi.getDisplayWithLevel(false);
+			int lvl = bi.getLevel(false);
 			
 			// Discovery
-			if (!researchPoints.containsKey(mob)) {
+			if (!researchPoints.containsKey(boss)) {
 				p.sendMessage(discovery.replaceAll("%mob%", display).replaceAll("&", "§"));
-				researchPoints.put(mob, 0);
+				researchPoints.put(boss, 0);
 			}
-			if (!mobKills.containsKey(mob)) {
-				mobKills.put(mob, 0);
+			if (!mobKills.containsKey(boss)) {
+				mobKills.put(boss, 0);
 			}
 			
 			if (pLevel >= lvl) {
-				int points = researchPoints.containsKey(mob) ? researchPoints.get(mob) + amount : amount;
-				researchPoints.put(mob, points);
+				int points = researchPoints.containsKey(boss) ? researchPoints.get(boss) + amount : amount;
+				researchPoints.put(boss, points);
 				if (announce) {
 					String msg = new String("&4[&c&lMLMC&4] &7You gained &e" + amount + " &7extra research points for " + display + "&7!");
 					msg = msg.replaceAll("&", "§");
@@ -534,7 +565,7 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 				}
 				String msg = display + " - §e" + points + " Research Pts";
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
-				checkItemCompletion(mob, p, points, display);
+				checkItemCompletion(boss, p, points, display);
 			}
 			else {
 				String msg = display + " - §cResearch level too low!";

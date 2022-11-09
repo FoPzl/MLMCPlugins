@@ -465,7 +465,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		ItemStack item = e.getItem();
-		if (item == null)
+		if (item == null || item.getType().isAir())
 			return;
 		String world = p.getWorld().getName();
 		if (!world.equals("Argyll") && !world.equals("ClassPVP") && !world.equals("Dev")) {
@@ -632,7 +632,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			if (e.getTargetEntity() instanceof Player) {
 				if (isQuestGear(e.getItem())) {
 					e.setCancelled(true);
-					e.getTargetEntity().sendMessage("§c[§4§lMLMC§4] §cYou cannot use quest gear in this world!");
+					e.getTargetEntity().sendMessage("§4[§c§lMLMC§4] §cYou cannot use quest gear in this world!");
 				}
 			}
 		}
@@ -647,7 +647,7 @@ public class Gear extends JavaPlugin implements org.bukkit.event.Listener {
 			if (world.equals("Argyll") || world.equals("ClassPVP") || world.equals("Dev")) {
 				if (e.getEntity().getType().equals(EntityType.TRIDENT)) {
 					e.setCancelled(true);
-					p.sendMessage("§c[§4§lMLMC§4] §cYou cannot throw tridents in this world!");
+					p.sendMessage("§4[§c§lMLMC§4] §cYou cannot throw tridents in this world!");
 				}
 			}
 		}

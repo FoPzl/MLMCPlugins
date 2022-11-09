@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.sucy.skill.SkillAPI;
 
 import me.neoblade298.neobossinstances.stats.PlayerStat;
+import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.player.PlayerDataManager;
 
 public class Commands implements CommandExecutor {
@@ -52,11 +53,10 @@ public class Commands implements CommandExecutor {
 					if (main.isDebug) {
 						Bukkit.getLogger().log(Level.INFO,
 								"Bosses Debug: REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','"
-								+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "');");
+								+ boss + "','" + instance + "','" + main.settings.getValue(uuid, boss) + "','" + NeoCore.getInstanceKey() + "');");
 					}
-					stmt.executeUpdate("DELETE FROM neobossinstances_fights WHERE uuid = '" + uuid + "';");
 					stmt.executeUpdate("REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss + "','"
-							+ instance + "','" + main.settings.getValue(uuid, boss) + "');");
+							+ instance + "','" + main.settings.getValue(uuid, boss) + "','" + NeoCore.getInstanceKey() + "');");
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -159,11 +159,11 @@ public class Commands implements CommandExecutor {
 						if (main.isDebug) {
 							Bukkit.getLogger().log(Level.INFO,
 									"Bosses Debug: REPLACE INTO neobossinstances_fights VALUES ('"
-									+ uuid + "','" + boss + "','" + instance + "'," + level + ");");
+									+ uuid + "','" + boss + "','" + instance + "'," + level + ",'" + NeoCore.getInstanceKey() + "');");
 						}
 						// Add boss level here
 						stmt.executeUpdate("REPLACE INTO neobossinstances_fights VALUES ('" + uuid + "','" + boss
-								+ "','" + instance + "'," + level + ");");
+								+ "','" + instance + "'," + level + ",'" + NeoCore.getInstanceKey() + "');");
 						con.close();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -174,7 +174,9 @@ public class Commands implements CommandExecutor {
 					int acct = SkillAPI.getPlayerAccountData(target).getActiveId();
 					if (!BossInstances.getBoss(boss).getBossType().equals(BossType.BOSS) ||
 							PlayerDataManager.getPlayerTags("questaccount_" + acct).exists("Killed" + boss, target.getUniqueId())) {
-						main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+						if (level >= 0) {
+							main.cooldowns.get(boss).put(uuid, System.currentTimeMillis());
+						}
 					}
 
 					BukkitRunnable teleport = new BukkitRunnable() {
@@ -582,7 +584,7 @@ public class Commands implements CommandExecutor {
 	        	timer = String.format("%2d:%02d.%03d", min, sec, ms);
 	        }
 		}
-		messages.add("§cBoss Stats §7[" + BossInstances.color + "§7] (§4§l" + display + " x" + BossInstances.inst().bossMultiplier.get(boss) + "§7) [Time:§c" + timer + "§7]");
+		messages.add("§cBoss Stats §7[" + NeoCore.getInstanceDisplay() + "§7] (§4§l" + display + " x" + BossInstances.inst().bossMultiplier.get(boss) + "§7) [Time:§c" + timer + "§7]");
 		messages.add("§7----- ");
 		messages.add("§7[§cDamage Dealt §7/ §4Damage Taken §7/ §2Self Healing §7/ §aAlly Healing§7]");
 		

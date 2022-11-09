@@ -1,0 +1,10 @@
+name: NeoRelics
+main: me.neoblade298.neorelics.NeoRelics
+author: [Neoblade298]
+depend: [SkillAPI, NeoCore]
+version: 1.0
+api-version: 1.16
+commands:
+   relic:
+      description: Various debug commands
+      usage: /relic

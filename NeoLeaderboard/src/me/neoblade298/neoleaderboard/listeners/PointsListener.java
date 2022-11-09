@@ -1,8 +1,6 @@
 package me.neoblade298.neoleaderboard.listeners;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -12,25 +10,28 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 
 import me.neoblade298.neobossinstances.Boss;
 import me.neoblade298.neobossinstances.BossInstances;
+import me.neoblade298.neocore.bungee.PluginMessageEvent;
 import me.neoblade298.neoleaderboard.points.PlayerPointType;
 import me.neoblade298.neoleaderboard.points.PointsManager;
 
-public class PointsListener implements Listener, PluginMessageListener {
-	private static final double BLOCK_EDIT_POINTS = 0.001;
-	private static final double KILL_PLAYER_POINTS = 5;
-	private static final double KILL_BOSS_BASE_POINTS = 0.1;
+public class PointsListener implements Listener {
+	public static final double BLOCK_EDIT_POINTS = 0.002;
+	public static final double KILL_PLAYER_POINTS = 5;
+	public static final double KILL_BOSS_BASE_POINTS = 0.01;
+	public static final double MINUTES_ONLINE_POINTS = 0.1;
 	private static final HashMap<UUID, Long> deathCooldowns = new HashMap<UUID, Long>();
 	private static final long DEATH_COOLDOWN = 600000L;
+	
+	private HashMap<Player, Long> playtime = new HashMap<Player, Long>();
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
@@ -55,6 +56,7 @@ public class PointsListener implements Listener, PluginMessageListener {
 		Nation kn = kr.getNationOrNull();
 
 		if (vn == null || kn == null) return;
+		if (vn == kn) return;
 		if (deathCooldownActive(victim.getUniqueId())) return;
 		deathCooldowns.put(victim.getUniqueId(), System.currentTimeMillis() + DEATH_COOLDOWN);
 		PointsManager.addPlayerPoints(killer.getUniqueId(), KILL_PLAYER_POINTS, PlayerPointType.KILL_PLAYER);
@@ -64,33 +66,56 @@ public class PointsListener implements Listener, PluginMessageListener {
 		if (!deathCooldowns.containsKey(uuid)) return false;
 		return System.currentTimeMillis() > deathCooldowns.get(uuid);
 	}
-
-	@Override
-	public void onPluginMessageReceived(String channel, Player p, byte[] msg) {
-		if (!channel.equals("BungeeCord")) {
-			return;
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		playtime.put(e.getPlayer(), System.currentTimeMillis());
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		handleLeave(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onKick(PlayerKickEvent e) {
+		handleLeave(e.getPlayer());
+	}
+	
+	private void handleLeave(Player p) {
+		if (playtime.containsKey(p)) {
+			long millisPlayed = System.currentTimeMillis() - playtime.get(p);
+			long minutes = millisPlayed / (1000 * 60);
+			PointsManager.addPlayerPoints(p.getUniqueId(), MINUTES_ONLINE_POINTS * minutes, PlayerPointType.PLAYTIME);
 		}
-		ByteArrayDataInput in = ByteStreams.newDataInput(msg);
-		String subchannel = in.readUTF();
-		
-		if (!subchannel.equals("neocore_bosskills")) return;
-		
-		short len = in.readShort();
-		byte[] msgbytes = new byte[len];
-		in.readFully(msgbytes);
+	}
 
-		DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
-		try {
-			UUID uuid = UUID.fromString(msgin.readUTF());
-			String boss = msgin.readUTF();
-			Boss b = BossInstances.getBoss(boss);
-			if (b != null) {
-				String ph = b.getPlaceholder();
-				double lv = Integer.parseInt(b.getPlaceholder().substring(ph.indexOf("Lv ") + 3, ph.indexOf(']'))); 
-				PointsManager.addPlayerPoints(uuid, KILL_BOSS_BASE_POINTS * lv, PlayerPointType.KILL_BOSS);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+	@EventHandler
+	public void onPluginMessage(PluginMessageEvent e) {
+		String subchannel = e.getChannel();
+		
+		if (!subchannel.startsWith("leaderboard") && !subchannel.equals("neocore_bosskills")) return;
+		
+		if (subchannel.equals("neocore_bosskills")) handleBossKillPM(e.getMessages());
+		else if (subchannel.equals("leaderboard_playtime")) handlePlaytimePM(e.getMessages());
+	}
+	
+	// UUID, boss
+	private void handleBossKillPM(ArrayList<String> msgs) {
+		UUID uuid = UUID.fromString(msgs.get(0));
+		String boss = msgs.get(1);
+		Boss b = BossInstances.getBoss(boss);
+		if (b != null) {
+			String ph = b.getPlaceholder();
+			double lv = Integer.parseInt(b.getPlaceholder().substring(ph.indexOf("Lv ") + 3, ph.indexOf(']'))); 
+			PointsManager.addPlayerPoints(uuid, KILL_BOSS_BASE_POINTS * lv, PlayerPointType.KILL_BOSS);
 		}
+	}
+	
+	// UUID, long timeOnline
+	private void handlePlaytimePM(ArrayList<String> msgs) {
+		UUID uuid = UUID.fromString(msgs.get(0));
+		int minutes = Integer.parseInt(msgs.get(1));
+		PointsManager.addPlayerPoints(uuid, MINUTES_ONLINE_POINTS * minutes, PlayerPointType.PLAYTIME);
 	}
 }

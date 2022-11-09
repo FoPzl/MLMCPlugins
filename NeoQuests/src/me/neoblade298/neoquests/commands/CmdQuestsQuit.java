@@ -47,7 +47,7 @@ public class CmdQuestsQuit implements Subcommand {
 				NeoQuests.getCommands().get("quest").runCommand("", s, new String[0]);
 			}
 			else if (q.getActiveQuests().size() == 1) {
-				q.cancelQuest(args[0]);
+				q.cancelQuest(q.getActiveQuests().iterator().next().getQuest().getKey());
 			}
 			else {
 				Util.msg(p, "§cYou don't have any active quests!");

@@ -1,5 +1,6 @@
 package me.Neoblade298.NeoProfessions.Commands;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,6 +22,11 @@ public class EssenceVouchCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String lbl, String[] args) {
 
 		Player p = (Player) sender;
+		
+		if (p.getGameMode() == GameMode.CREATIVE) {
+			Util.sendMessage(sender, "&cYou can't use this command in creative mode!");
+			return true;
+		}
 
 		if (args.length != 2) {
 			sender.sendMessage("§c/evouch [level] [amount]");

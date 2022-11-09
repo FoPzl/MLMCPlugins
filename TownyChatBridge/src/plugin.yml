@@ -2,6 +2,7 @@ name: TownyChatBridge
 main: me.neoblade298.townychatbridge.TownyChatBridge
 author: [Neoblade298]
 depend: [NeoCore]
+softdepend: [Towny]
 version: 1.0
 api-version: 1.16
 commands:

@@ -90,7 +90,7 @@ public class CmdQuestsRecommended implements Subcommand {
 			if (min != -1 && min > level) continue;
 			if (max != -1 && max < level) continue;
 			if (ConditionManager.getBlockingCondition(p, rec.getQuest().getConditions()) != null) continue;
-			if (q.getActiveQuestsHashMap().containsKey(rec.getQuest().getKey().toUpperCase())) continue;
+			if (q.hasActiveQuest(rec.getQuest().getKey())) continue;
 
 			pages.add(rec);
 		}
@@ -114,7 +114,7 @@ public class CmdQuestsRecommended implements Subcommand {
 		for (QuestRecommendation rec : pages.get(page)) {
 			ComponentBuilder text = new ComponentBuilder("§7- §6" + rec.getQuest().getDisplay());
 			if (rec.getEndpoint() == null) {
-				ComponentBuilder take = new ComponentBuilder(" §7§o[Click to take]")
+				ComponentBuilder take = new ComponentBuilder(" §7§o[Click to Take]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests take " + rec.getQuest().getKey()));
 				s.spigot().sendMessage(text.append(take.create()).create());
 			}

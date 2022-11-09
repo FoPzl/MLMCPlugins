@@ -59,7 +59,7 @@ public class PlayerTags {
 		return false;
 	}
 	
-	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
+	// Only happens on logout
 	public void save(Statement insert, Statement delete, UUID uuid) {
 		if (changedValues.containsKey(uuid) && !changedValues.get(uuid).isEmpty()) {
 			HashMap<String, Value> pValues = values.get(uuid);
@@ -68,6 +68,7 @@ public class PlayerTags {
 			}
 			
 			// Only save changed values
+			if (changedValues.size() > 0) Bukkit.getLogger().info("[NeoCore] Saving " + changedValues.size() + " changed tags for key " + this.getKey());
 			for (String key : changedValues.get(uuid)) {
 				
 				// If value was set
@@ -93,15 +94,15 @@ public class PlayerTags {
 					Bukkit.getLogger().log(Level.INFO, "[NeoCore] Removing tag " + this.getKey() + "." + key + " for " + uuid + ".");
 					try {
 						delete.addBatch("DELETE FROM neocore_tags WHERE `key` = '" + this.getKey() + "' AND tag = '" + key +
-						"';");
+						"' AND uuid = '" + uuid + "';");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
-			values.remove(uuid);
-			changedValues.remove(uuid);
 		}
+		values.remove(uuid);
+		changedValues.remove(uuid);
 	}
 	
 	public void load(Statement stmt, UUID uuid) {
@@ -167,6 +168,7 @@ public class PlayerTags {
 	
 	public boolean resetAllTags(UUID uuid) {
 		ArrayList<String> fields = new ArrayList<String>(values.get(uuid).keySet());
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Resetting all tags of " + this.getKey() + " for " + uuid + ".");
 		for (String key : fields) {
 			reset(key, uuid);
 		}
@@ -180,7 +182,7 @@ public class PlayerTags {
 		}
 		changedValues.get(uuid).add(key);
 		Value removed = values.get(uuid).remove(key);
-		Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, removed, ValueChangeType.EXPIRED));
+		Bukkit.getPluginManager().callEvent(new PlayerTagChangedEvent(Bukkit.getPlayer(uuid), this.key, key, removed, ValueChangeType.REMOVED));
 		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Reset tag of " + this.getKey() + "." + key + " for " + uuid + ".");
 		return true;
 	}

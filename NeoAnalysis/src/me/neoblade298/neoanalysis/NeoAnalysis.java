@@ -12,6 +12,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.player.PlayerClass;
 import com.sucy.skill.api.player.PlayerData;
@@ -97,7 +100,7 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 					break;
 				}
 			}
-			if (iteratedAll) q += "...";
+			if (!iteratedAll) q += "...";
 		}
 		final String quest = q;
 		
@@ -129,14 +132,25 @@ public class NeoAnalysis extends JavaPlugin implements org.bukkit.event.Listener
 				long joined = p.getFirstPlayed();
 				long now = System.currentTimeMillis();
 				
+				// Find last town
+				Resident r = TownyAPI.getInstance().getResident(p);
+				Town town = r.getTownOrNull();
+				String t = "";
+				boolean isMayor = false;
+				if (town != null) {
+					t = town.getName();
+					isMayor = r.isMayor();
+				}
+				
 				try {
 					Statement stmt = NeoCore.getStatement();
 					stmt.executeUpdate("REPLACE INTO analysis_players values('" + uuid + "','" + p.getName() + "'," + joined + "," + now + ",'" + pClass + 
-							"'," + level + ",'" + quest + "','" + boss + "');");
+							"'," + level + ",'" + quest + "','" + boss + "','" + t + "'," + isMayor + ");");
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
+				
 			}
 		}.runTaskAsynchronously(this);
 	}

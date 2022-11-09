@@ -17,6 +17,7 @@ import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.util.Util;
 
 public class SchedulerAPI {
+	private static final int DAYS_AVAILABLE_IN_SCHEDULER = 3;
 	private static final int startupTime = getDateKey(Calendar.getInstance());
 	private static ArrayList<HashMap<Integer, ArrayList<CoreRunnable>>> schedule = new ArrayList<HashMap<Integer, ArrayList<CoreRunnable>>>(3);
 	private static HashMap<ScheduleInterval, ArrayList<CoreRunnable>> repeaters = new HashMap<ScheduleInterval, ArrayList<CoreRunnable>>();
@@ -24,7 +25,7 @@ public class SchedulerAPI {
 	private static final int MINUTES_PER_SEGMENT = 15;
 	
 	public static void initialize() {
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < DAYS_AVAILABLE_IN_SCHEDULER; i++) {
 			schedule.add(new HashMap<Integer, ArrayList<CoreRunnable>>());
 		}
 		
@@ -75,7 +76,7 @@ public class SchedulerAPI {
 		if (minute == 0) {
 			runRepeaters(ScheduleInterval.HOUR);
 			
-			if (hour == 10) {
+			if (hour == 13) {
 				runRepeaters(ScheduleInterval.DAILY);
 			}
 		}

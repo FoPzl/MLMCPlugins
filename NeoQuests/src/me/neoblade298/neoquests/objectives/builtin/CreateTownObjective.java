@@ -34,7 +34,7 @@ public class CreateTownObjective extends Objective {
 
 	@Override
 	public String getDisplay() {
-		return "Hide this objective!";
+		return "Create town";
 	}
 	
 	@Override

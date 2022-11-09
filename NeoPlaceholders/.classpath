@@ -7,16 +7,17 @@
 	<classpathentry kind="lib" path="src/NeoBossInstances.jar"/>
 	<classpathentry kind="lib" path="src/paper-138.jar"/>
 	<classpathentry kind="lib" path="src/spigot-api-1.16.1-R0.1-SNAPSHOT-shaded.jar"/>
-	<classpathentry kind="lib" path="src/CrossTownyServer-5.0.jar"/>
 	<classpathentry kind="lib" path="src/NeoResearch.jar"/>
 	<classpathentry kind="lib" path="src/me/neoblade298/neoplaceholders/Vault.jar"/>
 	<classpathentry kind="lib" path="src/NeoProfessions.jar"/>
 	<classpathentry kind="lib" path="src/MythicMobs-5.0.3-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="src/NeoCore.jar"/>
+	<classpathentry kind="lib" path="src/NeoRelics.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/FoPzlVote.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

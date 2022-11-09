@@ -1,7 +1,7 @@
 name: NeoAnalysis
 main: me.neoblade298.neoanalysis.NeoAnalysis
 author: [Neoblade298]
-depend: [SkillAPI, NeoQuests, NeoCore]
+depend: [SkillAPI, NeoQuests, NeoCore, Towny]
 version: 1.0
 api-version: 1.16
 commands:

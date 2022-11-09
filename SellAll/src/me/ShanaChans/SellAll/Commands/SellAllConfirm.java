@@ -46,7 +46,7 @@ public class SellAllConfirm implements Subcommand
 				SellAllManager.getPlayerConfirmInv().remove(player.getUniqueId());
 				return;
 			}
-			player.sendMessage("ง6You can not sell in creative!");
+			player.sendMessage("ยง6You can not sell in creative!");
 		}
 	}
 }

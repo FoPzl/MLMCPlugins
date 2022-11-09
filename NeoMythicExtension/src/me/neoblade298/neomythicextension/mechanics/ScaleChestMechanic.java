@@ -17,6 +17,7 @@ import io.lumine.mythic.api.skills.ThreadSafetyLevel;
 import me.Neoblade298.NeoConsumables.Consumables;
 import me.Neoblade298.NeoConsumables.objects.GeneratableConsumable;
 import me.neoblade298.neocore.bungee.BungeeAPI;
+import me.neoblade298.neomythicextension.MythicExt;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 
 public class ScaleChestMechanic implements ITargetedEntitySkill {
@@ -34,7 +35,7 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 
 	public ScaleChestMechanic(MythicLineConfig config) {
         String key = config.getString("i", "mi_sewerzombie");
-        this.item = ((GeneratableConsumable) Consumables.getConsumable(key)).getItem(1);
+        this.item = ((GeneratableConsumable) Consumables.getConsumable(key)).getItem(null, 1);
         this.basechance = config.getDouble(new String[] {"basechance", "bc"}, 0.25);
         this.msg = new String("&4[&c&lMLMC&4] &7" + config.getString("msg", "&7You found a Boss Chest")).replaceAll("&", "§");
         this.boss = config.getString("boss", "Ratface");
@@ -76,6 +77,9 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 				Bukkit.getPluginManager().callEvent(e);
 				double moddedChance = e.getChance();
 				dropType = e.getDropType();
+				if (MythicExt.debug) {
+					Bukkit.getLogger().info("[NeoMythicExt] Generated chest chance: " + chance + ", cutoff: " + e.getChance() + ", drop type: " + dropType);
+				}
 				
 				// Check for successful drop
 				if (rand <= moddedChance) {
@@ -89,7 +93,8 @@ public class ScaleChestMechanic implements ITargetedEntitySkill {
 					localMsg += "!";
 					p.sendMessage(localMsg);
 					String name = fitem.getItemMeta().getDisplayName().replaceAll("§", "&");
-					BungeeAPI.broadcast("&4[&c&lMLMC&4&l] &e" + p.getName() + " &7has found " + name + "&7!");
+					Bukkit.getLogger().info("Player " + p.getName() + " found boss chest, sending broadcast");
+					BungeeAPI.broadcast("&4[&c&lMLMC&4] &e" + p.getName() + " &7has found " + name + "&7!");
 				}
 				return SkillResult.SUCCESS;
 			}

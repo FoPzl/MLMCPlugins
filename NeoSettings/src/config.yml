@@ -1,7 +1,0 @@
-sql:
-  host: 127.0.0.1
-  port: '3306'
-  db: MLMC
-  username: username
-  password: password
-  flags: ?verifyServerCertificate=false&useSSL=false&useUnicode=true&characterEncoding=utf-8

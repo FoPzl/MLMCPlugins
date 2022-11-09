@@ -62,10 +62,6 @@ public class ProfessionManager implements IOComponent, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		// Check if player exists already
-		if (accounts.containsKey(p.getUniqueId())) {
-			return;
-		}
 
 		HashMap<ProfessionType, Profession> profs = new HashMap<ProfessionType, Profession>();
 		for (ProfessionType prof : ProfessionType.values()) {

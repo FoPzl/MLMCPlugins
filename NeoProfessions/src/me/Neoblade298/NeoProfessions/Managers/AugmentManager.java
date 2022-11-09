@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ import com.sucy.skill.api.util.FlagManager;
 import de.tr7zw.nbtapi.NBTItem;
 import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Augments.*;
+import me.Neoblade298.NeoProfessions.Augments.Builtin.*;
 import me.Neoblade298.NeoProfessions.Events.AugmentInitCleanupEvent;
 import me.Neoblade298.NeoProfessions.Events.ProfessionHarvestEvent;
 import me.Neoblade298.NeoProfessions.Inventories.ConfirmAugmentInventory;
@@ -41,11 +43,12 @@ import me.Neoblade298.NeoProfessions.Objects.Rarity;
 import me.Neoblade298.NeoProfessions.Objects.FlagSettings;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Utilities.Util;
-import me.neoblade298.neobossrelics.NeoBossRelics;
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.io.FileLoader;
 import me.neoblade298.neomythicextension.events.ChestDropEvent;
 import me.neoblade298.neomythicextension.events.MythicResearchPointsChanceEvent;
+import me.neoblade298.neorelics.NeoRelics;
+import me.neoblade298.neorelics.Relic;
 
 public class AugmentManager implements Listener, Manager {
 	static Professions main = null;
@@ -55,6 +58,7 @@ public class AugmentManager implements Listener, Manager {
 	// Caches 1 augment of each level whenever it's created, works via Augment.get
 	private static HashMap<String, HashMap<Integer, Augment>> augmentCache = new HashMap<String, HashMap<Integer, Augment>>(); // Don't use, caches by level
 	private static HashMap<String, ArrayList<String>> droptables = new HashMap<String, ArrayList<String>>();
+	private static HashMap<String, Double> configValues = new HashMap<String, Double>();
 	private static HashMap<Player, PlayerAugments> playerAugments = new HashMap<Player, PlayerAugments>();
 	private static ArrayList<String> enabledWorlds = new ArrayList<String>();
 	
@@ -74,7 +78,33 @@ public class AugmentManager implements Listener, Manager {
 	
 	public AugmentManager(Professions main) {
 		AugmentManager.main = main;
+		
+		// Droptables and augments
+		reload();
+	}
+	
+	@Override
+	public void reload() {
+		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
 
+		droptables.clear();
+		configValues.clear();
+		try {
+			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
+			NeoCore.loadFiles(new File(main.getDataFolder(), "augments/config.yml"), (cfg, file) -> {
+				for (String augment : cfg.getKeys(false)) {
+					for (String subkey : cfg.getConfigurationSection(augment).getKeys(false)) {
+						String key = augment + "." + subkey;
+						configValues.put(key, cfg.getDouble(key, 0));
+					}
+				}
+			});
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		augmentMap.clear();
 		augmentMap.put("barrier", new BarrierAugment());
 		augmentMap.put("brace", new BraceAugment());
 		augmentMap.put("brawler", new BrawlerAugment());
@@ -138,25 +168,10 @@ public class AugmentManager implements Listener, Manager {
 		augmentMap.put("weightless", new WeightlessAugment());
 		augmentMap.put("woodcutter", new WoodcutterAugment());
 		
-		NeoBossRelics relics = (NeoBossRelics) Bukkit.getPluginManager().getPlugin("NeoBossRelics");
-		for (String set : relics.sets.keySet()) {
-			augmentMap.put(set.toLowerCase(), new BossRelic(set));
+		for (Entry<String, Relic> e : NeoRelics.getRelics().entrySet()) {
+			augmentMap.put(e.getKey().toLowerCase(), new BossRelic(e.getValue()));
 		}
 		
-		// Droptables
-		reload();
-	}
-	
-	@Override
-	public void reload() {
-		Bukkit.getLogger().log(Level.INFO, "[NeoProfessions] Loading Augment manager...");
-		AugmentManager.droptables.clear();
-		try {
-			NeoCore.loadFiles(new File(main.getDataFolder(), "droptables"), droptableLoader);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static boolean isAugment(ItemStack item) {
@@ -910,5 +925,9 @@ public class AugmentManager implements Listener, Manager {
 	
 	public static Professions getMain() {
 		return main;
+	}
+	
+	public static double getValue(String key) {
+		return configValues.getOrDefault(key, 0D);
 	}
 }

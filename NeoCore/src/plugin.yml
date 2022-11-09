@@ -1,21 +1,18 @@
 name: NeoCore
 main: me.neoblade298.neocore.NeoCore
 author: [Neoblade298]
+depend: [Vault]
+softdepend: [MythicMobs]
 version: 1.0
-api-version: 1.16
+api-version: 1.19
 commands:
    core:
       description: NeoCore command
       usage: /core
+      aliases: [ncore]
    bcore:
       description: NeoCore bungee command
       usage: /bcore
-   help:
-      description: Base help command
-      usage: /help
-   features:
-      description: Base features command
-      usage: /features
-   commands:
-      description: Base commands command
-      usage: /commands
+   io:
+      description: NeoCore IO command
+      usage: /io

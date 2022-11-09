@@ -7,6 +7,7 @@ import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionResult;
 import me.neoblade298.neoquests.quests.CompletedQuest;
 import me.neoblade298.neoquests.quests.Quest;
+import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
 public class QuestTakeableCondition extends Condition {
@@ -38,7 +39,12 @@ public class QuestTakeableCondition extends Condition {
 
 	@Override
 	public boolean passes(Player p) {
-		CompletedQuest cq = QuestsManager.getQuester(p).getCompletedQuest(questname);
+		Quester quester = QuestsManager.getQuester(p);
+		CompletedQuest cq = quester.getCompletedQuest(questname);
+
+		if (quester.hasActiveQuest(questname)) {
+			return false;
+		}
 		if (cq == null) {
 			return true;
 		}
@@ -51,9 +57,14 @@ public class QuestTakeableCondition extends Condition {
 
 	@Override
 	public String getExplanation(Player p) {
-		CompletedQuest cq = QuestsManager.getQuester(p).getCompletedQuest(questname);
+		Quester quester = QuestsManager.getQuester(p);
+		CompletedQuest cq = quester.getCompletedQuest(questname);
+
+		if (quester.hasActiveQuest(questname)) {
+			return "You're already on that quest! Type /q!";
+		}
 		if (cq == null) {
-			return "Error";
+			return "error";
 		}
 		if (cq.isSuccess()) {
 			return "You successfully completed this quest and it can't be repeated!";

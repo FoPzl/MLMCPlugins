@@ -34,6 +34,9 @@ public class Garden {
 	
 	public void plantSeed(UUID uuid, int slot, int plantId, Fertilizer fert) {
 		long growTime = DEFAULT_GROW_TIME;
+		if (fert != null) {
+			growTime *= fert.getTimeMultiplier();
+		}
 		GardenSlot gs = new GardenSlot(plantId, fert, System.currentTimeMillis() + growTime);
 		this.slots.put(slot, gs);
 		GardenManager.addGardenMessage(uuid, gs);
@@ -44,6 +47,13 @@ public class Garden {
 		if (gs != null && gs.canHarvest()) {
 			slots.remove(slot);
 			MinigameManager.startMinigame(p, gs.getId(), gs.getFertilizer() != null ? gs.getFertilizer().getParams() : new MinigameParameters());
+		}
+	}
+	
+	public void uprootSeed(Player p, int slot) {
+		GardenSlot gs = slots.get(slot);
+		if (gs != null && !gs.canHarvest()) {
+			slots.remove(slot);
 		}
 	}
 }

@@ -52,16 +52,18 @@ public class Main extends JavaPlugin implements Listener {
 		
 		// Professions
 		HashMap<ProfessionType, Profession> account = ProfessionManager.getAccount(viewed.getUniqueId());
-		Profession harv = account.get(ProfessionType.HARVESTER);
-		Profession stone = account.get(ProfessionType.STONECUTTER);
-		Profession craft = account.get(ProfessionType.CRAFTER);
-		Profession log = account.get(ProfessionType.LOGGER);
-		String line = "&7-- &6[Lv " + harv.getLevel() + " " + harv.getType().getDisplay() + "] ";
-		line += "&6[Lv " + log.getLevel() + " " + log.getType().getDisplay() + "] &7--";
-		sendMessage(recipient, line);
-		line = "&7-- &6[Lv " + stone.getLevel() + " " + stone.getType().getDisplay() + "] ";
-		line += "&6[Lv " + craft.getLevel() + " " + craft.getType().getDisplay() + "] &7--";
-		sendMessage(recipient, line);
+		if (account != null) {
+			Profession harv = account.get(ProfessionType.HARVESTER);
+			Profession stone = account.get(ProfessionType.STONECUTTER);
+			Profession craft = account.get(ProfessionType.CRAFTER);
+			Profession log = account.get(ProfessionType.LOGGER);
+			String line = "&7-- &6[Lv " + harv.getLevel() + " " + harv.getType().getDisplay() + "] ";
+			line += "&6[Lv " + log.getLevel() + " " + log.getType().getDisplay() + "] &7--";
+			sendMessage(recipient, line);
+			line = "&7-- &6[Lv " + stone.getLevel() + " " + stone.getType().getDisplay() + "] ";
+			line += "&6[Lv " + craft.getLevel() + " " + craft.getType().getDisplay() + "] &7--";
+			sendMessage(recipient, line);
+		}
 		
 		// Attributes
 		String attr = "&e" + pData.getAttribute("Strength") + " &cSTR&7 | &e"
@@ -82,6 +84,7 @@ public class Main extends JavaPlugin implements Listener {
 				|| !(e.getPlayer().getWorld().getName().equalsIgnoreCase("Argyll"))) {
 			return;
 		}
+		Player clicked = (Player) e.getRightClicked();
 
 		// Only let it happen once
 		if (!(e.getHand() == EquipmentSlot.HAND)) {
@@ -89,7 +92,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 
 		// Make sure the player being clicked is not an NPC
-		if (Bukkit.getPlayer(e.getRightClicked().getName()) == null) {
+		if (clicked.hasMetadata("NPC")) {
 			return;
 		}
 
@@ -97,7 +100,6 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 		}
 
-		Player clicked = (Player) e.getRightClicked();
 		sendPlayerCard(e.getPlayer(), clicked);
 	}
 

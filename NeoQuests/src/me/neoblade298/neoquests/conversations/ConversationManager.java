@@ -141,12 +141,6 @@ public class ConversationManager implements Manager, Listener {
 	}
 	
 	public static void startConversation(Player p, Conversation conv) {
-		if (activeConvs.containsKey(p)) {
-			p.sendMessage("§cYou're still in the middle of another conversation!");
-			activeConvs.get(p).show();
-			return;
-		}
-		
 		Condition cond = ConditionManager.getBlockingCondition(p, conv.getConditions());
 		if (cond != null) {
 			p.sendMessage("§cYou can't start this conversation: " + cond.getExplanation(p));

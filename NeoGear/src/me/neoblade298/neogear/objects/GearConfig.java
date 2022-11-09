@@ -2,6 +2,7 @@ package me.neoblade298.neogear.objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
@@ -48,12 +49,15 @@ public class GearConfig {
 	public double configPrice, value;
 	
 	private static HashMap<String, String> rarityUpgrades = new HashMap<String, String>();
+	private static HashSet<String> decimalAttrs = new HashSet<String>();
 	
 	static {
 		rarityUpgrades.put("common", "uncommon");
 		rarityUpgrades.put("uncommon", "rare");
 		rarityUpgrades.put("rare", "epic");
 		rarityUpgrades.put("epic", "legendary");
+		
+		decimalAttrs.add("rrg");
 	}
 	
 	public GearConfig(String id, String type, String title, Material material, ArrayList<String> prefixes, ArrayList<String> displayNames,
@@ -238,7 +242,7 @@ public class GearConfig {
 				AttributeSet attr = attributes.get(key);
 				amount += attr.generateAmount(level);
 				String id = attr.getAttr();
-				if (id.equals("hlr") || id.equals("rrg")) {
+				if (decimalAttrs.contains(id)) {
 					double amt = amount;
 					amt /= 10;
 					line = attr.format(amt);
@@ -251,7 +255,7 @@ public class GearConfig {
 				AttributeSet attr = rarities.get(rarity).attributes.get(key);
 				amount += attr.generateAmount(level);
 				String id = attr.getAttr();
-				if (id.equals("hlr") || id.equals("rrg")) {
+				if (decimalAttrs.contains(id)) {
 					double amt = amount;
 					amt /= 10;
 					line = attr.format(amt);
@@ -334,7 +338,8 @@ public class GearConfig {
 			return "cannot upgrade legendary! Must be artifacted at /warp artifactupgrade";
 		}
 		String newRarity = rarityUpgrades.get(oldRarity);
-		String rarityDisplay = Gear.getRarities().get(newRarity).displayName;
+		Rarity r = Gear.getRarities().get(newRarity);
+		String rarityDisplay = r.displayName;
 		nbti.setString("rarity", newRarity);
 		
 		// Add slots if rarity increased to rare+
@@ -347,6 +352,9 @@ public class GearConfig {
 		}
 		nbti.applyNBT(item);
 		ItemMeta meta = item.getItemMeta();
+		if (meta.getDisplayName().contains("Standard")) {
+			meta.setDisplayName(r.colorCode + ChatColor.stripColor(meta.getDisplayName()));
+		}
 		List<String> lore = meta.getLore();
 		lore.set(2, "§7Rarity: " + rarityDisplay);
 		lore.set(4, "§7Max Slots: " + slotsMaxNew);
@@ -410,8 +418,13 @@ public class GearConfig {
 		List<String> lore = meta.getLore();
 		ListIterator<String> loreIter = lore.listIterator();
 		while (loreIter.hasNext()) {
-			if (loreIter.next().contains("---")) {
+			String line = loreIter.next();
+			if (line.contains("---")) {
 				break;
+			}
+			else if (line.contains("Level") && !line.endsWith("" + level)) {
+				loreIter.remove();
+				loreIter.add("§7Level: " + level);
 			}
 		}
 		
@@ -432,7 +445,7 @@ public class GearConfig {
 				}
 				String num = line.substring(index);
                 double dbleAmt = Double.parseDouble(num.replaceAll("[^0-9-.]", ""));
-				if (key.equals("hlr") || key.equals("rrg")) {
+				if (decimalAttrs.contains(id)) {
 					// Turn decimals to int
 					dbleAmt *= 10;
 				}
@@ -454,7 +467,7 @@ public class GearConfig {
                 	loreIter.remove();
                 	// If max = 0, attribute was deleted entirely
                 	if (max > 0) {
-        				if (key.equals("hlr") || key.equals("rrg")) {
+        				if (decimalAttrs.contains(id)) {
         					double amount = min + Gear.gen.nextInt(max - min + 1);
         					amount /= 10;
         					loreIter.add(aset.format(amount));
@@ -482,7 +495,7 @@ public class GearConfig {
                 if (max > 0) {
                 	hasChanged = true;
                 	loreIter.previous();
-    				if (key.equals("hlr") || key.equals("rrg")) {
+    				if (decimalAttrs.contains(id)) {
     					double amount = min + Gear.gen.nextInt(max - min + 1);
     					amount /= 10;
     					loreIter.add(aset.format(amount));

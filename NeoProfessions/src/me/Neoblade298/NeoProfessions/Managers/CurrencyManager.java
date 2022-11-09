@@ -50,10 +50,6 @@ public class CurrencyManager implements IOComponent, Listener, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		// Check if player exists already
-		if (essence.containsKey(p.getUniqueId())) {
-			return;
-		}
 
 		HashMap<Integer, Integer> essences = new HashMap<Integer, Integer>();
 		essence.put(p.getUniqueId(), essences);

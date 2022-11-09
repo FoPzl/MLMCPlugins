@@ -31,6 +31,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tr7zw.nbtapi.NBTItem;
@@ -284,12 +285,12 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 		for(Material mat : sort.keySet())
 		{
 			double price = SellAllManager.getItemPrices().get(mat);
-			list.add("§7" + mat.name() + ":§e " + df.format(price) + "g §7| §c" + df.format(price * boosterMultiplier) + "g");
+			list.add("Â§7" + mat.name() + ":Â§e " + df.format(price) + "g Â§7| Â§c" + df.format(price * boosterMultiplier) + "g");
 		}
 		if(-1 < pageNumber && pageNumber < list.pages())
 		{
-			player.sendMessage("§6O---={ Price List }=---O");
-			player.sendMessage("§eBase Price §7| §cMultiplier (" + multiplier + "x) + Booster (" + booster + "x)");
+			player.sendMessage("Â§6O---={ Price List }=---O");
+			player.sendMessage("Â§eBase Price Â§7| Â§cMultiplier (" + multiplier + "x) + Booster (" + booster + "x)");
 			for(String output : list.get(pageNumber))
 			{
 				player.sendMessage(output);
@@ -299,14 +300,14 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			list.displayFooter(player, pageNumber, nextPage, prevPage);
 			return;
 		}
-		player.sendMessage("§7Invalid page");
+		player.sendMessage("Â§7Invalid page");
 	}
 	
     public static void resetPlayers()
     {
     	Statement stmt = NeoCore.getStatement();
-    	Bukkit.getLogger().warning("[Sellall] Reset all players!");
-    	BungeeAPI.broadcast("§6Sell All Limits have been refreshed!");
+		Bukkit.getLogger().info("[Sellall] Reset all players!");
+    	BungeeAPI.broadcast("Â§6Sell All Limits have been refreshed!");
     	
     	try {
 			stmt.executeUpdate("DELETE FROM sellall_players;");
@@ -378,6 +379,47 @@ public class SellAllManager extends JavaPlugin implements Listener, IOComponent 
 			}
 			players.remove(p.getUniqueId());
 		}
+	}
+	
+	public static void getValue(Player p)
+	{
+		ItemStack item = p.getInventory().getItemInMainHand();
+        
+        if (item == null || item.getType().isAir()) 
+        {
+            p.sendMessage("Â§6You're not holding anything!");
+            return;
+        }
+        
+        NBTItem nbti = new NBTItem(item);
+        double value = 0;
+        
+        if (!nbti.getString("value").isBlank()) 
+        {
+            value = Double.parseDouble(nbti.getString("value"));
+        }
+        else 
+        {
+            value = nbti.getDouble("value");
+        }
+        
+        String name = item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().name();
+        
+        if(value == 0)
+        {
+        	if(itemPrices.containsKey(item.getType()))
+        	{
+        		name = item.getType().name();
+        		value = itemPrices.get(item.getType());
+        	}
+        	else
+        	{
+        		p.sendMessage("Â§6This item does not have a price!");
+        		return;
+        	}
+        }
+        
+        p.sendMessage("Â§6Value of Â§7" + name + "Â§7: Â§e" + value + "g");
 	}
 	
 	public static HashMap<UUID, Inventory> getPlayerConfirmInv() 

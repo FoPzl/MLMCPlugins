@@ -56,7 +56,7 @@ public class SellAllQuick implements Subcommand
 			SellAllManager.getPlayers().get(player.getUniqueId()).sellAll(player.getInventory(), player, true);
 			return;
 		}
-		player.sendMessage("ง6You can not sell in creative!");
+		player.sendMessage("ยง6You can not sell in creative!");
 	}
 
 }

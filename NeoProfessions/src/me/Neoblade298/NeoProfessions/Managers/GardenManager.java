@@ -19,6 +19,7 @@ import me.Neoblade298.NeoProfessions.Professions;
 import me.Neoblade298.NeoProfessions.Gardens.Fertilizer;
 import me.Neoblade298.NeoProfessions.Gardens.Garden;
 import me.Neoblade298.NeoProfessions.Gardens.GardenSlot;
+import me.Neoblade298.NeoProfessions.Inventories.GardenInventory;
 import me.Neoblade298.NeoProfessions.Minigames.MinigameParameters;
 import me.Neoblade298.NeoProfessions.Objects.Manager;
 import me.Neoblade298.NeoProfessions.Objects.Rarity;
@@ -31,6 +32,7 @@ import me.neoblade298.neocore.io.IOComponent;
 public class GardenManager implements IOComponent, Manager {
 	public static Professions main;
 	private static HashMap<UUID, HashMap<ProfessionType, Garden>> gardens = new HashMap<UUID, HashMap<ProfessionType, Garden>>();
+	private static HashMap<UUID, ProfessionType> playersGardening = new HashMap<UUID, ProfessionType>();
 	private static HashMap<Integer, Fertilizer> fertilizers = new HashMap<Integer, Fertilizer>();
 	private static HashMap<UUID, ArrayList<BukkitTask>> gardenMsgs = new HashMap<UUID, ArrayList<BukkitTask>>();
 	private static FileLoader fertilizerLoader;
@@ -77,10 +79,6 @@ public class GardenManager implements IOComponent, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		// Check if player exists already
-		if (gardens.containsKey(p.getUniqueId())) {
-			return;
-		}
 
 		HashMap<ProfessionType, Garden> pgardens = new HashMap<ProfessionType, Garden>();
 		gardens.put(p.getUniqueId(), pgardens);
@@ -213,5 +211,20 @@ public class GardenManager implements IOComponent, Manager {
 	@Override
 	public String getKey() {
 		return "GardenManager";
+	}
+	
+	public static void addPlayerGardening(Player p, ProfessionType type) {
+		playersGardening.put(p.getUniqueId(), type);
+	}
+	
+	public static void removePlayerGardening(Player p) {
+		playersGardening.remove(p.getUniqueId());
+	}
+	
+	public static void tryReturnToGarden(Player p, ProfessionType type) {
+		if(playersGardening.get(p.getUniqueId()) == type) {
+			removePlayerGardening(p);
+			new GardenInventory(p, type);
+		}
 	}
 }

@@ -104,7 +104,7 @@ public class Recipe {
 		result.giveResult(p, amount);
 		ProfessionManager.getAccount(p.getUniqueId()).get(ProfessionType.CRAFTER).addExp(p, exp * amount);
 		p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
-		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + result.getDisplay());
+		p.sendMessage("§4[§c§lMLMC§4] §7You successfully crafted: " + result.getDisplay(p));
 		Bukkit.getPluginManager().callEvent(new ProfessionCraftSuccessEvent(p, this));
 		return true;
 	}

@@ -2,6 +2,7 @@ package me.neoblade298.neoquests.quests;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -165,11 +166,11 @@ public class QuestsManager implements IOComponent, Manager {
 				
 				QuestInstance qi = quester.getActiveQuestsHashMap().getOrDefault(qname, new QuestInstance(quester, quest, stage));
 				quester.addActiveQuest(qi);
-				qi.setupInstances(false); // Only start listening to the main account (in the finally clause)
+				qi.setupInstances(false); // False to only start listening to the main account (in the finally clause)
 				qi.getObjectiveSetInstance(set).setObjectiveCounts(counts);
 			}
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			Bukkit.getLogger().warning("Quests failed to load or init quest data for user " + p.getName());
 			e.printStackTrace();
 		}
@@ -222,7 +223,7 @@ public class QuestsManager implements IOComponent, Manager {
 				}
 			}
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			Bukkit.getLogger().warning("Quests failed to save quest data for user " + p.getName());
 			e.printStackTrace();
 		}
@@ -291,7 +292,7 @@ public class QuestsManager implements IOComponent, Manager {
 			return;
 		}
 		Quester quester = getQuester(p);
-		if (quester.getActiveQuestsHashMap().containsKey(q.getKey().toUpperCase())) {
+		if (quester.hasActiveQuest(q.getKey())) {
 			Bukkit.getLogger().warning("[NeoQuests] Failed to start quest " + quest + " for player " + p.getName() + ", quest already active.");
 			return;
 		}

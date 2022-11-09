@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -69,6 +70,9 @@ public class GardenInventory extends ProfessionInventory {
 		NBTItem nbti = new NBTItem(item);
 		if (nbti.getInteger("type") == IMMATURE) {
 			GardenSlot gslot = garden.getSlots().get(slot);
+			if (gslot == null) {
+				return createEmptySlot();
+			}
 			if (gslot.getEndTime() <= System.currentTimeMillis()) {
 				nbti.setInteger("type", MATURE);
 				return gslot.getIcon();
@@ -143,7 +147,15 @@ public class GardenInventory extends ProfessionInventory {
 				return;
 			}
 			else if (nbti.getInteger("type") == MATURE) {
+				GardenManager.addPlayerGardening(p, type);
 				GardenManager.getGarden(p, type).harvestSeed(p, slot);
+				return;
+			}
+			else if (nbti.getInteger("type") == IMMATURE && e.getClick() == ClickType.RIGHT){
+				GardenManager.getGarden(p, type).uprootSeed(p, slot);
+				ItemStack[] contents = inv.getContents();
+				contents[slot] = createEmptySlot();
+				inv.setContents(contents);
 				return;
 			}
 		}

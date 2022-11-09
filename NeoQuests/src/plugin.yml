@@ -4,7 +4,7 @@ author: [Neoblade298]
 depend: [NeoCore, Multiverse-Core, Vault]
 softdepend: [SkillAPI, Citizens, MythicMobs, WorldGuard]
 version: 1.0
-api-version: 1.18
+api-version: 1.19
 commands:
    quest:
       description: Quest command

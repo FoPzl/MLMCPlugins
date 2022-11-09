@@ -1,7 +1,0 @@
-# Under gps, add a new key for the quest name, case sensitive
-# Under it, put the stage # where the gps should activate
-# and what point the gps should send the player to
-
-GPS:
-  On the Trail of Corruption:
-    0: Loc-Sewers

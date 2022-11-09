@@ -181,7 +181,7 @@ public class PvpAccount {
 		Util.msg(s, "&6===[&e" + p.getName() + "&6]===", false);
 		boolean displayToSelf = s instanceof Player && (Player) s == this.p;
 		if (protectionExpires < System.currentTimeMillis()) {
-			ComponentBuilder b = new ComponentBuilder("§4N/A ");
+			ComponentBuilder b = new ComponentBuilder(prot + "§4N/A ");
 			if (displayToSelf) {
 				b.append("§7§o[Click to buy (§e5000g §7/ §e30m§7)]")
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp buyprotection"))
@@ -238,6 +238,7 @@ public class PvpAccount {
 			for (UUID uuid : pagedKills.get(page)) {
 				Util.msg(s, "&7- &e" + Bukkit.getOfflinePlayer(uuid).getName());
 			}
+			pagedKills.displayFooter(s, page, "/pvp uniquekills " + p.getName() + " " + (page + 1), "/pvp uniquekills " + p.getName() + " " + (page - 1));
 		}
 	}
 	
@@ -254,5 +255,21 @@ public class PvpAccount {
 	
 	public long getProtectionExpiration() {
 		return protectionExpires;
+	}
+
+	public void setPvpBalance(double pvpBalance) {
+		this.pvpBalance = pvpBalance;
+	}
+
+	public void setElo(int elo) {
+		this.elo = elo;
+	}
+
+	public void setWins(int wins) {
+		this.wins = wins;
+	}
+
+	public void setLosses(int losses) {
+		this.losses = losses;
 	}
 }

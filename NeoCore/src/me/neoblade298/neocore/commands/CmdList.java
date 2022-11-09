@@ -5,6 +5,7 @@ import java.util.TreeMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import io.lumine.mythic.bukkit.utils.lib.lang3.StringUtils;
 import me.neoblade298.neocore.util.PaginatedList;
 import me.neoblade298.neocore.util.Util;
 import net.md_5.bungee.api.ChatColor;
@@ -61,7 +62,12 @@ public class CmdList implements Subcommand {
 			showPage(s, 1);
 		}
 		else {
-			showPage(s, Integer.parseInt(args[0]));
+			if (!StringUtils.isNumeric(args[0])) {
+				Util.msg(s, "&cInvalid subcommand!");
+			}
+			else {
+				showPage(s, Integer.parseInt(args[0]));
+			}
 		}
 	}
 	

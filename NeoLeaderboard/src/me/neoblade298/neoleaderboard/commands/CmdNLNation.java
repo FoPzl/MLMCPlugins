@@ -66,13 +66,12 @@ public class CmdNLNation implements Subcommand {
 				Iterator<TownEntry> iter = ne.getTopTowns().descendingIterator();
 				
 				ComponentBuilder builder = new ComponentBuilder("§6§l>§8§m--------§c§l» §6Point Contribution: §e" + n.getName() + " §c§l«§8§m--------§6§l<");
-				int i = 1;
-				while (iter.hasNext() && i++ <= 10) {
+				int i = 0;
+				while (iter.hasNext() && i++ < 10) {
 					TownEntry e = iter.next();
 					String name = e.getTown().getName();
-					double effective = PointsManager.calculateEffectivePoints(ne, e.getTotalPoints());
-					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(effective) +
-							" §7§o(" + PointsManager.formatPoints(e.getTotalPoints()) + ")", FormatRetention.NONE)
+					// double effective = PointsManager.calculateEffectivePoints(ne, e.getTotalPoints());
+					builder.append("\n§6§l" + i + ". §e" + name + " §7- §f" + PointsManager.formatPoints(e.getTotalPoints()), FormatRetention.NONE)
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(buildTownHover(e))))
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nl town " + name));
 				}
@@ -82,16 +81,15 @@ public class CmdNLNation implements Subcommand {
 	}
 	
 	private String buildTownHover(TownEntry e) {
-		String hovertext = "Click for details: §e/nl town " + e.getNation().getName() + "\n";
+		String hovertext = "Click for details: §e/nl town " + e.getTown().getName() + "\n";
 		hovertext += "§6Top town contributors:";
 		
 		TreeSet<PlayerEntry> playerOrder = e.getTopPlayers();
 		Iterator<PlayerEntry> iter = playerOrder.descendingIterator();
 		for (int i = 1; i <= 10 && iter.hasNext(); i++) {
 			PlayerEntry pe = iter.next();
-			double effective = PointsManager.calculateEffectivePoints(PointsManager.getNationEntry(e.getNation().getUUID()), pe.getContributed());
-			hovertext += "\n§6§l" + i + ". §e" + pe.getDisplay() + " §7- §f" + PointsManager.formatPoints(effective) + 
-					" §7§o(" + PointsManager.formatPoints(e.getTotalPoints()) + ")";
+			// double effective = PointsManager.calculateEffectivePoints(PointsManager.getNationEntry(e.getNation().getUUID()), pe.getContributed());
+			hovertext += "\n§6§l" + i + ". §e" + pe.getDisplay() + " §7- §f" + PointsManager.formatPoints(pe.getContributed());
 		}
 		return hovertext;
 	}

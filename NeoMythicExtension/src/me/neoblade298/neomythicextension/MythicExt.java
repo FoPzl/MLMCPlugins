@@ -42,6 +42,7 @@ public class MythicExt extends JavaPlugin implements Listener {
 	public HashMap<UUID, SpawnerMaker> spawnermakers;
 	public static MythicExt inst;
 	public static Economy econ;
+	public static boolean debug = false;
 	private BossInstances nbi;
 
 	@Override
@@ -183,6 +184,9 @@ public class MythicExt extends JavaPlugin implements Listener {
 		case "giveaccounttag":
 			mechanic = new GiveAccountTagMechanic(cfg);
 			break;
+		case "giveattribute":
+			mechanic = new GiveAttributeMechanic(cfg);
+			break;
 		case "removeflag":
 			mechanic = new RemoveFlagMechanic(cfg);
 			break;
@@ -197,6 +201,9 @@ public class MythicExt extends JavaPlugin implements Listener {
 			break;
 		case "researchpoints":
 			mechanic = new ResearchPointsMechanic(cfg);
+			break;
+		case "researchpointsboss":
+			mechanic = new ResearchPointsBossMechanic(cfg);
 			break;
 		case "researchpointschance":
 			mechanic = new ResearchPointsChanceMechanic(cfg);

@@ -92,7 +92,7 @@ public class PlayerFields {
 		return false;
 	}
 	
-	// Only happens on logout. If this changes, make sure to keep the UUID initialized!
+	// Only happens on logout atm
 	public void save(Statement insert, Statement delete, UUID uuid) {
 		if (changedValues.containsKey(uuid) && !changedValues.get(uuid).isEmpty()) {
 			HashMap<String, Value> pValues = values.get(uuid);
@@ -140,20 +140,20 @@ public class PlayerFields {
 					try {
 						if (def instanceof String || def instanceof Boolean) {
 							delete.addBatch("DELETE FROM neocore_fields_strings WHERE `key` = '" + this.getKey() + "' AND field = '" + key +
-							"';");
+							"' AND uuid = '" + uuid + "';");
 						}
 						else if (def instanceof Integer) {
 							delete.addBatch("DELETE FROM neocore_fields_integers WHERE `key` = '" + this.getKey() + "' AND field = '" + key +
-							"';");
+							"' AND uuid = '" + uuid + "';");
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
-			values.remove(uuid);
-			changedValues.remove(uuid);
 		}
+		values.remove(uuid);
+		changedValues.remove(uuid);
 	}
 	
 	public void load(Statement stmt, UUID uuid) {
@@ -341,6 +341,7 @@ public class PlayerFields {
 	
 	public boolean resetAllFields(UUID uuid) {
 		ArrayList<String> fields = new ArrayList<String>(values.get(uuid).keySet());
+		Bukkit.getLogger().log(Level.INFO, "[NeoCore] Resetting all fields of " + this.getKey() + " for " + uuid + ".");
 		for (String key : fields) {
 			resetField(key, uuid);
 		}

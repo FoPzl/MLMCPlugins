@@ -4,7 +4,7 @@ main: me.Neoblade298.NeoProfessions.Professions
 version: 1.0
 api-version: 1.16
 depend: [MythicMobs, SkillAPI, NeoGear, NeoCore, Vault]
-softdepend: [NeoBossRelics, NeoMythicExtension, mcMMO, NeoResearch, Multiverse-Core, NeoConsumables]
+softdepend: [NeoRelics, NeoMythicExtension, mcMMO, NeoResearch, Multiverse-Core, NeoConsumables]
 commands:
   prof:
     description: Main command

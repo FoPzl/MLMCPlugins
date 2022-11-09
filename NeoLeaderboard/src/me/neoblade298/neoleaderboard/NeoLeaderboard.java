@@ -5,10 +5,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.neoblade298.neocore.NeoCore;
 import me.neoblade298.neocore.commands.CommandManager;
+import me.neoblade298.neocore.instancing.InstanceType;
 import me.neoblade298.neoleaderboard.commands.*;
+import me.neoblade298.neoleaderboard.listeners.InstanceListener;
 import me.neoblade298.neoleaderboard.listeners.PointsListener;
 import me.neoblade298.neoleaderboard.listeners.TownyListener;
 import me.neoblade298.neoleaderboard.points.PointsManager;
+import net.md_5.bungee.api.ChatColor;
 
 public class NeoLeaderboard extends JavaPlugin {
 	private static NeoLeaderboard inst;
@@ -17,21 +20,22 @@ public class NeoLeaderboard extends JavaPlugin {
 		Bukkit.getServer().getLogger().info("NeoLeaderboard Enabled");
 		inst = this;
 		
-		NeoCore.registerIOComponent(this, new PointsManager());
+		if (NeoCore.getInstanceType() != InstanceType.SESSIONS) {
+			NeoCore.registerIOComponent(this, new PointsManager());
 
-		PointsManager.initialize();
-		initCommands();
-		
-		PointsListener pl = new PointsListener();
-		Bukkit.getPluginManager().registerEvents(pl, this);
-		Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
-		
-	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pl);
+			PointsManager.initialize();
+			initCommands();
+			
+			Bukkit.getPluginManager().registerEvents(new PointsListener(), this);
+			Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
+		}
+		else if (NeoCore.getInstanceType() == InstanceType.SESSIONS) {
+			Bukkit.getPluginManager().registerEvents(new InstanceListener(), this);
+		}
 	}
 	
 	public void onDisable() {
 	    org.bukkit.Bukkit.getServer().getLogger().info("NeoLeaderboard Disabled");
-	    this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
 	    super.onDisable();
 	}
 	
@@ -46,12 +50,19 @@ public class NeoLeaderboard extends JavaPlugin {
 		mngr.register(new CmdNLBase());
 		mngr.registerCommandList("help");
 
-		mngr = new CommandManager("nc", this);
-		mngr.register(new CmdNCBase());
-		mngr.register(new CmdNCTop());
-		mngr.register(new CmdNCNation());
-		mngr.register(new CmdNCTown());
+		mngr = new CommandManager("nlc", this);
+		mngr.register(new CmdNLCBase());
+		mngr.register(new CmdNLCTop());
+		mngr.register(new CmdNLCNation());
+		mngr.register(new CmdNLCTown());
 		mngr.registerCommandList("help");
+
+		mngr = new CommandManager("nladmin", "neoleaderboard.admin", ChatColor.DARK_RED, this);
+		mngr.registerCommandList("");
+		mngr.register(new CmdNLAAddPlayer());
+		mngr.register(new CmdNLAAddNation());
+		mngr.register(new CmdNLAFinalize());
+		mngr.register(new CmdNLAReset());
 	}
 	
 	public static NeoLeaderboard inst() {

@@ -198,11 +198,6 @@ public class RecipeManager implements IOComponent, Listener, Manager {
 	
 	@Override
 	public void loadPlayer(Player p, Statement stmt) {
-		// Check if player exists already
-		if (knowledge.containsKey(p.getUniqueId())) {
-			return;
-		}
-
 		HashSet<String> keys = new HashSet<String>();
 		knowledge.put(p.getUniqueId(), keys);
 		

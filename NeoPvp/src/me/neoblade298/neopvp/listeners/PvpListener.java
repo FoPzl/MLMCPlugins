@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,19 +25,31 @@ import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neopvp.NeoPvp;
 import me.neoblade298.neopvp.PvpAccount;
 import me.neoblade298.neopvp.PvpManager;
+import me.neoblade298.neopvp.wars.War;
+import me.neoblade298.neopvp.wars.WarManager;
 
 public class PvpListener implements Listener {
 	private static final long ONE_DAY = 1000 * 60 * 60 * 24;
 
 	@EventHandler
 	public void onPvp(EntityDamageByEntityEvent e) {
-		if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) {
-			return;
+		if (!(e.getEntity() instanceof Player)) return;
+		Player pv = (Player) e.getEntity();
+		
+		if (e.getDamager() instanceof Player) {
+			handlePvpDamage((Player) e.getDamager(), pv, e);
+		}
+		else if (e.getDamager() instanceof Projectile) {
+			Projectile proj = (Projectile) e.getDamager();
+			if (proj.getShooter() instanceof Player) {
+				handlePvpDamage((Player) proj.getShooter(), pv, e);
+			}
 		}
 
-		Player pa = (Player) e.getDamager();
-		Player pv = (Player) e.getEntity();
-
+		
+	}
+	
+	private void handlePvpDamage(Player pa, Player pv, EntityDamageByEntityEvent e) {
 		PvpAccount attacker = PvpManager.getAccount(pa);
 		PvpAccount victim = PvpManager.getAccount(pv);
 
@@ -65,19 +78,35 @@ public class PvpListener implements Listener {
 				return;
 			}
 		}
-
+		
+		// war protection
+		for (War war : WarManager.getOngoingWars().values()) {
+			if (!war.getWorld().equals(pa.getWorld())) continue;
+			
+			for (int i = 0; i <= 1; i++) {
+				if (war.getTeams()[i].isMember(pa) && war.getTeams()[i].isMember(pv)) {
+					Util.msg(pa, "&cYou're on the same war team!");
+					e.setCancelled(true);
+					return;
+				}
+			}
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDeath(PlayerDeathEvent e) {
 		// Ignore event
-		if (e.getEntity().getWorld().getName().equalsIgnoreCase("Event")) return;
-		
+		String world = e.getEntity().getWorld().getName();
+		if (world.equalsIgnoreCase("Event") || world.equalsIgnoreCase("ClassPVP")) return;
 		Player victim = e.getEntity();
-		if (victim.getKiller() == null) {
+		Player killer = victim.getKiller();
+		
+		// War logic takes priority, ignores /pvp
+		if (WarManager.handleKill(killer, victim)) return;
+		
+		if (killer == null) {
 			// Inventory protection for 24 hours, this DOES NOT APPLY if it's a pvp death 
 			if (victim.getFirstPlayed() + ONE_DAY > System.currentTimeMillis()) {
-				String world = victim.getWorld().getName();
 				if (!world.equalsIgnoreCase("Argyll") && !world.equalsIgnoreCase("ClassPVP")) {
 					e.setKeepInventory(true);
 					e.getDrops().clear();
@@ -88,7 +117,7 @@ public class PvpListener implements Listener {
 				}
 			}
 		}
-		else if (victim.getKiller() == victim) {
+		else if (killer == victim) {
 			return;
 		}
 		else {
@@ -104,7 +133,7 @@ public class PvpListener implements Listener {
 			}
 
 			// Handle all pvp stats
-			PvpManager.handleKill(victim.getKiller(), victim);
+			PvpManager.handleKill(killer, victim);
 		}
 	}
 }

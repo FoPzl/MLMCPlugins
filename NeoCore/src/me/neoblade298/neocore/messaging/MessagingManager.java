@@ -95,6 +95,10 @@ public class MessagingManager {
 				builder.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, sec.getString("suggest")));
 			}
 			
+			if (sec.getString("url") != null) {
+				builder.event(new ClickEvent(ClickEvent.Action.OPEN_URL, sec.getString("url")));
+			}
+			
 			if (sec.getString("run") != null) {
 				builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, sec.getString("run")));
 			}

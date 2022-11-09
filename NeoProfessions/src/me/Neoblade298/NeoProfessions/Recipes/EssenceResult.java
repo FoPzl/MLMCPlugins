@@ -39,7 +39,7 @@ public class EssenceResult implements RecipeResult {
 	}
 	
 	@Override
-	public String getDisplay() {
+	public String getDisplay(Player p) {
 		return "[Lv " + level + "] Essence";
 	}
 }

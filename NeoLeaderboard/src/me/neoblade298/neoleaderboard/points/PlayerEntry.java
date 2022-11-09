@@ -30,6 +30,7 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 		TownyAPI api = TownyAPI.getInstance();
 		Resident r = api.getResident(uuid);
 		t = r.getTownOrNull();
+		if (t == null) return;
 		n = t.getNationOrNull();
 		if (n == null) return;
 		ne = PointsManager.getNationEntry(n.getUUID());
@@ -131,7 +132,7 @@ public class PlayerEntry implements Comparable<PlayerEntry> {
 	}
 	
 	public double getContributedPoints(PlayerPointType type) {
-		return contributedPoints.get(type);
+		return contributedPoints.getOrDefault(type, 0D);
 	}
 	
 	public HashMap<PlayerPointType, Double> getTotalPoints() {

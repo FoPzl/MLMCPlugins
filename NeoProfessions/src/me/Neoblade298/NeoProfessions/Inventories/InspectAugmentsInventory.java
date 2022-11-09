@@ -74,25 +74,25 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		ItemStack item = aug.getItem(p);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		lore.add("§cShift left click to unslot.");
-		lore.add("§cCosts §e" + GOLD_COST + "g §cand 3 Essence");
-		lore.add("§cof the same level.");
+		if (aug.isPermanent()) {
+			lore.add("§cThis augment cannot be unslotted.");
+		}
+		else {
+			lore.add("§cShift left click to unslot.");
+			lore.add("§cCosts §e" + GOLD_COST + "g §cand 3 Essence");
+			lore.add("§cof the same level.");
+		}
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbti = new NBTItem(item);
-		nbti.setInteger("slot", slot);
+		if (!aug.isPermanent()) nbti.setInteger("slot", slot);
 		return nbti.getItem();
 	}
 
 	protected ItemStack createGuiItem(final Material material, final String name, List<String> list, Augment aug) {
 		final ItemStack item = new ItemStack(material, 1);
 		final ItemMeta meta = item.getItemMeta();
-		if (aug.isPermanent()) {
-			meta.setDisplayName("§cThis augment cannot be swapped");
-		}
-		else {
-			meta.setDisplayName(name);
-		}
+		meta.setDisplayName(name);
 		meta.setLore(list);
 		item.setItemMeta(meta);
 		return item;
@@ -114,16 +114,18 @@ public class InspectAugmentsInventory extends ProfessionInventory {
 		}
 		
 		NBTItem nbti = new NBTItem(item);
-		if (!Professions.econ.has(p, GOLD_COST)) {
+		if (!nbti.hasKey("slot")) {
 			return;
 		}
-		if (!nbti.hasKey("slot")) {
+		if (!Professions.econ.has(p, GOLD_COST)) {
+			Util.sendMessage(p, "&cYou don't have enough gold to unslot!");
 			return;
 		}
 		String aug = nbti.getString("augment");
 		int level = nbti.getInteger("level");
 		int slot = nbti.getInteger("slot");
 		if (!CurrencyManager.hasEnough(p, level, ESSENCE_COST)) {
+			Util.sendMessage(p, "&cYou don't have enough essence to unslot!");
 			return;
 		}
 

@@ -9,6 +9,7 @@ import me.neoblade298.neoquests.objectives.ObjectiveInstance;
 
 public class RunCommandObjective extends Objective {
 	private String command;
+	private boolean startsWith = false, endsWith = false, contains = false;
 
 	public RunCommandObjective() {
 		super();
@@ -16,7 +17,19 @@ public class RunCommandObjective extends Objective {
 
 	public RunCommandObjective(LineConfig cfg) {
 		super(ObjectiveEvent.COMMAND, cfg, true);
-		command = cfg.getString("command", null);
+		command = cfg.getLine();
+		if (command.startsWith("*") && command.endsWith("*")) {
+			contains = true;
+			command = command.substring(1, command.length() - 1);
+		}
+		else if (command.startsWith("*")) {
+			endsWith = true;
+			command = command.substring(1);
+		}
+		else if (command.endsWith("*")) {
+			startsWith = true;
+			command = command.substring(0, command.length() - 1);
+		}
 	}
 
 	@Override
@@ -31,19 +44,19 @@ public class RunCommandObjective extends Objective {
 
 	public boolean checkEvent(PlayerCommandPreprocessEvent e, ObjectiveInstance o) {
 		String msg = e.getMessage().substring(1); // Remove / from start of command
-		if (command.startsWith("*") && command.endsWith("*")) {
+		if (contains) {
 			if (msg.contains(command)) {
 				o.incrementCount();
 				return true;
 			}
 		}
-		else if (command.startsWith("*")) {
+		else if (endsWith) {
 			if (msg.endsWith(command)) {
 				o.incrementCount();
 				return true;
 			}
 		}
-		else if (command.endsWith("*")) {
+		else if (startsWith) {
 			if (msg.startsWith(command)) {
 				o.incrementCount();
 				return true;

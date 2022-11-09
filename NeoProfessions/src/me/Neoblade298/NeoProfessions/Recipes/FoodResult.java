@@ -14,7 +14,7 @@ public class FoodResult implements RecipeResult {
 	String key;
 	int amount;
 	String display;
-
+	
 	public FoodResult(String[] lineArgs) {
 		this.key = "default";
 		this.amount = 1;
@@ -27,13 +27,11 @@ public class FoodResult implements RecipeResult {
 				this.amount = Integer.parseInt(arg.substring(arg.indexOf(':') + 1));
 			}
 		}
-		
-		display = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(this.amount).getItemMeta().getDisplayName();
 	}
 
 	@Override
 	public void giveResult(Player p, int amount) {
-		ItemStack item = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(this.amount);
+		ItemStack item = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(p, this.amount);
 		item.setAmount(this.amount * amount);
 		HashMap<Integer, ItemStack> failed = p.getInventory().addItem(item);
 		for (Integer i : failed.keySet()) {
@@ -43,7 +41,7 @@ public class FoodResult implements RecipeResult {
 	
 	@Override
 	public ItemStack getResultItem(Player p, boolean canCraft) {
-		ItemStack item = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(this.amount);
+		ItemStack item = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(p, this.amount);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName((canCraft ? "§a" : "§c") + ChatColor.stripColor(meta.getDisplayName()));
 		item.setItemMeta(meta);
@@ -51,7 +49,10 @@ public class FoodResult implements RecipeResult {
 	}
 	
 	@Override
-	public String getDisplay() {
+	public String getDisplay(Player p) {
+		if (display == null) {
+			display = ((GeneratableConsumable) Consumables.getConsumable(this.key)).getItem(p, this.amount).getItemMeta().getDisplayName();
+		}
 		return display;
 	}
 }

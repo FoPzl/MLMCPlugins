@@ -3,7 +3,7 @@ author: Neoblade298
 main: me.neoblade298.neomythicextension.MythicExt
 version: 1.00
 depend: [MythicMobs]
-softdepend: [NeoBossInstances, NeoResearch, NeoConsumables, NeoCore]
+softdepend: [NeoBossInstances, NeoResearch, NeoConsumables, NeoCore, MythicLib]
 api-version: 1.16
 commands:
   nme:

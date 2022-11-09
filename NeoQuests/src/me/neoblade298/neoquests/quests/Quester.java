@@ -1,7 +1,9 @@
 package me.neoblade298.neoquests.quests;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
@@ -10,7 +12,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.neoblade298.neocore.bar.BarAPI;
+import me.neoblade298.neocore.bar.CoreBar;
+import me.neoblade298.neocore.util.Util;
 import me.neoblade298.neoquests.NeoQuests;
+import me.neoblade298.neoquests.commands.CmdQuestsRecommended;
 import me.neoblade298.neoquests.conditions.Condition;
 import me.neoblade298.neoquests.conditions.ConditionManager;
 import me.neoblade298.neoquests.conversations.ConversationManager;
@@ -19,6 +25,7 @@ import me.neoblade298.neoquests.objectives.ObjectiveSetInstance;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
@@ -72,6 +79,8 @@ public class Quester {
 				}
 			}
 
+			CoreBar cb = BarAPI.getBar(p);
+			if (cb.getTopic().startsWith("Q-")) cb.setVisible(false);
 			p.sendMessage("§4[§c§lMLMC§4] §7You cancelled quest: §6" + qi.getQuest().getDisplay() + "§7!");
 			p.sendTitle("§fQuest Cancelled", "§6" + qi.getQuest().getDisplay(), 10, 70, 10);
 		}
@@ -103,7 +112,9 @@ public class Quester {
 		qi.setupInstances(true);
 		new BukkitRunnable() {
 			public void run() {
-				qi.displayObjectives(p);
+				if (qi.getStage() == 0) {
+					qi.displayObjectives(p);
+				}
 			}
 		}.runTaskLater(NeoQuests.inst(), 40L);
 	}
@@ -111,33 +122,40 @@ public class Quester {
 	public void displayQuests(CommandSender s) {
 		if (activeQuests.size() > 0) {
 			for (QuestInstance qi : activeQuests.values()) {
-				ComponentBuilder builder = new ComponentBuilder("§6§l-[" + qi.getQuest().getDisplay() + "]- ");
-				ComponentBuilder quitquest = new ComponentBuilder("§7§o[Click to Quit]")
+				Util.msg(s, "&7&m= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =", false);
+				ComponentBuilder builder = new ComponentBuilder("§6§l" + qi.getQuest().getDisplay()) ;
+				ComponentBuilder quitquest = new ComponentBuilder(" §7§o[Click to Quit]")
 						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests quit " + qi.getQuest().getKey()));
 				s.spigot().sendMessage(builder.append(quitquest.create()).create());
 				qi.displayObjectives(s);
 			}
-			s.sendMessage("§7=====");
-			ComponentBuilder builder = new ComponentBuilder("§e<Click for other quests you can take!>")
+			Util.msg(s, "&7&m= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =", false);
+			ComponentBuilder builder = new ComponentBuilder("§7§o[Other Available Quests]")
 					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests guide")))
 					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
 			s.spigot().sendMessage(builder.create());
 		}
 		else {
-			s.sendMessage("§7You have no active quests!");
 			displayGuide(s);
 		}
 	}
 	
 	public void displayGuide(CommandSender s) {
 		if (activeQuestlines.size() > 0) {
-			s.sendMessage("§eActive Questlines:");
-			for (Questline ql : activeQuestlines.values()) {
+			ArrayList<String> nullQuestlines = new ArrayList<String>();
+			boolean first = true;
+			for (Entry<String, Questline> e : activeQuestlines.entrySet()) {
+				Questline ql = e.getValue();
 				Quest next = ql.getNextQuest(p);
 				if (next == null) {
 					Bukkit.getLogger().warning("[NeoQuests] Player questline " + ql.getDisplay() + " returned null for next, this should never happen "
-							+ "as questlines are removed once the last quest is completed.");
+							+ "as questlines are removed once the last quest is completed. Removing from questlines.");
+					nullQuestlines.add(e.getKey());
 					continue;
+				}
+				Util.msg(s, "&7&m= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =", false);
+				if (first) {
+					Util.msg(s, "&6&lActive Questlines:");
 				}
 				ComponentBuilder builder = new ComponentBuilder("§7- §6" + ql.getDisplay() + " §7(§e" + next.getDisplay() + "§7) ");
 				ComponentBuilder takequest = new ComponentBuilder("§7§o[Click to Take]")
@@ -145,15 +163,29 @@ public class Quester {
 						.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests take")));
 				s.spigot().sendMessage(builder.append(takequest.create()).create());
 			}
+			
+			// Only add line if there's actually a nonnull questline
+			if (nullQuestlines.size() != activeQuestlines.size()) {
+				Util.msg(s, "&7&m= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =", false);
+			}
+			for (String key : nullQuestlines) {
+				activeQuestlines.remove(key);
+			}
+			ComponentBuilder rec = new ComponentBuilder("§7§o[Recommended Quests] ")
+					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests recommended")))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended " + this.p.getName()))
+					.append("§7§o [Challenge Quests]", FormatRetention.NONE)
+					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges " + this.p.getName()));
+			s.spigot().sendMessage(rec.create());
 		}
-		ComponentBuilder rec = new ComponentBuilder("§e<Click to show other recommended quests!>")
-				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests recommended")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests recommended"));
-		ComponentBuilder side = new ComponentBuilder("§e<Click to show challenging sidequests!>")
-				.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
-				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges"));
-		s.spigot().sendMessage(rec.create());
-		s.spigot().sendMessage(side.create());
+		else {
+			CmdQuestsRecommended.run(s, new String[] { s.getName() }, false);
+			ComponentBuilder rec = new ComponentBuilder("§7§o[Challenge Quests]")
+					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests challenges")))
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests challenges " + this.p.getName()));
+			s.spigot().sendMessage(rec.create());
+		}
 	}
 	
 	// Call when switching to another quest account
@@ -216,6 +248,10 @@ public class Quester {
 		return activeQuests;
 	}
 	
+	public boolean hasActiveQuest(String key) {
+		return activeQuests.containsKey(key.toUpperCase());
+	}
+	
 	public Location getLocation() {
 		return loc;
 	}
@@ -239,16 +275,21 @@ public class Quester {
 	}
 	
 	public void reloadQuests() {
-		for (QuestInstance qi : activeQuests.values()) {
-			QuestInstance reloadedqi = new QuestInstance(this, QuestsManager.getQuest(qi.getQuest().getKey()), qi.getStage());
-			addActiveQuest(reloadedqi);
-			for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
-				reloadedqi.setupInstances(false);
-				reloadedqi.getObjectiveSetInstance(osi.getKey()).setObjectiveCounts(osi.getCounts());
+		try {
+			for (QuestInstance qi : activeQuests.values()) {
+				QuestInstance reloadedqi = new QuestInstance(this, QuestsManager.getQuest(qi.getQuest().getKey()), qi.getStage());
+				addActiveQuest(reloadedqi);
+				for (ObjectiveSetInstance osi : qi.getObjectiveSetInstances()) {
+					reloadedqi.setupInstances(false);
+					reloadedqi.getObjectiveSetInstance(osi.getKey()).setObjectiveCounts(osi.getCounts());
+				}
+				qi.cleanupInstances(); // Must be done after for loop because the instances get cleared
 			}
-			qi.cleanupInstances(); // Must be done after for loop because the instances get cleared
+			QuestsManager.initializeOrGetQuester(p).startListening();
 		}
-		QuestsManager.initializeOrGetQuester(p).startListening();
+		catch (Exception e) {
+			Bukkit.getLogger().warning("[NeoQuests] Failed to reload quester " + p.getName());
+		}
 	}
 	
 	public void setStage(String key, int stage) {
