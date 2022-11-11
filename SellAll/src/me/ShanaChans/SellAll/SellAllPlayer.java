@@ -1,6 +1,7 @@
 package me.ShanaChans.SellAll;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -95,10 +96,10 @@ public class SellAllPlayer
 		DecimalFormat df = new DecimalFormat("0.00");
 		String text = "";
 		text = text.concat("§c§oRed§7§o item amounts = reduced item value & over soft cap\n");
-		Bukkit.getLogger().info("[Sellall] Player " + player.getName() + " sold:");
+		ArrayList<String> log = new ArrayList<String>();
     	for(Material mat : itemAmount.keySet())
     	{
-    		Bukkit.getLogger().info("- " + mat + " (" + itemAmount.get(mat) + "x) - " + df.format(itemTotal.get(mat)) + "g");
+    		log.add("- " + mat + " (" + itemAmount.get(mat) + "x) - " + df.format(itemTotal.get(mat)) + "g");
     		if(itemAmountSold.getOrDefault(mat, 0) > SellAllManager.getItemCaps().get(mat))
     		{
     			text = text.concat("§6" + mat.name() + " §c(" + itemAmount.get(mat) + "x)§7 - " + "§e" + df.format(itemTotal.get(mat)) + "g\n");
@@ -111,6 +112,10 @@ public class SellAllPlayer
     	text = text.concat("§7TOTAL - §e" + df.format(totalCost) + "g");
     	if(sell)
     	{
+    		Bukkit.getLogger().info("[Sellall] Player " + player.getName() + " sold:");
+    		for (String line : log) {
+        		Bukkit.getLogger().info(line);
+    		}
     		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text)));
     	}
     	else
