@@ -358,10 +358,10 @@ public class Research extends JavaPlugin implements Listener, IOComponent {
 						}
 						actualAttrs += pAttrs.getAttribute(attr);
 					}
-					
+
+					Bukkit.getLogger().log(Level.INFO, "[NeoResearch] Saving account " + p.getName() + 
+							" Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
 					if (actualAttrs > expectedAttrs) {
-						Bukkit.getLogger().log(Level.INFO, "[NeoResearch] Saving account " + p.getName() + 
-								" Account " + key + ": Expected - " + expectedAttrs + ", Actual - " + actualAttrs);
 						for (Entry<String, Integer> ent : pAttrs.getStoredAttrs().entrySet()) {
 							Bukkit.getLogger().log(Level.INFO, ent.getKey() + ": " + ent.getValue());
 						}
