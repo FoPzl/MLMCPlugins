@@ -18,8 +18,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -284,5 +286,14 @@ public class SAPIAddons extends JavaPlugin implements Listener, SkillPlugin {
     public boolean isQuestWorld(World w) {
     	String name = w.getName();
     	return name.equalsIgnoreCase("Argyll") || name.equalsIgnoreCase("Dev") || name.equalsIgnoreCase("ClassPVP");
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onShootCrossbow(EntityShootBowEvent e) {
+    	if (e.getEntity() instanceof Player &&
+    			e.getBow().getType().equals(Material.CROSSBOW) &&
+    			isQuestWorld(e.getEntity().getWorld())) {
+        	((Player) e.getEntity()).getInventory().addItem(new ItemStack(Material.ARROW));
+    	}
     }
 }
