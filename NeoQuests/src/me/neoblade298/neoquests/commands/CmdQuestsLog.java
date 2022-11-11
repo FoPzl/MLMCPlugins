@@ -75,8 +75,8 @@ public class CmdQuestsLog implements Subcommand {
 			msg += cq.getQuest().getDisplay();
 			Util.msg(s, msg, false);
 		}
-		String nextCmd = "/quests log " + (page + 2);
-		String prevCmd = "/quests log " + page;
+		String nextCmd = "/quests log " + p.getName() + " "+ (page + 2);
+		String prevCmd = "/quests log " + p.getName() + " " + page;
 		list.displayFooter(s, page, nextCmd, prevCmd);
 	}
 

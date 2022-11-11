@@ -132,7 +132,7 @@ public class Quester {
 			Util.msg(s, "&7&m= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =", false);
 			ComponentBuilder builder = new ComponentBuilder("§7§o[Other Available Quests]")
 					.event(new HoverEvent(Action.SHOW_TEXT, new Text("/quests guide")))
-					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide"));
+					.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quests guide " + this.p.getName()));
 			s.spigot().sendMessage(builder.create());
 		}
 		else {
