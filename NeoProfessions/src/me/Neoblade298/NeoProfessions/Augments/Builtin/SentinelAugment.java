@@ -52,7 +52,12 @@ public class SentinelAugment extends Augment implements ModDamageDealtAugment {
 
 	@Override
 	public boolean canUse(Player user, LivingEntity target) {
-		return !FlagManager.hasFlag(user, "aug_sentinel");
+		// Don't allow player to spam left click
+		if (FlagManager.hasFlag(user, "aug_sentinel")) {
+			FlagManager.addFlag(user, user, "aug_sentinel", 20);
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

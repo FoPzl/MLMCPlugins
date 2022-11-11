@@ -451,7 +451,7 @@ public class AugmentManager implements Listener, Manager {
 		double flat = e.getFlat();
 		double thorns = 0;
 		FlagSettings flag = null;
-		if (containsType(e.getTypes(), "PHYSICAL_DAMAGE", "SKILL_DAMAGE")) {
+		if (containsType(e.getTypes(), "DAMAGE", "SKILL_DAMAGE")) {
 			if (containsAugments(p, EventType.DAMAGE_DEALT)) {
 				for (Augment augment : AugmentManager.playerAugments.get(p).getAugments(EventType.DAMAGE_DEALT)) {
 					if (augment instanceof ModDamageDealtAugment) {
