@@ -1,0 +1,13 @@
+sets:
+  "Ratface":
+    1:
+      flag: ratface_1
+      attributes:
+      - "Strength:5"
+    2:
+      flag: ratface_2
+    3:
+      flag: ratface_3
+enabled-worlds:
+  - Argyll
+  - ClassPVP

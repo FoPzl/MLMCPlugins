@@ -1,0 +1,5 @@
+# server price to use /gift
+price: 100.0
+
+# request auto-deny timeout
+timeout: 10
