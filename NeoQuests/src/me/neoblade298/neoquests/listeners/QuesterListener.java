@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerAccountChangeEvent;
 
+import me.neoblade298.neocore.bar.BarAPI;
+import me.neoblade298.neocore.bar.CoreBar;
 import me.neoblade298.neoquests.quests.Quester;
 import me.neoblade298.neoquests.quests.QuestsManager;
 
@@ -22,6 +24,8 @@ public class QuesterListener implements Listener {
 		
 		oldAcc.setLocation(p.getLocation());
 		oldAcc.stopListening();
+		CoreBar cb = BarAPI.getBar(p);
+		if (cb.getTopic().startsWith("Q-")) cb.setVisible(false);
 		if (newAcc.getLocation() != null) {
 			if (!p.teleport(newAcc.getLocation())) {
 				Bukkit.getLogger().warning("[NeoQuests] Failed to teleport player on class acccount change!");
