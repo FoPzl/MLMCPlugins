@@ -243,7 +243,7 @@ public class VoteIO implements IOComponent {
 		return topVoters;
 	}
 	
-	public void setCooldown(Player player, String voteSite) {
+	public void setCooldown(OfflinePlayer player, String voteSite) {
 		try {
 			Statement stmt = NeoCore.getStatement();
 			
@@ -259,7 +259,7 @@ public class VoteIO implements IOComponent {
 		}
 	}
 	
-	public LocalDateTime getCooldown(Player player, String voteSite) {
+	public LocalDateTime getCooldown(OfflinePlayer player, String voteSite) {
 		try {
 			Statement stmt = NeoCore.getStatement();
 			

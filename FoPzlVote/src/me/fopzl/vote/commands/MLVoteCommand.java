@@ -62,7 +62,7 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 			if(!(sender instanceof Player)) return false;
 			if(args.length > 1) {
 				OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
-				main.showCooldowns(sender, (Player)player);
+				main.showCooldowns(sender, player);
 			} else {
 				main.showCooldowns(sender, (Player)sender);
 			}

@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -149,7 +150,7 @@ public class Vote extends JavaPlugin {
 		Util.sendMessageFormatted(showTo, msg);
 	}
 	
-	public void showCooldowns(CommandSender showTo, Player player) {
+	public void showCooldowns(CommandSender showTo, OfflinePlayer player) {
 		String msg = "&4[&c&lMLMC&4] &eVote Site Cooldowns for &6" + player.getName() + "&e:";
 		for(Entry<String, VoteSiteInfo> site : voteSites.entrySet()) {
 			String cd = getCooldown(player, site.getKey());
@@ -187,11 +188,11 @@ public class Vote extends JavaPlugin {
 		rewards.rewardVote(p, stats.voteStreak);
 	}
 	
-	public void setCooldown(Player player, String voteServiceName) {
+	public void setCooldown(OfflinePlayer player, String voteServiceName) {
 		io.setCooldown(player, voteSites.get(voteServiceName).nickname);
 	}
 	
-	public String getCooldown(Player player, String voteServiceName) {
+	public String getCooldown(OfflinePlayer player, String voteServiceName) {
 		VoteSiteInfo vsi = voteSites.get(voteServiceName);
 		LocalDateTime lastVoted = io.getCooldown(player, vsi.nickname);
 		
