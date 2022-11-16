@@ -130,6 +130,16 @@ public class VoteIO implements IOComponent {
 			Bukkit.getLogger().warning("Failed to load vote data for player " + p.getName());
 			e.printStackTrace();
 		}
+		
+		Map<UUID, Map<String, Integer>> qr = main.getVoteInfo().queuedRewards;
+		if(qr.containsKey(uuid)) {
+			Map<String, Integer> sites = qr.remove(uuid);
+			for(Entry<String, Integer> entry : sites.entrySet()) {
+				for(int i = 0; i < entry.getValue(); i++) {
+					main.rewardVote(p, entry.getKey());
+				}
+			}
+		}
 	}
 	
 	public void saveVoteParty() {

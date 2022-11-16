@@ -4,7 +4,6 @@ import com.vexsoftware.votifier.model.VotifierEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -12,8 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class VoteListener implements Listener {
 	private Vote main;
@@ -50,24 +47,5 @@ public class VoteListener implements Listener {
 			main.incVoteParty();
 			main.setCooldown(p, site);
 		}
-	}
-	
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent e) {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				UUID uuid = e.getPlayer().getUniqueId();
-				Map<UUID, Map<String, Integer>> qr = main.getVoteInfo().queuedRewards;
-				if(qr.containsKey(uuid)) {
-					Map<String, Integer> sites = qr.remove(uuid);
-					for(Entry<String, Integer> entry : sites.entrySet()) {
-						for(int i = 0; i < entry.getValue(); i++) {
-							main.rewardVote(e.getPlayer(), entry.getKey());
-						}
-					}
-				}
-			}
-		}.runTaskLater(main, 200); // delay to let vote stats load in first
 	}
 }
