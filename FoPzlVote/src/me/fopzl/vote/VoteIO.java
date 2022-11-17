@@ -131,15 +131,20 @@ public class VoteIO implements IOComponent {
 			e.printStackTrace();
 		}
 		
-		Map<UUID, Map<String, Integer>> qr = main.getVoteInfo().queuedRewards;
-		if(qr.containsKey(uuid)) {
-			Map<String, Integer> sites = qr.remove(uuid);
-			for(Entry<String, Integer> entry : sites.entrySet()) {
-				for(int i = 0; i < entry.getValue(); i++) {
-					main.rewardVote(p, entry.getKey());
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Map<UUID, Map<String, Integer>> qr = main.getVoteInfo().queuedRewards;
+				if(qr.containsKey(uuid)) {
+					Map<String, Integer> sites = qr.remove(uuid);
+					for(Entry<String, Integer> entry : sites.entrySet()) {
+						for(int i = 0; i < entry.getValue(); i++) {
+							main.rewardVote(p, entry.getKey());
+						}
+					}
 				}
 			}
-		}
+		}.runTask(main);
 	}
 	
 	public void saveVoteParty() {
