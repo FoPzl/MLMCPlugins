@@ -201,5 +201,10 @@ public class Vote extends JavaPlugin {
 		if(dur.isNegative()) return "&aReady!";
 		else return String.format("&c%02d:%02d:%02d", dur.toHours(), dur.toMinutesPart(), dur.toSecondsPart());
 	}
+	
+	public void setTotalVotes(Player p, int numVotes) {
+		info.getStats(p).totalVotes = numVotes;
+		info.getStats(p).needToSave = true;
+	}
 }
 

@@ -34,6 +34,17 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 					
 					main.cmdVote(args[1], args[2]);
 					return true;
+				case "setvotes":
+					if(args.length < 3) return false;
+					
+					Player onlinePlayer = Bukkit.getPlayer(args[1]);
+					int numVotes = Integer.parseInt(args[2]);
+					if(onlinePlayer == null) {
+						Util.sendMessageFormatted(sender, "&4[&c&lMLMC&4] &7Player &e" + args[1] + " &7offline.");
+						return true;
+					}
+					main.setTotalVotes(onlinePlayer, numVotes);
+					return true;
 				case "reload":
 					main.loadAllConfigs();
 					Util.sendMessageFormatted(sender, "&4[&c&lMLMC&4] &7Reloaded config");
@@ -84,6 +95,7 @@ public class MLVoteCommand implements CommandExecutor, TabCompleter {
 			options.add("leaderboard");
 			if(sender.hasPermission("mlvote.admin")) {
 				options.add("vote");
+				options.add("setvotes");
 				options.add("reload");
 				options.add("debug");
 			}
