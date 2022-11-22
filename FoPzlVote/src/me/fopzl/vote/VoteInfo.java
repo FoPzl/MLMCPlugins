@@ -10,7 +10,11 @@ public class VoteInfo {
 	public Map<UUID, VoteStats> playerStats;
 	public Map<UUID, Map<String, Integer>> queuedRewards;
 	
-	public VoteInfo() {
+	private VoteIO io;
+	
+	public VoteInfo(VoteIO io) {
+		this.io = io;
+		
 		playerStats = new HashMap<UUID, VoteStats>();
 		queuedRewards = new HashMap<UUID, Map<String, Integer>>();
 	}
@@ -20,8 +24,12 @@ public class VoteInfo {
 		if(playerStats.containsKey(uuid)) {
 			return playerStats.get(uuid);
 		} else {
-			VoteStats vs = new VoteStats();
-			playerStats.put(uuid, vs);
+			VoteStats vs = io.tryLoadStats(p);
+			if(vs == null) {
+				vs = new VoteStats();
+				playerStats.put(uuid, vs);
+			}
+			
 			return vs;
 		}
 	}

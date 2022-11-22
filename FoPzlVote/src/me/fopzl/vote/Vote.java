@@ -43,8 +43,8 @@ public class Vote extends JavaPlugin {
 		rewards = new VoteRewards();
 		voteParty = new VoteParty(this);
 		
-		info = new VoteInfo();
 		io = new VoteIO(this);
+		info = new VoteInfo(io);
 
 		voteListener = new VoteListener(this);
 		getServer().getPluginManager().registerEvents(voteListener, this);
@@ -178,6 +178,11 @@ public class Vote extends JavaPlugin {
 	
 	public void rewardVote(Player p, String voteServiceName) {
 		VoteStats stats = info.getStats(p);
+		rewards.rewardVote(p, stats.voteStreak);
+	}
+	
+	public void countVote(Player p, String voteServiceName) {
+		VoteStats stats = info.getStats(p);
 		String nickname;
 		if(voteSites.containsKey(voteServiceName)) {
 			nickname = voteSites.get(voteServiceName).nickname;
@@ -185,7 +190,6 @@ public class Vote extends JavaPlugin {
 			nickname = voteServiceName;
 		}
 		stats.addVote(nickname);
-		rewards.rewardVote(p, stats.voteStreak);
 	}
 	
 	public void setCooldown(OfflinePlayer player, String voteServiceName) {

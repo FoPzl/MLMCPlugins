@@ -28,6 +28,8 @@ public class VoteListener implements Listener {
 			OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(vote.getUsername());
 			Util.broadcastFormatted("&4[&c&lMLMC&4] &e" + p.getName() + " &7just voted on &c" + site + "&7!");
 			
+			main.countVote((Player)p, site);
+			
 			if(p.isOnline()) {
 				main.rewardVote((Player)p, site);
 			} else {

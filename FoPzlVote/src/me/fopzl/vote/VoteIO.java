@@ -6,9 +6,11 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -24,9 +26,13 @@ import me.neoblade298.neocore.scheduler.SchedulerAPI;
 public class VoteIO implements IOComponent {
 	Vote main;
 	
+	Set<UUID> loadedOfflinePlayers;
+	
 	public VoteIO(Vote main) {
 		this.main = main;
 		NeoCore.registerIOComponent(main, this);
+		
+		loadedOfflinePlayers = new HashSet<UUID>();
 		
 		loadQueue();
 		loadVoteParty();
@@ -35,6 +41,7 @@ public class VoteIO implements IOComponent {
 			public void run() {
 				new BukkitRunnable() {
 					public void run() {
+						cleanupOfflineVoters();
 						saveQueue();
 						saveVoteParty();
 					}
@@ -50,6 +57,7 @@ public class VoteIO implements IOComponent {
 	
 	@Override
 	public void cleanup(Statement insert, Statement delete) {
+		cleanupOfflineVoters();
 		saveQueue();
 		saveVoteParty();
 	}
@@ -108,6 +116,8 @@ public class VoteIO implements IOComponent {
 	public void loadPlayer(Player p, Statement stmt) {
 		UUID uuid = p.getUniqueId();
 		
+		if(loadedOfflinePlayers.contains(uuid)) return;
+		
 		try {
 			ResultSet rs = stmt.executeQuery("select * from fopzlvote_playerStats where uuid = '" + uuid + "';");
 			if(!rs.next()) return;
@@ -145,6 +155,83 @@ public class VoteIO implements IOComponent {
 				}
 			}
 		}.runTask(main);
+	}
+	
+	public VoteStats tryLoadStats(Player p) {
+		Statement stmt = NeoCore.getStatement();
+		UUID uuid = p.getUniqueId();
+		
+		try {
+			ResultSet rs = stmt.executeQuery("select * from fopzlvote_playerStats where uuid = '" + uuid + "';");
+			if(!rs.next()) return null;
+			
+			VoteStats vs = new VoteStats(rs.getInt("totalVotes"), rs.getInt("voteStreak"), rs.getObject("whenLastVoted", LocalDateTime.class));
+			
+			rs = stmt.executeQuery("select * from fopzlvote_playerHist where uuid = '" + uuid + "';");
+			while(rs.next()) {
+				VoteMonth voteMonth = new VoteMonth(rs.getInt("year"), rs.getInt("month"));
+				String voteSite = rs.getString("voteSite");
+				int numVotes = rs.getInt("numVotes");
+				
+				Map<String, Integer> monthCounts = vs.monthlySiteCounts.getOrDefault(voteMonth, new HashMap<String, Integer>());
+				monthCounts.put(voteSite, numVotes);
+				vs.monthlySiteCounts.putIfAbsent(voteMonth, monthCounts);
+			}
+			
+			main.getVoteInfo().playerStats.put(uuid, vs);
+			
+			return vs;
+		} catch (SQLException e) {
+			Bukkit.getLogger().warning("Failed to load vote data for player " + p.getName());
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public void cleanupOfflineVoters() {
+		Statement insert = NeoCore.getStatement();
+		
+		for(UUID uuid : loadedOfflinePlayers) {
+			VoteStats vs = main.getVoteInfo().playerStats.get(uuid);
+			if(!vs.needToSave) return;
+			vs.needToSave = false;
+			
+			try {
+				insert.addBatch("replace into fopzlvote_playerStats values ('" + uuid + "', " + vs.totalVotes + ", " + vs.voteStreak + ", '" + vs.lastVoted.toString() + "');");
+				
+				int year = LocalDateTime.now().getYear();
+				int month = LocalDateTime.now().getMonthValue();
+				VoteMonth now = new VoteMonth(year, month);
+				if(month == 1) {
+					year--;
+					month = 12;
+				}
+				VoteMonth prev = new VoteMonth(year, month);
+				
+				// only save this month and the last
+				Map<String, Integer> currCounts = vs.monthlySiteCounts.get(now);
+				if(currCounts != null) {
+					for(Entry<String, Integer> entry : currCounts.entrySet()) {
+						insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
+					}
+				}
+				
+				Map<String, Integer> prevCounts = vs.monthlySiteCounts.get(prev);
+				if(prevCounts != null) {
+					for(Entry<String, Integer> entry : prevCounts.entrySet()) {
+						insert.addBatch("replace into fopzlvote_playerHist values ('" + uuid + "', " + year + ", " + month + ", '" + entry.getKey() + "', " + entry.getValue() + ");");
+					}
+				}
+				
+				insert.executeBatch();
+			} catch (SQLException e) {
+				Bukkit.getLogger().warning("Failed to cleanup offline vote data for uuid " + uuid);
+				e.printStackTrace();
+			}
+		}
+		
+		loadedOfflinePlayers.clear();
 	}
 	
 	public void saveVoteParty() {
