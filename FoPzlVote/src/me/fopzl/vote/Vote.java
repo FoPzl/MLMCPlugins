@@ -43,8 +43,8 @@ public class Vote extends JavaPlugin {
 		rewards = new VoteRewards();
 		voteParty = new VoteParty(this);
 		
+		info = new VoteInfo(this);
 		io = new VoteIO(this);
-		info = new VoteInfo(io);
 
 		voteListener = new VoteListener(this);
 		getServer().getPluginManager().registerEvents(voteListener, this);
@@ -119,6 +119,10 @@ public class Vote extends JavaPlugin {
 	
 	public VoteInfo getVoteInfo() {
 		return info;
+	}
+	
+	public VoteIO getVoteIO() {
+		return io;
 	}
 	
 	public VoteParty getVoteParty() {
