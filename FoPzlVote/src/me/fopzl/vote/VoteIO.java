@@ -378,7 +378,6 @@ public class VoteIO implements IOComponent {
 			e.printStackTrace();
 		}
 		
-		//return LocalDateTime.of(0, 1, 1, 0, 0);
-		return LocalDateTime.MIN;
+		return LocalDateTime.of(0, 1, 1, 0, 0);
 	}
 }
